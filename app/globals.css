@@ -1,42 +1,302 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background:
+      0 0% 100%;
+    --foreground:
+      0 0% 3.9%;
+    --card:
+      0 0% 100%;
+    --card-foreground:
+      0 0% 3.9%;
+    --popover:
+      0 0% 100%;
+    --popover-foreground:
+      0 0% 3.9%;
+    --primary:
+      0 0% 9%;
+    --primary-foreground:
+      0 0% 98%;
+    --secondary:
+      0 0% 96.1%;
+    --secondary-foreground:
+      0 0% 9%;
+    --muted:
+      0 0% 96.1%;
+    --muted-foreground:
+      0 0% 45.1%;
+    --accent:
+      0 0% 96.1%;
+    --accent-foreground:
+      0 0% 9%;
+    --destructive:
+      0 84.2% 60.2%;
+    --destructive-foreground:
+      0 0% 98%;
+    --border:
+      0 0% 89.8%;
+    --input:
+      0 0% 89.8%;
+    --ring:
+      0 0% 3.9%;
+    --radius:
+      0.5rem;
+    --font-mono:
+      "Geist Mono", ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco, "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --chart-1:
+      12 76% 61%;
+    --chart-2:
+      173 58% 39%;
+    --chart-3:
+      197 37% 24%;
+    --chart-4:
+      43 74% 66%;
+    --chart-5:
+      27 87% 67%;
+  }
+
+  .dark {
+    --background:
+      0 0% 3.9%;
+    --foreground:
+      0 0% 98%;
+    --card:
+      0 0% 3.9%;
+    --card-foreground:
+      0 0% 98%;
+    --popover:
+      0 0% 3.9%;
+    --popover-foreground:
+      0 0% 98%;
+    --primary:
+      0 0% 98%;
+    --primary-foreground:
+      0 0% 9%;
+    --secondary:
+      0 0% 14.9%;
+    --secondary-foreground:
+      0 0% 98%;
+    --muted:
+      0 0% 14.9%;
+    --muted-foreground:
+      0 0% 63.9%;
+    --accent:
+      0 0% 14.9%;
+    --accent-foreground:
+      0 0% 98%;
+    --destructive:
+      0 62.8% 30.6%;
+    --destructive-foreground:
+      0 0% 98%;
+    --border:
+      0 0% 14.9%;
+    --input:
+      0 0% 14.9%;
+    --ring:
+      0 0% 83.1%;
+    --chart-1:
+      220 70% 50%;
+    --chart-2:
+      160 60% 45%;
+    --chart-3:
+      30 80% 55%;
+    --chart-4:
+      280 65% 60%;
+    --chart-5:
+      340 75% 55%;
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+@layer base {
+  * {
+    @apply border-border;
   }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-mono);
+    /* padding-top: 4rem; 64px, matches the header height */
+  }
+}
+
+.animate-in {
+  animation: animateIn 0.5s ease-in-out;
+}
+
+@keyframes animateIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline-item {
+  @apply relative pl-8 pb-12;
+}
+
+.timeline-item::before {
+  content: "";
+  @apply absolute left-0 top-1 h-4 w-4 rounded-full bg-primary;
+}
+
+.timeline-item::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 1.25rem;
+  height: 100%;
+  width: 2px;
+  background-color: hsl(var(--border));
+}
+
+.timeline-item:last-child::after {
+  height: 2rem;
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+}
+
+.skill-card {
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-lg;
+}
+
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.animated-background .blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  transition: transform 3s ease-out;
+}
+
+.animated-background .blob-1 {
+  background-color: hsl(var(--primary) / 30%);
+  width: 400px;
+  height: 400px;
+  top: 20%;
+  left: 10%;
+}
+
+.animated-background .blob-2 {
+  background-color: hsl(var(--primary) / 20%);
+  width: 300px;
+  height: 300px;
+  top: 60%;
+  right: 15%;
+}
+
+.animated-background .blob-3 {
+  background-color: hsl(var(--primary) / 15%);
+  width: 200px;
+  height: 200px;
+  bottom: 10%;
+  left: 20%;
+}
+
+/* Project card styles - updated without images */
+.project-card {
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+}
+
+.project-content {
+  @apply p-4;
+}
+
+.project-tags {
+  @apply flex flex-wrap gap-1;
+}
+
+.project-tag {
+  @apply text-xs bg-primary/10 px-2 py-1 rounded-full;
+}
+
+.project-links {
+  @apply flex gap-2;
+}
+
+/* Navigation animations */
+.nav-item {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: hsl(var(--primary));
+  transition: width 0.3s ease;
+}
+
+.nav-item:hover::after {
+  width: 100%;
+}
+
+.nav-item.active::after {
+  width: 100%;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced timeline animations */
+.timeline-item {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.timeline-item:hover {
+  transform: translateX(5px);
+}
+
+.timeline-item::before {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.timeline-item:hover::before {
+  transform: scale(1.2);
+  background-color: hsl(var(--primary) / 80%);
+}
+
+/* Ensure header is sticky */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+/* Glassmorphism effect for header */
+header.scrolled {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark header.scrolled {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
