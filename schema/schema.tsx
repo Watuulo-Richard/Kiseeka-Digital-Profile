@@ -79,3 +79,38 @@ export const verifyUserSchema = z.object({
 });
 
 export type UserVerificationTypes = z.infer<typeof verifyUserSchema>;
+
+// Zod schema for login validation
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address')
+    .transform((email) => email.toLowerCase().trim()),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .max(128, 'Password must be less than 128 characters')
+    .refine(
+      (password) => /[a-z]/.test(password),
+      'Password must contain at least one lowercase letter',
+    )
+    .refine(
+      (password) => /[A-Z]/.test(password),
+      'Password must contain at least one uppercase letter',
+    )
+    .refine(
+      (password) => /\d/.test(password),
+      'Password must contain at least one number',
+    )
+    .refine(
+      (password) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+      'Password must contain at least one special character',
+    )
+    .refine(
+      (password) => !/\s/.test(password),
+      'Password cannot contain spaces',
+    ),
+});
+
+export type UserLoginTypes = z.infer<typeof loginSchema>;

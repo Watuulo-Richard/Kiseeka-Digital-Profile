@@ -1,16 +1,50 @@
-"use client";
-
-import { useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowRight, Check, Eye, EyeOff } from "lucide-react";
+'use client';
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { loginSchema, UserLoginTypes } from '@/schema/schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<UserLoginTypes>({ resolver: zodResolver(loginSchema) });
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  async function handleSignInOnSubmit(loginDetails: UserLoginTypes) {
+    try {
+      setIsLoading(true);
+      const response = await signIn('credentials', {
+        ...loginDetails,
+        redirect: false,
+      });
+      console.log('SignIn Response...', response);
+      if (response?.ok) {
+        setIsLoading(false);
+        toast.success('User Signin Successful...!!!✅');
+        reset();
+        router.push('/dashboard');
+      } else {
+        setIsLoading(false);
+        toast.error('Sign-in error: Please check your credentials...!!!🥺');
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(
+        'Internet Connection Error...!!!, Please Check Your Internet Connection...!!!❌',
+      );
+      console.error('Authentication error:', error);
+    }
+  }
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
       <motion.div
@@ -30,19 +64,19 @@ export default function SignIn() {
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             transition={{
-              type: "spring",
+              type: 'spring',
               stiffness: 300,
               damping: 20,
               delay: 0.1,
             }}
             whileHover={{
               boxShadow:
-                "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
               translateY: -5,
             }}
           >
             {/* Card header */}
-            <div className="px-8 pb-6 pt-8">
+            <div className="px-8 pb-3 pt-4">
               <motion.div
                 className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50"
                 whileHover={{ rotate: [0, -10, 10, -10, 0] }}
@@ -82,7 +116,10 @@ export default function SignIn() {
 
             {/* Card body */}
             <div className="p-8 pt-0">
-              <form className="space-y-5">
+              <form
+                onSubmit={handleSubmit(handleSignInOnSubmit)}
+                className="space-y-5"
+              >
                 <div>
                   <label
                     htmlFor="email"
@@ -92,13 +129,19 @@ export default function SignIn() {
                   </label>
                   <motion.div whileFocus={{ scale: 1.01 }} className="relative">
                     <input
+                      {...register('email', { required: true })}
                       id="email"
                       type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      // value={email}
+                      // onChange={(e) => setEmail(e.target.value)}
                       className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-teal-500"
                       placeholder="Enter your email"
                     />
+                    {errors.email && (
+                      <span className="text-sm text-destructive">
+                        Email is required...
+                      </span>
+                    )}
                   </motion.div>
                 </div>
 
@@ -111,13 +154,19 @@ export default function SignIn() {
                   </label>
                   <motion.div whileFocus={{ scale: 1.01 }} className="relative">
                     <input
+                      {...register('password', { required: true })}
                       id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      type={showPassword ? 'text' : 'password'}
+                      // value={password}
+                      // onChange={(e) => setPassword(e.target.value)}
                       className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-teal-500"
                       placeholder="••••••••"
                     />
+                    {errors.password && (
+                      <span className="text-sm text-destructive">
+                        Password is required...
+                      </span>
+                    )}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -129,7 +178,7 @@ export default function SignIn() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center">
+                  {/* <div className="flex items-center">
                     <motion.button
                       type="button"
                       onClick={() => setRememberMe(!rememberMe)}
@@ -144,7 +193,7 @@ export default function SignIn() {
                     >
                       Remember me
                     </label>
-                  </div>
+                  </div> */}
                   <Link
                     href="#"
                     className="text-sm font-medium text-teal-600 transition-colors hover:text-teal-500"
@@ -153,15 +202,27 @@ export default function SignIn() {
                   </Link>
                 </div>
 
-                <motion.button
-                  type="submit"
-                  className="flex w-full items-center justify-center rounded-xl bg-teal-500 py-3 font-medium text-white"
-                  whileHover={{ scale: 1.02, backgroundColor: "#0D9488" }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Sign in
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </motion.button>
+                {isLoading ? (
+                  <motion.button
+                    type="submit"
+                    className="flex w-full items-center justify-center rounded-xl bg-teal-500 py-3 font-medium text-white"
+                    whileHover={{ scale: 1.02, backgroundColor: '#0D9488' }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in, Please Wait...
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    type="submit"
+                    className="flex w-full items-center justify-center rounded-xl bg-teal-500 py-3 font-medium text-white"
+                    whileHover={{ scale: 1.02, backgroundColor: '#0D9488' }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Sign in
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </motion.button>
+                )}
 
                 <div className="relative my-6">
                   <div className="absolute inset-0 flex items-center">
@@ -252,7 +313,7 @@ export default function SignIn() {
               </form>
 
               <p className="mt-8 text-center text-sm text-gray-500">
-                Don&apos;t have an account?{" "}
+                Don&apos;t have an account?{' '}
                 <Link
                   href="#"
                   className="font-medium text-teal-600 transition-colors hover:text-teal-500"
@@ -266,4 +327,4 @@ export default function SignIn() {
       </motion.div>
     </div>
   );
-};
+}
