@@ -1,5 +1,5 @@
-import { Portfolio, User } from "@/lib/generated/prisma";
 import { baseUrl } from "@/types/type";
+import { Portfolio, User } from "@prisma/client";
 
 export async function getUserById(id: string) {
     const userAPIRoute = `${baseUrl}/api/v1/signupAPI/${id}`
