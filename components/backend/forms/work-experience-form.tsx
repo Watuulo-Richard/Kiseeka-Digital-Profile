@@ -31,10 +31,13 @@ import { baseUrl } from '@/types/type';
 import { toast } from 'sonner';
 import { StartDate } from '../start-date';
 import { EndDate } from '../end-date';
-import { Portfolio } from '@/lib/generated/prisma';
+import { Portfolio } from '@prisma/client';
 
-export default function WorkExperienceForm({portfolio}:{portfolio:Portfolio}) {
-  console.log(portfolio, 'ogubana....')
+export default function WorkExperienceForm({
+  portfolio,
+}: {
+  portfolio: Portfolio;
+}) {
   const {
     register,
     handleSubmit,
@@ -71,8 +74,8 @@ export default function WorkExperienceForm({portfolio}:{portfolio:Portfolio}) {
     WorkExperienceFormData: WorkExperienceFormTypes,
   ) {
     setLoading(true);
-    WorkExperienceFormData.portfolioId = portfolio.id
-    console.log(WorkExperienceFormData,"Jesus...")
+    WorkExperienceFormData.portfolioId = portfolio.id;
+    console.log(WorkExperienceFormData, 'Jesus...');
     try {
       const response = await fetch(`${baseUrl}/api/v1/workexperienceAPI`, {
         method: 'POST',
