@@ -7,11 +7,10 @@ import { ArrowRight, Github, Linkedin, Loader2, Twitter } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { userDetailsSchema, UserDetailTypes } from '@/schema/schema';
 import { toast } from 'sonner';
-import { UserRole } from '@/lib/generated/prisma';
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { useRouter } from 'next/navigation';
 import { baseUrl } from '@/types/type';
 import { useRouter } from 'next/navigation';
+import { UserRole } from '@prisma/client';
 
 export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
   const [loading, setLoading] = useState(false);

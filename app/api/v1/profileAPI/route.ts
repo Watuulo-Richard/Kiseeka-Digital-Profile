@@ -1,5 +1,4 @@
 import { prismaClient } from "@/lib/db";
-import { ProfileFormTypes } from "@/schema/schema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request:NextRequest) {
