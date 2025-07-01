@@ -45,6 +45,13 @@ export default function SignIn() {
       console.error('Authentication error:', error);
     }
   }
+
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  function handleGoogleSignIn() {
+    setIsGoogleLoading(true);
+    signIn('google', { callbackUrl: '/dashboard' });
+  }
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
       <motion.div
@@ -236,37 +243,76 @@ export default function SignIn() {
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
-                  <motion.button
-                    type="button"
-                    className="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                  {isGoogleLoading ? (
+                    <motion.button
+                      onClick={handleGoogleSignIn}
+                      type="button"
+                      className="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5"
+                      disabled={isGoogleLoading}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      <path
-                        d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.71 17.57V20.34H19.28C21.36 18.42 22.56 15.6 22.56 12.25Z"
-                        fill="#4285F4"
-                      />
-                      <path
-                        d="M12 23C14.97 23 17.46 22.02 19.28 20.34L15.71 17.57C14.73 18.23 13.48 18.63 12 18.63C9.13 18.63 6.72 16.69 5.82 14.09H2.12V16.95C3.94 20.53 7.69 23 12 23Z"
-                        fill="#34A853"
-                      />
-                      <path
-                        d="M5.82 14.09C5.6 13.43 5.48 12.73 5.48 12C5.48 11.27 5.6 10.57 5.82 9.91V7.05H2.12C1.41 8.57 1 10.24 1 12C1 13.76 1.41 15.43 2.12 16.95L5.82 14.09Z"
-                        fill="#FBBC05"
-                      />
-                      <path
-                        d="M12 5.37C13.62 5.37 15.06 5.94 16.21 7.02L19.36 3.87C17.45 2.09 14.97 1 12 1C7.69 1 3.94 3.47 2.12 7.05L5.82 9.91C6.72 7.31 9.13 5.37 12 5.37Z"
-                        fill="#EA4335"
-                      />
-                    </svg>
-                  </motion.button>
+                      {/* <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.71 17.57V20.34H19.28C21.36 18.42 22.56 15.6 22.56 12.25Z"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M12 23C14.97 23 17.46 22.02 19.28 20.34L15.71 17.57C14.73 18.23 13.48 18.63 12 18.63C9.13 18.63 6.72 16.69 5.82 14.09H2.12V16.95C3.94 20.53 7.69 23 12 23Z"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M5.82 14.09C5.6 13.43 5.48 12.73 5.48 12C5.48 11.27 5.6 10.57 5.82 9.91V7.05H2.12C1.41 8.57 1 10.24 1 12C1 13.76 1.41 15.43 2.12 16.95L5.82 14.09Z"
+                          fill="#FBBC05"
+                        />
+                        <path
+                          d="M12 5.37C13.62 5.37 15.06 5.94 16.21 7.02L19.36 3.87C17.45 2.09 14.97 1 12 1C7.69 1 3.94 3.47 2.12 7.05L5.82 9.91C6.72 7.31 9.13 5.37 12 5.37Z"
+                          fill="#EA4335"
+                        />
+                      </svg> */}
+                       <Loader2 className="mr-2 h-4 w-4 text-emerald-600 animate-spin" />
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      onClick={handleGoogleSignIn}
+                      type="button"
+                      className="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5"
+                      disabled={isGoogleLoading}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.71 17.57V20.34H19.28C21.36 18.42 22.56 15.6 22.56 12.25Z"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M12 23C14.97 23 17.46 22.02 19.28 20.34L15.71 17.57C14.73 18.23 13.48 18.63 12 18.63C9.13 18.63 6.72 16.69 5.82 14.09H2.12V16.95C3.94 20.53 7.69 23 12 23Z"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M5.82 14.09C5.6 13.43 5.48 12.73 5.48 12C5.48 11.27 5.6 10.57 5.82 9.91V7.05H2.12C1.41 8.57 1 10.24 1 12C1 13.76 1.41 15.43 2.12 16.95L5.82 14.09Z"
+                          fill="#FBBC05"
+                        />
+                        <path
+                          d="M12 5.37C13.62 5.37 15.06 5.94 16.21 7.02L19.36 3.87C17.45 2.09 14.97 1 12 1C7.69 1 3.94 3.47 2.12 7.05L5.82 9.91C6.72 7.31 9.13 5.37 12 5.37Z"
+                          fill="#EA4335"
+                        />
+                      </svg>
+                    </motion.button>
+                  )}
                   <motion.button
                     type="button"
                     className="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5"
