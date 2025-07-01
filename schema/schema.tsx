@@ -1,35 +1,78 @@
 import { z } from 'zod';
 
-// model Portfolio {
-//   id            String      @id @default(cuid())
-//   title         String
-//   bio           String
-//   profileImage  String?
-//   user          User        @relation(fields: [userId], references: [id])
-//   userId        String      @unique
-//   workExperience WorkExperience[]
-//   education     Education[]
-//   project       Project[]
-//   skill         Skill[]
-//   award         Award[]
-//   createdAt     DateTime    @default(now())
-//   updatedAt     DateTime    @updatedAt
-// }
-
 // Zod schema for profile validation
 export const profileSchema = z.object({
-  title: z
-    .string()
-    .min(1, 'Profile name is required')
-    .max(10, 'Profile Name must be less than 100 characters'),
-  bio: z
-    .string()
-    .min(10, 'Your biography must be at least 10 characters')
-    .max(500, 'Your biography must be less than 500 characters'),
-  profileImage: z.string().url('Please enter a valid image URL'),
+  title: z.string()
+  .min(1, 'Profile name is required')
+  .max(100, 'Profile Name must be less than 100 characters'),
+  bio: z.string()
+  .min(1, 'Your biography must be at least 10 characters')
+  .max(500, 'Your biography must be less than 500 characters'),
+  profileImage: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type ProfileFormTypes = z.infer<typeof profileSchema>;
+
+// Zod schema for experience validation
+export const workExperienceSchema = z.object({
+  position: z
+    .string()
+    .min(1, 'Position is required')
+    .max(100, 'Position must be less than 100 characters'),
+  company: z
+    .string()
+    .min(1, 'Company is required')
+    .max(100, 'Company must be less than 100 characters'),
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime().optional(),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(500, 'Description must be less than 500 characters'),
+  portfolioId: z.string().optional()
+});
+
+export type WorkExperienceFormTypes = z.infer<typeof workExperienceSchema>;
+
+// Zod schema for education validation
+export const EducationSchema = z.object({
+  institution: z
+    .string()
+    .min(1, 'Education is required')
+    .max(100, 'Education must be less than 100 characters'),
+  educationLevel: z
+    .string()
+    .min(1, 'Education level is required')
+    .max(100, 'Education level must be less than 100 characters'),
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime().optional(),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(500, 'Description must be less than 500 characters'),
+  portfolioId: z.string().optional()
+});
+
+export type EducationFormTypes = z.infer<typeof EducationSchema>;
+
+// Zod schema for projects validation
+
+export const ProjectsSchema = z.object({
+  title: z
+    .string()
+    .min(1, 'Project title is required')
+    .max(100, 'Project title must be less than 100 characters'),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(500, 'Description must be less than 500 characters')
+    .optional(),
+  url: z.string().optional(),
+  portfolioId: z.string().optional(),
+});
+
+export type ProjectsFormTypes = z.infer<typeof ProjectsSchema>;
 
 // Zod schema for user validation
 export const userDetailsSchema = z.object({
@@ -66,16 +109,14 @@ export const userDetailsSchema = z.object({
       (password) => !/\s/.test(password),
       'Password cannot contain spaces',
     ),
-  role: z.enum(['USER', 'ADMIN'])
+  role: z.enum(['USER', 'ADMIN']),
 });
 
 export type UserDetailTypes = z.infer<typeof userDetailsSchema>;
 
 // Zod schema for verification validation
 export const verifyUserSchema = z.object({
-  token: z
-    .string()
-    .min(6, 'Your one-time token must be 6 characters...!!!')
+  token: z.string().min(6, 'Your one-time token must be 6 characters...!!!'),
 });
 
 export type UserVerificationTypes = z.infer<typeof verifyUserSchema>;

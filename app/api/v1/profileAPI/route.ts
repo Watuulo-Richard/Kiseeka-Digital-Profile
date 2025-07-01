@@ -1,11 +1,18 @@
 import { prismaClient } from "@/lib/db";
+import { ProfileFormTypes } from "@/schema/schema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request:NextRequest) {
     try {
         const profileData = await request.json()
+        
         const createProfile = await prismaClient.portfolio.create({
-            data: profileData
+            data: {  
+                title: profileData.title, 
+                bio:   profileData.bio,
+                profileImage:  profileData.profileImage,
+                userId:        profileData.userId
+            }
         })
         return NextResponse.json({
             data: createProfile,
@@ -21,9 +28,9 @@ export async function POST(request:NextRequest) {
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
             message: 'Failed To Save Profile...!!!🥺',
-            status: 201
+            status: 500
         }, {
-            status: 201
+            status: 500
         })
     }
 }

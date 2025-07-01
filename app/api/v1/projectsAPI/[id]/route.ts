@@ -4,15 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
     try {
         const { id } = await params
-        const getProfile = await prismaClient.portfolio.findUnique({
+        const getUserProject = await prismaClient.project.findUnique({
             where: {
                 id: id
             }
         })
         return NextResponse.json({
-            data: getProfile,
+            data: getUserProject,
             error: null,
-            message: 'Profile Fetched Successfully...!!!✅',
+            message: 'User Project Fetched Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -22,7 +22,7 @@ export async function GET(request:NextRequest, {params}:{params:Promise<{id:stri
         return NextResponse.json({
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-            message: 'Failed To Fetch Profile...!!!🥺',
+            message: 'Failed To Fetch User Education Background...!!!🥺',
             status: 500
         }, {
             status: 500
@@ -32,15 +32,15 @@ export async function GET(request:NextRequest, {params}:{params:Promise<{id:stri
 export async function DELETE(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
     try {
         const { id } = await params
-        const deleteProfile = await prismaClient.portfolio.delete({
+        const deleteUserProject = await prismaClient.project.delete({
             where: {
                 id: id
             }
         })
         return NextResponse.json({
-            data: deleteProfile,
+            data: deleteUserProject,
             error: null,
-            message: 'Profile Deleted Successfully...!!!✅',
+            message: 'User Project Deleted Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -49,8 +49,8 @@ export async function DELETE(request:NextRequest, {params}:{params:Promise<{id:s
         console.log(error);
         return NextResponse.json({
             data: null,
-            error: 'Something Went Wrong, Please Check Your Internet Connection...!!!🥺',
-            message: 'Failed To Delete Profile...!!!🥺',
+            error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+            message: 'Failed To Delete User Project...!!!🥺',
             status: 500
         }, {
             status: 500
@@ -60,17 +60,17 @@ export async function DELETE(request:NextRequest, {params}:{params:Promise<{id:s
 export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
     try {
         const { id } = await params
-        const profileData = await request.json()
-        const updateProfile = await prismaClient.portfolio.update({
+        const ProjectFormData = await request.json()
+        const updateUserProject = await prismaClient.project.update({
             where: {
                 id: id
             },
-            data: profileData
+            data: ProjectFormData
         })
         return NextResponse.json({
-            data: updateProfile,
+            data: updateUserProject,
             error: null,
-            message: 'Profile Updated Successfully...!!!✅',
+            message: 'User Project Updated Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -79,8 +79,8 @@ export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:st
         console.log(error);
         return NextResponse.json({
             data: null,
-            error: 'Something Went Wrong, Please Check Your Internet Connection...!!!🥺',
-            message: 'Failed To Update Profile...!!!🥺',
+            error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+            message: 'Failed To User Project...!!!🥺',
             status: 500
         }, {
             status: 500

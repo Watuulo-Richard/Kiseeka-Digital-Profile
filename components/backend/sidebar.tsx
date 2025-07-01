@@ -15,6 +15,8 @@ import {
   HelpCircle,
   Menu,
   CircleUser,
+  BriefcaseBusiness,
+  GraduationCap,
 } from "lucide-react"
 
 import { Home } from "lucide-react"
@@ -74,22 +76,28 @@ export default function Sidebar() {
             className="h-16 px-6 flex items-center border-b border-gray-200 dark:border-[#1F1F23]"
           >
             <div className="flex items-center gap-3">
-              <Image
-                src="https://kokonutui.com/logo.svg"
-                alt="Acme"
+              <div className="rounded-full overflow-hidden">
+                <Image
+                src="https://j9v2s0d9fs.ufs.sh/f/lPsbSsZAX9SYdNnmqvWekY0wghnZXPrJQ7R45bjNmFBu8SCx"
+                alt="Kiseeka Pius"
                 width={32}
                 height={32}
-                className="flex-shrink-0 hidden dark:block"
+                className="flex-shrink-0 hidden dark:block ring-2 ring-gray-200 dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer"
+                // className="rounded-full "
               />
+              </div>
+              <div className="rounded-full overflow-hidden ring-2 ring-gray-200 dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer">
               <Image
-                src="https://kokonutui.com/logo-black.svg"
+                src="https://j9v2s0d9fs.ufs.sh/f/lPsbSsZAX9SYdNnmqvWekY0wghnZXPrJQ7R45bjNmFBu8SCx"
                 alt="Acme"
                 width={32}
                 height={32}
                 className="flex-shrink-0 block dark:hidden"
+                // className="rounded-full "
               />
+              </div>
               <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white">
-                KokonutUI
+                Kiseeka Pius
               </span>
             </div>
           </Link>
@@ -107,12 +115,6 @@ export default function Sidebar() {
                   <NavItem href="#" icon={BarChart2}>
                     Analytics
                   </NavItem>
-                  <NavItem href="/dashboard/profile-form" icon={ CircleUser }>
-                    Profile-Form
-                  </NavItem>
-                  <NavItem href="#" icon={Folder}>
-                    Projects
-                  </NavItem>
                 </div>
               </div>
 
@@ -121,14 +123,17 @@ export default function Sidebar() {
                   Finance
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Wallet}>
-                    Transactions
+                  <NavItem href="/dashboard/profile-form" icon={ CircleUser }>
+                    Profile-Form
                   </NavItem>
-                  <NavItem href="#" icon={Receipt}>
-                    Invoices
+                  <NavItem href="/dashboard/work-experience" icon={BriefcaseBusiness}>
+                    Work Experience
                   </NavItem>
-                  <NavItem href="#" icon={CreditCard}>
-                    Payments
+                  <NavItem href="/dashboard/education-form" icon={GraduationCap}>
+                    Education
+                  </NavItem>
+                  <NavItem href="/dashboard/projects-form" icon={GraduationCap}>
+                    Projects
                   </NavItem>
                 </div>
               </div>

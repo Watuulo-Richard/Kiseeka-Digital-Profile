@@ -1,82 +1,87 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Nihal Maskey | Senior Software Engineer",
+  title: 'Kiseeka Pius | Senior Auditor',
   description:
-    "Portfolio of Nihal Maskey, a Senior Software Engineer specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.",
+    'Portfolio of Kiseeka Pius, a Senior Auditor specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.',
   keywords: [
-    "Nihal Maskey",
-    "Software Engineer",
-    "Full Stack Developer",
-    "JavaScript",
-    "TypeScript",
-    "React",
-    "Node.js",
-    "AWS",
+    'Kiseeka Pius',
+    'Software Engineer',
+    'Full Stack Developer',
+    'JavaScript',
+    'TypeScript',
+    'React',
+    'Node.js',
+    'AWS',
   ],
-  authors: [{ name: "Nihal Maskey" }],
-  creator: "Nihal Maskey",
+  authors: [{ name: 'Kiseeka Pius' }],
+  creator: 'Kiseeka Pius',
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.png", type: "image/svg+xml" },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/svg+xml' },
     ],
-    apple: [{ url: "/apple-touch-icon.png" }],
+    apple: [{ url: '/apple-touch-icon.png' }],
   },
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://nihalmaskey.com",
-    title: "Nihal Maskey | Senior Software Engineer",
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://nihalmaskey.com',
+    title: 'Kiseeka Pius | Senior Software Engineer',
     description:
-      "Portfolio of Nihal Maskey, a Senior Software Engineer specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.",
-    siteName: "Nihal Maskey Portfolio",
+      'Portfolio of Kiseeka Pius, a Senior Software Engineer specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.',
+    siteName: 'Kiseeka Pius Portfolio',
     images: [
       {
-        url: "/favicon.png",
+        url: '/favicon.png',
         width: 512,
         height: 512,
-        alt: "Nihal Maskey Logo",
+        alt: 'Kiseeka Pius Logo',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Nihal Maskey | Senior Software Engineer",
+    card: 'summary_large_image',
+    title: 'Kiseeka Pius | Senior Software Engineer',
     description:
-      "Portfolio of Nihal Maskey, a Senior Software Engineer specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.",
-    creator: "@maskeynihal",
-    images: ["/favicon.png"],
+      'Portfolio of Kiseeka Pius, a Senior Software Engineer specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.',
+    creator: '@kiseekapius',
+    images: ['/favicon.png'],
   },
   robots: {
     index: true,
     follow: true,
   },
-}
+  metadataBase: new URL('http://localhost:3000'), // Add this to fix the warning
+};
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const session = await getServerSession();
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
-        <Toaster richColors position="bottom-center" />
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   );

@@ -1,36 +1,38 @@
-"use client"
 
-import type { ReactNode } from "react"
-import { useEffect, useState } from "react"
-import TopNav from "@/components/backend/top-nav"
-import Sidebar from "@/components/backend/sidebar"
-// import { useTheme } from "next-themes"
+import TopNav from '@/components/backend/top-nav';
+import Sidebar from '@/components/backend/sidebar';
+import { authOptions } from '@/config/authoptions';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
-interface LayoutProps {
-  children: ReactNode
-}
 
-export default function BackendLayout({ children }: LayoutProps) {
-//   const { theme } = useTheme()
-  const [mounted, setMounted] = useState(false)
+import { ReactNode } from 'react';
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
-
+export default async function BackendLayout({ children }: { children: ReactNode }) {
+const session = await getServerSession(authOptions)
+  // console.log(session?.user, 'fdfdfdfdfdfdfd...');
+    if(!session) {
+      return(
+        redirect('/sign-in-page')
+      )
+    }
+    else if(session.user.role !== 'ADMIN') {
+      return(
+        redirect('/sign-in-page')
+      )
+    }
   return (
-    <div className='flex h-screen'>
+    <div className="flex h-screen">
       <Sidebar />
       <div className="w-full flex flex-1 flex-col">
         <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23]">
           <TopNav />
         </header>
-        <main className="flex-1 overflow-auto p-6 bg-white dark:bg-[#0F0F12]">{children}</main>
+        <main className="flex-1 overflow-auto px-6 py-20 bg-white dark:bg-[#0F0F12]">
+          {children}
+        </main>
       </div>
     </div>
-  )
+  );
 }
+

@@ -315,7 +315,7 @@ export default function SignIn() {
               <p className="mt-8 text-center text-sm text-gray-500">
                 Don&apos;t have an account?{' '}
                 <Link
-                  href="#"
+                  href="/sign-up-page"
                   className="font-medium text-teal-600 transition-colors hover:text-teal-500"
                 >
                   Sign up for free

@@ -31,7 +31,7 @@ import ImageInput from '../image-upload';
 import { toast } from 'sonner';
 import { baseUrl } from '@/types/type';
 
-export default function ProfileForm() {
+export default function ProfileForm({userId}:{userId:string}) {
   const {
     register,
     handleSubmit,
@@ -49,8 +49,16 @@ export default function ProfileForm() {
   //   const initialImage = initialData?.imageUrl || '/placeholder.svg';
   const [imageUrl, setImageUrl] = useState('/placeholder.png');
   const [loading, setLoading] = useState(false);
+
   async function handleOnSubmit(profileData: ProfileFormTypes) {
-    setLoading(true)
+    setLoading(true);
+    profileData.userId = userId;
+    profileData.profileImage = imageUrl
+    // console.log(profileData);
+    if (!imageUrl) {
+      toast.error('Please upload an image for the profile');
+      return;
+    }
     try {
       const response = await fetch(`${baseUrl}/api/v1/profileAPI`, {
         method: 'POST',
@@ -64,7 +72,7 @@ export default function ProfileForm() {
         toast.success(
           '✅ Success! Your action was completed successfully. Everything looks great!',
         );
-        reset()
+        reset();
       } else {
         setLoading(false);
         toast.error(
@@ -122,6 +130,11 @@ export default function ProfileForm() {
                   className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   {...register('title', { required: true })}
                 />
+                {errors.title && (
+                  <p className="text-sm text-destructive">
+                    Profile Name is required...
+                  </p>
+                )}
               </CardContent>
             </Card>
 
@@ -166,6 +179,11 @@ export default function ProfileForm() {
                   className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 min-h-32 resize-none"
                   {...register('bio', { required: true })}
                 />
+                {errors.bio && (
+                  <p className="text-sm text-destructive">
+                    Biography is required...
+                  </p>
+                )}
                 {/* <FormDescription className="flex justify-between items-center">
                         <span className="text-gray-500">
                           Write a compelling description that highlights your
