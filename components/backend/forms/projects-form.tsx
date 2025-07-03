@@ -18,15 +18,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
-  Star,
   Package,
-  Tag,
-  DollarSign,
-  Image,
-  Sparkles,
   FileText,
   Info,
   Loader2,
+  Link,
+  GlobeLock,
 } from 'lucide-react';
 
 export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
@@ -34,8 +31,6 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
     register,
     handleSubmit,
     reset,
-    setValue,
-    watch,
     formState: { errors },
   } = useForm<ProjectsFormTypes>({
     resolver: zodResolver(ProjectsSchema),
@@ -64,7 +59,7 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
       if (response.ok) {
         setLoading(false);
         toast.success(
-          'Project Saved Successfully In The System...✅',
+          'Project Saved Successfully In The System',
         );
         reset(); // Reset form after successful submission
       } else {
@@ -78,7 +73,7 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
       setLoading(false);
       console.log(error);
       toast.error(
-        'Something Went Wrong, Check Your Internet Connection And Try Again...!!!❌',
+        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
       );
     }
   }
@@ -93,15 +88,14 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
-              <Package className="h-8 w-8 text-white" />
+              <GlobeLock className="h-4 w-4 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
-              Create Project
+            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+              Add a New Project
             </h1>
           </div>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Build your product listing by filling out the organized sections
-            below. Each card focuses on a specific aspect of your product.
+          <p className="text-gray-600 text-sm max-w-2xl mx-auto">
+            Provide detailed information about your project using the structured sections below. Each card is designed to capture a key element of your project to ensure a complete and compelling presentation.
           </p>
         </div>
 
@@ -117,25 +111,24 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <Info className="h-5 w-5 text-gray-600" />
-                    Basic Information
+                    	Project Details
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Essential details about your product
+                    Key information about your audit or consultancy assignment
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
                   <div>
                     <Label className="text-gray-700 font-semibold">
-                      Project Name
+                      Enter the official title of the audit or project.
                     </Label>
                     <Input
-                      placeholder="Enter title..."
-                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="Enter project title..."
                       {...register('title', { required: true })}
                     />
                     {errors.title && (
                       <span className="text-sm text-destructive">
-                        Title is required...
+                        Project title is required...
                       </span>
                     )}
                   </div>
@@ -145,11 +138,11 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
               <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
-                    <DollarSign className="h-5 w-5 text-gray-600" />
-                    Start & End Dates
+                    <Link className="h-5 w-5 text-gray-600" />
+                    Project Url
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Set your employment period
+                     Include a link to the project report, published article, client website, or portfolio reference (if available).
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
@@ -158,8 +151,7 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                       Project Link
                     </Label>
                     <Input
-                      placeholder="Enter company..."
-                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="https://example.com/audit-report"
                       {...register('url', { required: true })}
                     />
                     {errors.url && (
@@ -176,10 +168,10 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <FileText className="h-5 w-5 text-gray-600" />
-                    Education Description
+                    Project Description ✅ (kept, it's appropriate)
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Describe your education in detail to attract customers
+                    Provide a concise summary of the audit or consultancy assignment...
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -189,8 +181,7 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                     </Label>
                     <div>
                       <Textarea
-                        placeholder="Describe your product features, benefits, and what makes it special..."
-                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 min-h-32 resize-none"
+                        placeholder="e.g., Conducted a financial compliance audit for XYZ Ltd..."
                         {...register('description', { required: true })}
                       />
                       {errors.description && (
@@ -222,7 +213,7 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                       type="submit"
                       size="lg"
                       disabled
-                      className="bg-gradient-to-r from-pink-300/90 via-purple-600 to-red-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      className="flex items-center font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
                       <Loader2 className="h-5 w-5 animate-spin mr-2" />
                       Saving Project, Please Wait...
@@ -231,9 +222,8 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                     <Button
                       type="submit"
                       size="lg"
-                      className="bg-gradient-to-r from-pink-300/90 via-rose-300 to-emerald-400 hover:from-pink-600/100 hover:via-rose-300 hover:to-emerald-200 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
-                      <Sparkles className="h-5 w-5 mr-2" />
                       Save Project
                     </Button>
                   )}

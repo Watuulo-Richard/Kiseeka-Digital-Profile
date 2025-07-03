@@ -2,11 +2,6 @@
 
 import {
   BarChart2,
-  Receipt,
-  Building2,
-  CreditCard,
-  Folder,
-  Wallet,
   Users2,
   Shield,
   MessagesSquare,
@@ -17,6 +12,8 @@ import {
   CircleUser,
   BriefcaseBusiness,
   GraduationCap,
+  GlobeLock,
+  Hammer,
 } from "lucide-react"
 
 import { Home } from "lucide-react"
@@ -82,21 +79,19 @@ export default function Sidebar() {
                 alt="Kiseeka Pius"
                 width={32}
                 height={32}
-                className="flex-shrink-0 hidden dark:block ring-2 ring-gray-200 dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer"
-                // className="rounded-full "
+                className="flex-shrink-0 hidden dark:block ring-2 ring-gradient-text dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer"
               />
               </div>
-              <div className="rounded-full overflow-hidden ring-2 ring-gray-200 dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer">
+              <div className="rounded-full overflow-hidden ring-2 ring-gradient-text dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer">
               <Image
                 src="https://j9v2s0d9fs.ufs.sh/f/lPsbSsZAX9SYdNnmqvWekY0wghnZXPrJQ7R45bjNmFBu8SCx"
                 alt="Acme"
                 width={32}
                 height={32}
                 className="flex-shrink-0 block dark:hidden"
-                // className="rounded-full "
               />
               </div>
-              <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white">
+              <span className="text-lg font-semibold hover:cursor-pointer gradient-text dark:text-white bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                 Kiseeka Pius
               </span>
             </div>
@@ -105,7 +100,7 @@ export default function Sidebar() {
           <div className="flex-1 overflow-y-auto py-4 px-4">
             <div className="space-y-6">
               <div>
-                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
                   Overview
                 </div>
                 <div className="space-y-1">
@@ -119,12 +114,12 @@ export default function Sidebar() {
               </div>
 
               <div>
-                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
                   Finance
                 </div>
                 <div className="space-y-1">
                   <NavItem href="/dashboard/profile-form" icon={ CircleUser }>
-                    Profile-Form
+                    Profile
                   </NavItem>
                   <NavItem href="/dashboard/work-experience" icon={BriefcaseBusiness}>
                     Work Experience
@@ -132,8 +127,11 @@ export default function Sidebar() {
                   <NavItem href="/dashboard/education-form" icon={GraduationCap}>
                     Education
                   </NavItem>
-                  <NavItem href="/dashboard/projects-form" icon={GraduationCap}>
+                  <NavItem href="/dashboard/projects-form" icon={GlobeLock}>
                     Projects
+                  </NavItem>
+                  <NavItem href="/dashboard/skills-form" icon={Hammer}>
+                    Skill
                   </NavItem>
                 </div>
               </div>

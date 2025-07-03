@@ -10,7 +10,7 @@ import { ReactNode } from 'react';
 
 export default async function BackendLayout({ children }: { children: ReactNode }) {
 const session = await getServerSession(authOptions)
-  // console.log(session?.user, 'fdfdfdfdfdfdfd...');
+  // console.log(session?.user,);
     if(!session) {
       return(
         redirect('/sign-in-page')
@@ -28,7 +28,7 @@ const session = await getServerSession(authOptions)
         <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23]">
           <TopNav />
         </header>
-        <main className="flex-1 overflow-auto px-6 py-20 bg-white dark:bg-[#0F0F12]">
+        <main className="flex-1 overflow-auto px-6 py-4 bg-white dark:bg-[#0F0F12]">
           {children}
         </main>
       </div>

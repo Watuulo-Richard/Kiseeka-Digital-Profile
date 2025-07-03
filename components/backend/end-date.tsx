@@ -22,7 +22,7 @@ export function EndDate({endDate, setEndDate}:DateProps) {
   return (
     <div className="flex flex-col gap-3">
       <Label htmlFor="date" className="px-1">
-        Date of birth
+        Enter the date you completed your studies (leave blank if still studying)
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

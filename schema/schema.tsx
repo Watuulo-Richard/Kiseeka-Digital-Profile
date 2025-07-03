@@ -74,6 +74,19 @@ export const ProjectsSchema = z.object({
 
 export type ProjectsFormTypes = z.infer<typeof ProjectsSchema>;
 
+// Zod schema for skill validation
+export const SkillSchema = z.object({
+  name:    z
+  .string()
+  .min(1, 'Project title is required')
+  .max(100, 'Project title must be less than 100 characters'),
+  level:   z.coerce.number(),
+  description: z.string(),
+  portfolioId:  z.string().optional()
+})
+
+export type SkillFormTypes = z.infer<typeof SkillSchema>;
+
 // Zod schema for user validation
 export const userDetailsSchema = z.object({
   fullName: z

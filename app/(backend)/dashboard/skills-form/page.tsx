@@ -1,5 +1,5 @@
-import ProjectsForm from '@/components/backend/forms/projects-form';
 import { getPortfolio } from '@/actions/actions';
+import SkillForm from '@/components/backend/forms/skills-form';
 import React from 'react';
 
 export default async function page() {
@@ -10,7 +10,7 @@ export default async function page() {
   }
   return (
     <>
-      <ProjectsForm portfolio={portfolio[0]} />
+      <SkillForm portfolio={portfolio[0]} />
     </>
   );
 }

@@ -1,17 +1,7 @@
 'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { EducationFormTypes, EducationSchema } from '@/schema/schema';
-import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
-import { toast } from 'sonner';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Portfolio } from '@prisma/client';
-import { StartDate } from '../start-date';
-import { baseUrl } from '@/types/type';
-import { EndDate } from '../end-date';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Card,
   CardContent,
@@ -19,70 +9,67 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+
 import {
   FileText,
   Info,
   Loader2,
-  GraduationCap,
-  CalendarDays,
+  BriefcaseBusiness,
 } from 'lucide-react';
+import { SkillFormTypes, SkillSchema } from '@/schema/schema';
+import { baseUrl } from '@/types/type';
+import { toast } from 'sonner';
+import { Portfolio } from '@prisma/client';
 
-export default function EducationForm({ portfolio }: { portfolio: Portfolio }) {
+export default function SkillForm({
+  portfolio,
+}: {
+  portfolio: Portfolio;
+}) {
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
-    watch,
     formState: { errors },
-  } = useForm<EducationFormTypes>({
-    resolver: zodResolver(EducationSchema),
+  } = useForm<SkillFormTypes>({
+    resolver: zodResolver(SkillSchema),
     defaultValues: {
-      institution: '',
-      educationLevel: '',
-      startDate: new Date().toISOString(), // Keep as string in form
-      endDate: undefined, // or null, since it's optional
+      name: '',
+      level: 0,
+      description: ''
     },
   });
 
   const [loading, setLoading] = useState(false);
 
-  const watchedStartDate = watch('startDate');
-  const watchedEndDate = watch('endDate');
-
-  //   Handle Start Date Change
-  function handleStartDateChange(date: Date) {
-    setValue('startDate', date.toISOString(), { shouldValidate: true });
-  }
-
-  //   Handle Start Date Change
-  function handleEndDateChange(date: Date) {
-    setValue('endDate', date.toISOString(), { shouldValidate: true });
-  }
-
-  async function handleEducationOnSubmit(
-    EducationFormData: EducationFormTypes,
+  async function handleWorkExperienceOnSubmit(
+    SkillFormData: SkillFormTypes,
   ) {
-    EducationFormData.portfolioId = portfolio.id;
     setLoading(true);
+    SkillFormData.portfolioId = portfolio.id;
+    // console.log(SkillFormData, 'Jesus...');
     try {
-      const response = await fetch(`${baseUrl}/api/v1/educationAPI`, {
+      const response = await fetch(`${baseUrl}/api/v1/skillsAPI`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(EducationFormData),
+        body: JSON.stringify(SkillFormData),
       });
       console.log(response);
       if (response.ok) {
         setLoading(false);
         toast.success(
-          'Education Details Saved Successfully In The System',
+          'Skill Details Saved Successfully In The System',
         );
         reset(); // Reset form after successful submission
       } else {
         setLoading(false);
         console.log(response);
         toast.error(
-          'Failed To Save Education Background In The System...🥺',
+          'Failed To Save Work Skill In The System...🥺',
         );
       }
     } catch (error) {
@@ -104,119 +91,80 @@ export default function EducationForm({ portfolio }: { portfolio: Portfolio }) {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
-              <GraduationCap className="h-4 w-4 text-white" />
+              <BriefcaseBusiness className="h-4 w-4 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
-              Add Your Education Background
+               Add a Professional Skill
             </h1>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
-            Provide details about your academic journey by completing the sections below. Each card highlights a key stage or qualification in your education history.
+            Showcase your expertise by filling out the details below. Each section helps present your skills clearly and professionally to enhance your digital profile.
           </p>
         </div>
 
         <div>
           <form
-            onSubmit={handleSubmit(handleEducationOnSubmit)}
+            onSubmit={handleSubmit(handleWorkExperienceOnSubmit)}
             className="space-y-6"
           >
             {/* Grid Layout for Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Basic Information Card */}
               <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <Info className="h-5 w-5 text-gray-600" />
-                     Education Details
+                    Skill Details
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Provide key information about your academic background.
+                    Demonstrate your capabilities by outlining the specific skills you've mastered. Focus on hands-on experience, achievements, and areas of specialization.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
                   <div>
                     <Label className="text-gray-700 font-semibold">
-                      Name of Institution
+                      Skill title
                     </Label>
                     <Input
-                      placeholder="Enter name of institution..."
-                      {...register('institution', { required: true })}
+                      placeholder="Enter your job title..."
+                      {...register('name', { required: true })}
                     />
-                    {errors.institution && (
+                    {errors.name && (
                       <span className="text-sm text-destructive">
-                        Institution name is required...
+                        Skill title is required...
                       </span>
                     )}
                   </div>
 
                   <div>
                     <Label className="text-gray-700 font-semibold">
-                      Level of Education
+                      Proficiency Level
                     </Label>
                     <Input
-                      placeholder="Enter level of Education..."
-                      {...register('educationLevel', { required: true })}
+                      type='number'
+                      min="0"
+                      max="100"
+                      placeholder="Specify your proficiency level as a percentage (e.g., 90%)"
+                      {...register('level', { required: true })}
                     />
-                    {errors.educationLevel && (
+                    {errors.description && (
                       <span className="text-sm text-destructive">
-                        Level of Education is required...
+                        Skill Description is required...
                       </span>
                     )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
-                <CardHeader className="border-b border-gray-100">
-                  <CardTitle className="flex items-center gap-2 text-gray-900">
-                    <CalendarDays className="h-5 w-5 text-gray-600" />
-                    Start & End Dates
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
-                    Specify the period you attended this institution
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-6 space-y-4">
-                  <div className="">
-                    <div>
-                      <StartDate
-                        startDate={
-                          watchedStartDate
-                            ? new Date(watchedStartDate)
-                            : new Date()
-                        }
-                        setStartDate={handleStartDateChange}
-                      />
-                      {errors.startDate && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.startDate.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="">
-                    <div>
-                      <EndDate
-                        endDate={
-                          watchedEndDate ? new Date(watchedEndDate) : new Date()
-                        }
-                        setEndDate={handleEndDateChange}
-                      />
-                    </div>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Description Card */}
-              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white lg:col-span-2">
+              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white ">
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <FileText className="h-5 w-5 text-gray-600" />
-                     Education Summary
+                    Detailed Skill Description
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Provide a brief overview of what you studied, key achievements, and any notable experiences.
+                    Provide a rich description of how you've applied this skill in real-world scenarios—include tasks performed, key achievements, tools or technologies used, and measurable outcomes.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -226,7 +174,8 @@ export default function EducationForm({ portfolio }: { portfolio: Portfolio }) {
                     </Label>
                     <div>
                       <Textarea
-                        placeholder="Describe your course, key subjects, achievements, or any relevant academic highlights..."
+                        placeholder="Describe your key responsibilities, accomplishments, and the impact you made in this role..."
+                        className="min-h-32 resize-none"
                         {...register('description', { required: true })}
                       />
                       {errors.description && (
@@ -257,19 +206,20 @@ export default function EducationForm({ portfolio }: { portfolio: Portfolio }) {
                     <Button
                       type="submit"
                       size="lg"
-                      disabled
-                      className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
+                      disabled = {loading}
+                      className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
                       <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                      Saving Education Background
+                      Processing Your Skill Entry...
                     </Button>
                   ) : (
                     <Button
                       type="submit"
                       size="lg"
-                      className="flex items-center font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      disabled = {loading}
+                      className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
-                      Save Education Background
+                      Save Skill Details
                     </Button>
                   )}
 

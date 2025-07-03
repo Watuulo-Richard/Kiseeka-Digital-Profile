@@ -1,17 +1,20 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"], 
+  weight: ['400', '500', '600', '700'], 
+  variable: '--font-mono',
+  display: 'swap'
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+// const geistMono = DM_Mono({
+//   variable: '--font-geist-mono',
+//   subsets: ['latin'],
+//   weight: ['400'], // Add the required weight(s) here
+// });
 
 export const metadata: Metadata = {
   title: 'Kiseeka Pius | Senior Auditor',
@@ -73,12 +76,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const session = await getServerSession();
 
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${spaceGrotesk.variable} antialiased`}
       >
         {children}
         <Toaster richColors position="top-center" />

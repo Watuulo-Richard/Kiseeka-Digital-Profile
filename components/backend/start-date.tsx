@@ -25,7 +25,7 @@ export function StartDate({startDate, setStartDate}:DateProps) {
   return (
     <div className="flex flex-col gap-3">
       <Label htmlFor="date" className="px-1">
-        Enter The Date Your Started To Work
+        Enter the date you started studying
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

@@ -7,6 +7,8 @@ import Projects from "@/components/frontend/projects"
 import Education from "@/components/frontend/education"
 import Experience from "@/components/frontend/experience"
 import Header from "@/components/frontend/header"
+import ScrollToTop from "@/components/frontend/scroll-to-top"
+import Testimonials from "@/components/frontend/testimonials"
 
 export const metadata: Metadata = {
   title: "Kiseeka Pius | Senior Auditor",
@@ -23,8 +25,10 @@ export default function Home() {
       <Experience />
       <Projects />
       <Education />
+      <Testimonials/>
       <Blog />
       <Contact />
+      <ScrollToTop/>
     </div>
   )
 }

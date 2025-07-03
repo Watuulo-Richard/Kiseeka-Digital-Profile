@@ -47,7 +47,7 @@ export default function ProfileForm({userId}:{userId:string}) {
   });
 
   //   const initialImage = initialData?.imageUrl || '/placeholder.svg';
-  const [imageUrl, setImageUrl] = useState('/placeholder.png');
+  const [imageUrl, setImageUrl] = useState('/placeholder.svg');
   const [loading, setLoading] = useState(false);
 
   async function handleOnSubmit(profileData: ProfileFormTypes) {
@@ -70,13 +70,13 @@ export default function ProfileForm({userId}:{userId:string}) {
         setLoading(false);
         console.log(response);
         toast.success(
-          '✅ Success! Your action was completed successfully. Everything looks great!',
+          'Profile Details Have Been Saved Successfully',
         );
         reset();
       } else {
         setLoading(false);
         toast.error(
-          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+          'Failed To Save Profile Details...🥺',
         );
       }
     } catch (error) {
@@ -98,12 +98,11 @@ export default function ProfileForm({userId}:{userId:string}) {
               <User className="h-4 w-4 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
-              Create Your Profile
+              Set Up Your Digital Profile
             </h1>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
-            Build your product listing by filling out the organized sections
-            below. Each card focuses on a specific aspect of your product.
+            Complete the structured form below to showcase your personal and professional information. Each section is designed to highlight a specific area of your profile.
           </p>
         </div>
 
@@ -118,21 +117,20 @@ export default function ProfileForm({userId}:{userId:string}) {
                   Basic Information
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Essential details about your product
+                  Provide essential details to begin building your digital profile.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
                 <Label className="text-gray-700 font-semibold">
-                  Profile Name
+                  Full Name
                 </Label>
                 <Input
-                  placeholder="Enter product name..."
-                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Enter your full name..."
                   {...register('title', { required: true })}
                 />
                 {errors.title && (
                   <p className="text-sm text-destructive">
-                    Profile Name is required...
+                    Full Name is required...
                   </p>
                 )}
               </CardContent>
@@ -146,12 +144,12 @@ export default function ProfileForm({userId}:{userId:string}) {
                   Upload Your Profile Image
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Set your product pricing strategy
+                  Add a professional image to represent your profile. (Max size: 2MB)
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4 w-full">
                 <ImageInput
-                  title="Profile Image"
+                  title="Profile Photo"
                   imageUrl={imageUrl}
                   setImageUrl={setImageUrl}
                   endpoint="imageUploader"
@@ -164,19 +162,19 @@ export default function ProfileForm({userId}:{userId:string}) {
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <FileText className="h-5 w-5 text-gray-600" />
-                  Product Description
+                  Professional Profile
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Describe your product in detail to attract customers
+                  Summarize your career journey, unique value, and accomplishments that define who you are.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
                 <Label className="text-gray-700 font-semibold">
-                  Profession Description & Biography
+                  Provide a detailed overview of your expertise, experience, and what sets you apart.
                 </Label>
                 <Textarea
-                  placeholder="Describe your product features, benefits, and what makes it special..."
-                  className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 min-h-32 resize-none"
+                  placeholder="Share your professional background, key skills, achievements, and what makes you stand out..."
+                  className="min-h-32 resize-none"
                   {...register('bio', { required: true })}
                 />
                 {errors.bio && (
@@ -205,7 +203,8 @@ export default function ProfileForm({userId}:{userId:string}) {
                   <Button
                     type="submit"
                     size="lg"
-                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    disabled={loading}
+                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                   >
                     <Loader className="h-5 w-5 mr-2 animate-spin" />
                     Saving Profile, Please Wait...
@@ -214,7 +213,7 @@ export default function ProfileForm({userId}:{userId:string}) {
                   <Button
                     type="submit"
                     size="lg"
-                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                   >
                     <SaveAll className="h-5 w-5 mr-2" />
                     Save Profile
