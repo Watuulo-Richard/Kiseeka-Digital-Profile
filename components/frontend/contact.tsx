@@ -1,30 +1,82 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Mail, MapPin, Phone } from "lucide-react"
+'use client'
 
-export default function Contact() {
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Loader2, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { EmailFormTypes } from '@/schema/schema';
+import { useState } from 'react';
+import { Portfolio } from '@prisma/client';
+import { baseUrl } from '@/types/type';
+import { toast } from 'sonner';
+
+export default function Contact({ portfolio }: { portfolio: Portfolio }) {
   const contactInfo = [
     {
       icon: <Mail className="h-6 w-6 text-primary" />,
-      title: "Email",
-      value: "t3w4e0rdaf6f@opayq.com",
-      link: "mailto:t3w4e0rdaf6f@opayq.com",
+      title: 'Email',
+      value: 't3w4e0rdaf6f@opayq.com',
+      link: 'mailto:t3w4e0rdaf6f@opayq.com',
     },
     {
       icon: <MapPin className="h-6 w-6 text-primary" />,
-      title: "Location",
-      value: "Kathmandu, Nepal",
-      link: "https://maps.google.com/?q=Kathmandu,Nepal",
+      title: 'Location',
+      value: 'Kathmandu, Nepal',
+      link: 'https://maps.google.com/?q=Kathmandu,Nepal',
     },
     {
       icon: <Phone className="h-6 w-6 text-primary" />,
-      title: "Phone",
-      value: "Available on request",
+      title: 'Phone',
+      value: 'Available on request',
       link: null,
     },
-  ]
+  ];
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<EmailFormTypes>({
+    defaultValues: {
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+    },
+  });
+
+  async function handleEmailOnSubmit(EmailFormData: EmailFormTypes) {
+    EmailFormData.portfolioId = portfolio.id;
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`${baseUrl}/api/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(EmailFormData),
+      });
+      console.log(response);
+      if (response.ok) {
+        setIsSubmitting(false);
+        toast.success('Email Has Been Sent Successfully');
+        reset(); // Reset form after successful submission
+      } else {
+        setIsSubmitting(false);
+        console.log(response);
+        toast.error('Failed To Send Email, Please Try Again...🥺');
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      console.log(error);
+      toast.error(
+        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+      );
+    }
+  }
 
   return (
     <div className="w-full bg-muted/30">
@@ -32,9 +84,12 @@ export default function Contact() {
         <div className="container px-4 md:px-6 mx-auto">
           <div className="space-y-12">
             <div className="space-y-4 text-center">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Get In Touch</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Get In Touch
+              </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Have a project in mind or want to discuss opportunities? I'd love to hear from you!
+                Have a project in mind or want to discuss opportunities? I'd
+                love to hear from you!
               </p>
             </div>
 
@@ -42,45 +97,110 @@ export default function Contact() {
               <div className="lg:col-span-2">
                 <Card>
                   <CardContent className="p-6">
-                    <form action="https://formspree.io/f/xanoenzo" method="POST" className="space-y-6">
+                    <form
+                      onSubmit={handleSubmit(handleEmailOnSubmit)}
+                      className="space-y-6"
+                    >
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <label htmlFor="name" className="text-sm font-medium">
                             Name
                           </label>
-                          <Input id="name" name="name" placeholder="Your name" required />
+                          <Input
+                            {...register('name', { required: true })}
+                            id="name"
+                            name="name"
+                            placeholder="Your name"
+                            required
+                          />
+                          {errors.name && (
+                            <span className="text-sm text-destructive">
+                              Name is required...
+                            </span>
+                          )}
                         </div>
                         <div className="space-y-2">
-                          <label htmlFor="email" className="text-sm font-medium">
+                          <label
+                            htmlFor="email"
+                            className="text-sm font-medium"
+                          >
                             Email
                           </label>
-                          <Input id="email" name="email" type="email" placeholder="Your email" required />
+                          <Input
+                            {...register('email', { required: true })}
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="Your email"
+                            required
+                          />
+                          {errors.email && (
+                            <span className="text-sm text-destructive">
+                              Email is required...
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <label htmlFor="subject" className="text-sm font-medium">
+                        <label
+                          htmlFor="subject"
+                          className="text-sm font-medium"
+                        >
                           Subject
                         </label>
-                        <Input id="subject" name="subject" placeholder="Subject of your message" required />
+                        <Input
+                          {...register('subject', { required: true })}
+                          id="subject"
+                          name="subject"
+                          placeholder="Subject of your message"
+                          required
+                        />
+                        {errors.subject && (
+                          <span className="text-sm text-destructive">
+                            Subject is required...
+                          </span>
+                        )}
                       </div>
                       <div className="space-y-2">
-                        <label htmlFor="message" className="text-sm font-medium">
+                        <label
+                          htmlFor="message"
+                          className="text-sm font-medium"
+                        >
                           Message
                         </label>
                         <Textarea
+                          {...register('message', { required: true })}
                           id="message"
                           name="message"
                           placeholder="Your message"
                           className="min-h-[150px]"
                           required
                         />
+                        {errors.message && (
+                          <span className="text-sm text-destructive">
+                            Institution name is required...
+                          </span>
+                        )}
                       </div>
-                      <Button type="submit" className="w-full">
-                        Send Message
-                      </Button>
+                      {isSubmitting ? (
+                        <Button
+                          type="submit"
+                          className="w-full opacity-75 cursor-not-allowed"
+                        >
+                          <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                          Sending...
+                        </Button>
+                      ) : (
+                        <Button type="submit" className="w-full">
+                          <Send className="w-5 h-5 mr-2" />
+                          Send Message
+                        </Button>
+                      )}
+
                       <noscript>
                         <p className="text-sm text-center text-muted-foreground mt-2">
-                          Please enable JavaScript to use the form, or email me directly.
+                          Please enable JavaScript to use the form, or email me
+                          directly.
                         </p>
                       </noscript>
                     </form>
@@ -92,15 +212,23 @@ export default function Contact() {
                 {contactInfo.map((info, index) => (
                   <Card key={index} className="overflow-hidden">
                     <CardContent className="p-6 flex items-start gap-4">
-                      <div className="bg-primary/10 p-3 rounded-full mt-1">{info.icon}</div>
+                      <div className="bg-primary/10 p-3 rounded-full mt-1">
+                        {info.icon}
+                      </div>
                       <div>
                         <h3 className="font-medium">{info.title}</h3>
                         {info.link ? (
                           <a
                             href={info.link}
                             className="text-muted-foreground hover:text-primary transition-colors"
-                            target={info.title === "Location" ? "_blank" : undefined}
-                            rel={info.title === "Location" ? "noopener noreferrer" : undefined}
+                            target={
+                              info.title === 'Location' ? '_blank' : undefined
+                            }
+                            rel={
+                              info.title === 'Location'
+                                ? 'noopener noreferrer'
+                                : undefined
+                            }
                           >
                             {info.value}
                           </a>
@@ -115,10 +243,16 @@ export default function Contact() {
                 <Card>
                   <CardContent className="p-6">
                     <h3 className="font-medium mb-2">Connect with me</h3>
-                    <p className="text-sm text-muted-foreground mb-4">Find me on these platforms</p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Find me on these platforms
+                    </p>
                     <div className="flex gap-4">
                       <Button variant="outline" size="icon" asChild>
-                        <a href="https://github.com/maskeynihal" target="_blank" rel="noopener noreferrer">
+                        <a
+                          href="https://github.com/maskeynihal"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -138,7 +272,11 @@ export default function Contact() {
                         </a>
                       </Button>
                       <Button variant="outline" size="icon" asChild>
-                        <a href="https://linkedin.com/in/maskeynihal" target="_blank" rel="noopener noreferrer">
+                        <a
+                          href="https://linkedin.com/in/maskeynihal"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -172,7 +310,13 @@ export default function Contact() {
                             strokeLinejoin="round"
                             className="h-5 w-5"
                           >
-                            <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                            <rect
+                              width="20"
+                              height="16"
+                              x="2"
+                              y="4"
+                              rx="2"
+                            ></rect>
                             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                           </svg>
                           <span className="sr-only">Email</span>
@@ -187,5 +331,5 @@ export default function Contact() {
         </div>
       </section>
     </div>
-  )
+  );
 }

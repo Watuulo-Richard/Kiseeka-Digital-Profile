@@ -14,6 +14,7 @@ import {
   GraduationCap,
   GlobeLock,
   Hammer,
+  Users,
 } from "lucide-react"
 
 import { Home } from "lucide-react"
@@ -132,6 +133,9 @@ export default function Sidebar() {
                   </NavItem>
                   <NavItem href="/dashboard/skills-form" icon={Hammer}>
                     Skill
+                  </NavItem>
+                  <NavItem href="/dashboard/testimonial-form" icon={Users}>
+                    Testimonial
                   </NavItem>
                 </div>
               </div>

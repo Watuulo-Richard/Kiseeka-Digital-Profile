@@ -76,7 +76,7 @@ export type ProjectsFormTypes = z.infer<typeof ProjectsSchema>;
 
 // Zod schema for skill validation
 export const SkillSchema = z.object({
-  name:    z
+  name:z
   .string()
   .min(1, 'Project title is required')
   .max(100, 'Project title must be less than 100 characters'),
@@ -86,6 +86,57 @@ export const SkillSchema = z.object({
 })
 
 export type SkillFormTypes = z.infer<typeof SkillSchema>;
+
+// Zod schema for testimonials validation
+
+export const TestimonialSchema = z.object({
+  fullName: z
+    .string()
+    .min(1, 'Full name is required')
+    .max(100, 'Full name must be less than 100 characters'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address')
+    .transform((email) => email.toLowerCase().trim()),
+  image: z.string().optional(),
+  profession:z
+  .string()
+  .min(1, 'Profession is required')
+  .max(100, 'Profession must be less than 100 characters'),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(500, 'Description must be less than 500 characters')
+    .optional(),
+  portfolioId: z.string().optional(),
+});
+
+export type TestimonialFormTypes = z.infer<typeof TestimonialSchema>;
+// Zod schema for email validation
+
+export const EmailSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .max(100, 'Name must be less than 100 characters'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address')
+    .transform((email) => email.toLowerCase().trim()),
+  subject:z
+  .string()
+  .min(1, 'Profession is required')
+  .max(100, 'Profession must be less than 100 characters'),
+  message: z
+    .string()
+    .min(10, 'Message must be at least 10 characters')
+    .max(500, 'Message must be less than 500 characters'),
+  portfolioId: z.string().optional(),
+});
+
+export type EmailFormTypes = z.infer<typeof EmailSchema>;
 
 // Zod schema for user validation
 export const userDetailsSchema = z.object({
