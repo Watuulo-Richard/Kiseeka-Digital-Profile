@@ -131,7 +131,7 @@ export const EmailSchema = z.object({
   .max(100, 'Profession must be less than 100 characters'),
   message: z
     .string()
-    .min(10, 'Message must be at least 10 characters')
+    .min(1, 'Message must be at least 10 characters')
     .max(500, 'Message must be less than 500 characters'),
   portfolioId: z.string().optional(),
 });
