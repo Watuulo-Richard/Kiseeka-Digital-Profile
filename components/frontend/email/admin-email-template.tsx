@@ -104,7 +104,7 @@ const AdminNotificationEmail = ({name, email, subject, message}:{name:string, em
                   <Column className="text-center pl-[8px]">
                     <Button
                       className="bg-white text-[#0f4c81] font-bold py-[12px] px-[16px] rounded-[4px] no-underline text-[14px] border-solid border-[1px] border-[#0f4c81] w-full box-border"
-                      href="https://example.com/admin/contacts"
+                      href="https://kiseeka-digital-profile.vercel.app/sign-in-page"
                     >
                       View in Dashboard
                     </Button>

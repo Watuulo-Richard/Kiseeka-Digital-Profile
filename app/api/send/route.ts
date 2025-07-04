@@ -1,9 +1,7 @@
 import AdminNotificationEmail from '@/components/frontend/email/admin-email-template';
-import { EmailTemplate } from '@/components/frontend/email/email-template';
-import { prismaClient } from '@/lib/db';
-import { EmailFormTypes } from '@/schema/schema';
-import { error } from 'console';
 import { NextRequest, NextResponse } from 'next/server';
+import KiseekaEmailTemplate from '@/components/frontend/email/email-template';
+import { prismaClient } from '@/lib/db';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -16,7 +14,7 @@ export async function POST(request:NextRequest) {
       from: 'Kiseeka-Digital-Profile <info@lubegajovan.com>',
       to: email,
       subject: subject,
-      react: EmailTemplate({ name, email, subject, message }),
+      react: KiseekaEmailTemplate({ name, email, subject, message }),
     });
     console.log(responseOne)
 
