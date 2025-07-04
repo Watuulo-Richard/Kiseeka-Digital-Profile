@@ -14,24 +14,20 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
-import {
-  Package,
-  DollarSign,
-  Image,
-  Sparkles,
-  FileText,
-  Info,
-  ImagePlus,
-  SaveAll,
-  User,
-  Loader,
-} from 'lucide-react';
+import { FileText, Info, ImagePlus, SaveAll, User, Loader } from 'lucide-react';
 import { ProfileFormTypes, profileSchema } from '@/schema/schema';
 import ImageInput from '../image-upload';
 import { toast } from 'sonner';
 import { baseUrl } from '@/types/type';
+import { Portfolio } from '@prisma/client';
 
-export default function ProfileForm({userId}:{userId:string}) {
+export default function ProfileForm({
+  userId,
+  userPortfolio,
+}: {
+  userId: string;
+  userPortfolio: Portfolio | null;
+}) {
   const {
     register,
     handleSubmit,
@@ -40,51 +36,76 @@ export default function ProfileForm({userId}:{userId:string}) {
   } = useForm<ProfileFormTypes>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      title: '',
-      bio: '',
-      profileImage: '',
+      title: userPortfolio?.title,
+      bio: userPortfolio?.bio,
+      profileImage: userPortfolio?.profileImage || '/placeholder.svg',
     },
   });
 
-  //   const initialImage = initialData?.imageUrl || '/placeholder.svg';
-  const [imageUrl, setImageUrl] = useState('/placeholder.svg');
+  const initialImage = userPortfolio?.profileImage || '/placeholder.svg';
+  const [imageUrl, setImageUrl] = useState(initialImage);
   const [loading, setLoading] = useState(false);
 
   async function handleOnSubmit(profileData: ProfileFormTypes) {
     setLoading(true);
     profileData.userId = userId;
-    profileData.profileImage = imageUrl
+    profileData.profileImage = imageUrl;
     // console.log(profileData);
     if (!imageUrl) {
       toast.error('Please upload an image for the profile');
       return;
     }
-    try {
-      const response = await fetch(`${baseUrl}/api/v1/profileAPI`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profileData),
-      });
-      console.log(response);
-      if (response.ok) {
-        setLoading(false);
-        console.log(response);
-        toast.success(
-          'Profile Details Have Been Saved Successfully',
+    if (userPortfolio) {
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/v1/profileAPI/${userPortfolio.id}`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(profileData),
+          },
         );
-        reset();
-      } else {
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          console.log(response);
+          toast.success('Profile Details Have Been Updated Successfully');
+          reset();
+        } else {
+          setLoading(false);
+          toast.error('Failed To Update Profile Details...🥺');
+        }
+      } catch (error) {
         setLoading(false);
         toast.error(
-          'Failed To Save Profile Details...🥺',
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
         );
+        console.log(error);
       }
-    } catch (error) {
-      setLoading(false);
-      toast.error(
-        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-      );
-      console.log(error);
+    } else {
+      try {
+        const response = await fetch(`${baseUrl}/api/v1/profileAPI`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(profileData),
+        });
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          console.log(response);
+          toast.success('Profile Details Have Been Saved Successfully');
+          reset();
+        } else {
+          setLoading(false);
+          toast.error('Failed To Save Profile Details...🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+        console.log(error);
+      }
     }
   }
 
@@ -102,7 +123,9 @@ export default function ProfileForm({userId}:{userId:string}) {
             </h1>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
-            Complete the structured form below to showcase your personal and professional information. Each section is designed to highlight a specific area of your profile.
+            Complete the structured form below to showcase your personal and
+            professional information. Each section is designed to highlight a
+            specific area of your profile.
           </p>
         </div>
 
@@ -117,13 +140,12 @@ export default function ProfileForm({userId}:{userId:string}) {
                   Basic Information
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Provide essential details to begin building your digital profile.
+                  Provide essential details to begin building your digital
+                  profile.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
-                <Label className="text-gray-700 font-semibold">
-                  Full Name
-                </Label>
+                <Label className="text-gray-700 font-semibold">Full Name</Label>
                 <Input
                   placeholder="Enter your full name..."
                   {...register('title', { required: true })}
@@ -144,7 +166,8 @@ export default function ProfileForm({userId}:{userId:string}) {
                   Upload Your Profile Image
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Add a professional image to represent your profile. (Max size: 2MB)
+                  Add a professional image to represent your profile. (Max size:
+                  2MB)
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4 w-full">
@@ -165,12 +188,14 @@ export default function ProfileForm({userId}:{userId:string}) {
                   Professional Profile
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Summarize your career journey, unique value, and accomplishments that define who you are.
+                  Summarize your career journey, unique value, and
+                  accomplishments that define who you are.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
                 <Label className="text-gray-700 font-semibold">
-                  Provide a detailed overview of your expertise, experience, and what sets you apart.
+                  Provide a detailed overview of your expertise, experience, and
+                  what sets you apart.
                 </Label>
                 <Textarea
                   placeholder="Share your professional background, key skills, achievements, and what makes you stand out..."
@@ -199,7 +224,7 @@ export default function ProfileForm({userId}:{userId:string}) {
           <Card className="shadow-lg border border-gray-200 bg-white">
             <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {loading ? (
+                {/* {loading ? (
                   <Button
                     type="submit"
                     size="lg"
@@ -220,6 +245,71 @@ export default function ProfileForm({userId}:{userId:string}) {
                   </Button>
                 )}
 
+                {
+                  userPortfolio ? (
+                    <Button
+                    type="submit"
+                    size="lg"
+                    disabled={loading}
+                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    <Loader className="h-5 w-5 mr-2 animate-spin" />
+                    Updating Profile...
+                  </Button>
+                  ):(
+                    <Button
+                    type="submit"
+                    size="lg"
+                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    <SaveAll className="h-5 w-5 mr-2" />
+                    Update Profile
+                  </Button>
+                  )
+                } */}
+                {userPortfolio ? (
+                  <>
+                    {loading ? (
+                      <Button
+                        type="submit"
+                        size="lg"
+                        disabled={loading}
+                        className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      >
+                        <Loader className="h-5 w-5 mr-2 animate-spin" />
+                        Updating Profile...
+                      </Button>
+                    ) : (
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      >
+                        <SaveAll className="h-5 w-5 mr-2" />
+                        Update Profile
+                      </Button>
+                    )}
+                  </>
+                ) : loading ? (
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={loading}
+                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    <Loader className="h-5 w-5 mr-2 animate-spin" />
+                    Updating Profile...
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    <SaveAll className="h-5 w-5 mr-2" />
+                    Save Profile
+                  </Button>
+                )}
                 <Button
                   type="button"
                   variant="outline"

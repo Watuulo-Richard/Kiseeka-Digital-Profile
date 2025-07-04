@@ -5,6 +5,8 @@ import Image from "next/image"
 import { Bell, ChevronRight } from "lucide-react"
 import Profile01 from "./profile-01"
 import Link from "next/link"
+import { Session } from "next-auth"
+
 // import { ThemeToggle } from "../theme-toggle"
 
 interface BreadcrumbItem {
@@ -12,7 +14,7 @@ interface BreadcrumbItem {
   href?: string
 }
 
-export default function TopNav() {
+export default function TopNav({session}:{session:Session}) {
   const breadcrumbs: BreadcrumbItem[] = [
     { label: "kokonutUI", href: "#" },
     { label: "dashboard", href: "#" },
@@ -63,7 +65,7 @@ export default function TopNav() {
             sideOffset={8}
             className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg"
           >
-            <Profile01 avatar="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png" />
+            <Profile01 session={session} />
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

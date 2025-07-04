@@ -56,7 +56,7 @@ export function TestimonialCard({
       <div className="select-none text-sm font-normal text-muted-foreground">
         {description}
         <div className="flex flex-row py-1">
-          <Star className="size-4 fill-blue-500 text-blue-500" />
+          <Star className="size-4 fill-gradient-text gradient-text" />
           <Star className="size-4 fill-blue-500 text-blue-500" />
           <Star className="size-4 fill-blue-500 text-blue-500" />
           <Star className="size-4 fill-blue-500 text-blue-500" />
@@ -244,15 +244,15 @@ export default function Testimonials() {
         transition={{ duration: 0.5 }}
       >
         <h2 className="mb-4 text-center text-4xl font-bold leading-[1.2] tracking-tighter text-foreground md:text-5xl">
-          What Our Users Are Saying
+          What Clients & Colleagues Are Saying
         </h2>
         <h3 className="mx-auto mb-8 max-w-lg text-balance text-center text-lg font-medium tracking-tight text-muted-foreground">
           Don&apos;t just take our word for it. Here&apos;s what{' '}
           <span className="bg-gradient-to-r from-blue-500 to-sky-500 bg-clip-text text-transparent">
-            real developers
+             clients, partners, and colleagues
           </span>{' '}
-          are saying about{' '}
-          <span className="font-semibold text-blue-500">NexaUI</span>
+          are saying about working with{' '}
+          <span className="font-semibold text-blue-500">Kiseeka Pius, Auditor at PKF Uganda.</span>
         </h3>
       </motion.div>
 

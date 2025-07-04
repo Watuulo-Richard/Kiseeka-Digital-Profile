@@ -17,14 +17,14 @@ export default function Contact({ portfolio }: { portfolio: Portfolio }) {
     {
       icon: <Mail className="h-6 w-6 text-primary" />,
       title: 'Email',
-      value: 't3w4e0rdaf6f@opayq.com',
-      link: 'mailto:t3w4e0rdaf6f@opayq.com',
+      value: 'kisekapius45@gmail.com',
+      link: 'mailto:kisekapius45@gmail.com',
     },
     {
       icon: <MapPin className="h-6 w-6 text-primary" />,
       title: 'Location',
-      value: 'Kathmandu, Nepal',
-      link: 'https://maps.google.com/?q=Kathmandu,Nepal',
+      value: 'Kawempe, Bwaise',
+      link: 'https://maps.google.com/?q=Kampala,Uganda',
     },
     {
       icon: <Phone className="h-6 w-6 text-primary" />,

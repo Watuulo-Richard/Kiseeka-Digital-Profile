@@ -21,12 +21,13 @@ const session = await getServerSession(authOptions)
         redirect('/sign-in-page')
       )
     }
+    
   return (
     <div className="flex h-screen">
       <Sidebar />
       <div className="w-full flex flex-1 flex-col">
         <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23]">
-          <TopNav />
+          <TopNav session={session}/>
         </header>
         <main className="flex-1 overflow-auto px-6 py-4 bg-white dark:bg-[#0F0F12]">
           {children}

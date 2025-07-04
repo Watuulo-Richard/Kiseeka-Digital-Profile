@@ -2,10 +2,6 @@
 
 import {
   BarChart2,
-  Users2,
-  Shield,
-  MessagesSquare,
-  Video,
   Settings,
   HelpCircle,
   Menu,
@@ -15,6 +11,7 @@ import {
   GlobeLock,
   Hammer,
   Users,
+  TableProperties,
 } from "lucide-react"
 
 import { Home } from "lucide-react"
@@ -42,7 +39,7 @@ export default function Sidebar() {
       <Link
         href={href}
         onClick={handleNavigation}
-        className="flex items-center px-3 py-2 text-sm rounded-md transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-[#1F1F23]"
+        className="flex items-center px-3 py-2 text-sm rounded-md transition-colors text-gray-600 dark:text-gray-300 hover:text-white dark:hover:text-white hover:bg-rose-300/95 dark:hover:bg-[#1F1F23]"
       >
         <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
         {children}
@@ -141,21 +138,24 @@ export default function Sidebar() {
               </div>
 
               <div>
-                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Team
+                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
+                  Table OverView
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Users2}>
-                    Members
+                  <NavItem href="/dashboard/view-work-experiences" icon={TableProperties}>
+                    Work Experiences
                   </NavItem>
-                  <NavItem href="#" icon={Shield}>
-                    Permissions
+                  <NavItem href="/dashboard/view-education-backgrounds" icon={TableProperties}>
+                    Education Background
                   </NavItem>
-                  <NavItem href="#" icon={MessagesSquare}>
-                    Chat
+                  <NavItem href="/dashboard/view-projects" icon={TableProperties}>
+                    Projects
                   </NavItem>
-                  <NavItem href="#" icon={Video}>
-                    Meetings
+                  <NavItem href="/dashboard/view-skills" icon={TableProperties}>
+                    Skills
+                  </NavItem>
+                  <NavItem href="/dashboard/view-testimonials" icon={TableProperties}>
+                    Testimonials
                   </NavItem>
                 </div>
               </div>
