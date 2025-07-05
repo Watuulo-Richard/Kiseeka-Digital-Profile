@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import SkillForm from '@/components/backend/forms/skills-form';
 import { getPortfolio, getSkillAction } from '@/actions/actions';
 import React from 'react';

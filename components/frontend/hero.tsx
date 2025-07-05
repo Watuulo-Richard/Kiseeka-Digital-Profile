@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowUpCircle, Download, Github, Linkedin, Mail } from "lucide-react"
+import { Download, Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
 import CardFlip from "./card-flip"
 import { RiTwitterXLine } from "react-icons/ri";
@@ -179,20 +179,6 @@ export default function Hero({fetchedProfile}:{fetchedProfile:Portfolio}) {
             <CardFlip />
           </div>
         </div>
-
-        {/* Scroll to top button */}
-        {/* <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 hidden md:block js-only z-50">
-          <Link
-            href="#"
-            onClick={(e) => {
-              e.preventDefault()
-              window.scrollTo({ top: 0, behavior: "smooth" })
-            }}
-            className="group"
-          >
-            <ArrowUpCircle className="h-10 w-10 text-primary animate-bounce group-hover:text-primary/80 transition-colors" />
-          </Link>
-        </div> */}
       </div>
     </section>
   )

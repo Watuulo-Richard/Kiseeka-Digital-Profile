@@ -1,7 +1,6 @@
-import { getSkillsAction, getTestimonialAction, getWorkExperiences } from '@/actions/actions';
+export const dynamic = 'force-dynamic'
+import { getSkillsAction } from '@/actions/actions';
 import SkillsTable from '@/components/backend/tables/skills-table';
-import TestimonialsTable from '@/components/backend/tables/testimonial-table';
-import WorkExperienceTable from '@/components/backend/tables/work-experience-table';
 import React from 'react';
 
 export default async function page() {

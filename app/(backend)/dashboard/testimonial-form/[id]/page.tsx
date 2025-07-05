@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import TestimonialForm from '@/components/backend/forms/testimonial-form';
 import { getPortfolio, getTestimonialAction } from '@/actions/actions';
 import React from 'react';

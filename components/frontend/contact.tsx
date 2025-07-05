@@ -12,7 +12,7 @@ import { Portfolio } from '@prisma/client';
 import { baseUrl } from '@/types/type';
 import { toast } from 'sonner';
 
-export default function Contact({ portfolio }: { portfolio: Portfolio }) {
+export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio }) {
   const contactInfo = [
     {
       icon: <Mail className="h-6 w-6 text-primary" />,
@@ -51,7 +51,7 @@ export default function Contact({ portfolio }: { portfolio: Portfolio }) {
   });
 
   async function handleEmailOnSubmit(EmailFormData: EmailFormTypes) {
-    EmailFormData.portfolioId = portfolio.id;
+    EmailFormData.portfolioId = fetchedProfile.id;
     setIsSubmitting(true);
     try {
       const response = await fetch(`${baseUrl}/api/send`, {

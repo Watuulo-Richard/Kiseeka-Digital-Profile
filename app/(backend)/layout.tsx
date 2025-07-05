@@ -1,4 +1,3 @@
-
 import TopNav from '@/components/backend/top-nav';
 import Sidebar from '@/components/backend/sidebar';
 import { authOptions } from '@/config/authoptions';

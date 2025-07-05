@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import EducationBackgroundTable from '@/components/backend/tables/education-background-table';
 import { getEducationBackgroundAction } from '@/actions/actions';
 import React from 'react';

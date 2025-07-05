@@ -1,4 +1,4 @@
-import WorkExperienceForm from '@/components/backend/forms/work-experience-form';
+export const dynamic = 'force-dynamic'
 import { getPortfolio } from '@/actions/actions';
 import React from 'react';
 import TestimonialForm from '@/components/backend/forms/testimonial-form';

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import ProjectsForm from '@/components/backend/forms/projects-form';
 import { getPortfolio, getProjectAction } from '@/actions/actions';
 import React from 'react';

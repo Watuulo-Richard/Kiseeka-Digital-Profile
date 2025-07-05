@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { getWorkExperiences } from '@/actions/actions';
 import WorkExperienceTable from '@/components/backend/tables/work-experience-table';
 import React from 'react';

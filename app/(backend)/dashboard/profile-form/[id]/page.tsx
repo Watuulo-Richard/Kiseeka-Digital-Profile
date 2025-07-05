@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { getUserPortfolio } from '@/actions/actions';
 import ProfileForm from '@/components/backend/forms/profile-form';
 import { authOptions } from '@/config/authoptions';

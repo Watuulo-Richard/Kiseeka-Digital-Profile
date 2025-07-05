@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import EducationForm from '@/components/backend/forms/education-form';
 import { getEducationAction, getPortfolio } from '@/actions/actions';
 import React from 'react';

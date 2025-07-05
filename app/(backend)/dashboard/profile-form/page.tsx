@@ -1,4 +1,4 @@
-import { getUserPortfolio } from '@/actions/actions';
+export const dynamic = 'force-dynamic'
 import ProfileForm from '@/components/backend/forms/profile-form';
 import { authOptions } from '@/config/authoptions';
 import { getServerSession } from 'next-auth';
