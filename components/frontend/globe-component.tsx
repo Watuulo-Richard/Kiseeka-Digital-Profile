@@ -6,14 +6,14 @@ export default function Globe1() {
       <div className="flex flex-col items-center justify-center overflow-hidden">
         <article className="relative mx-auto my-8 max-w-[500px] rounded-xl border border-border p-5 text-center">
           <div className="relative z-10">
-            <h1 className="text-5xl font-semibold leading-[100%] tracking-tighter">
-              Welcome to Mvpblocks
+            <h1 className="text-4xl font-semibold leading-[100%] tracking-tighter">
+              Global Audit Standards
             </h1>
-            {/* Normalized RGB values i.e (RGB or color / 255) */}
+            {/* Using CSS variables converted to normalized RGB values */}
             <Earth
-              baseColor={[1, 0, 0.3]}
-              markerColor={[1, 0, 0.33]}
-              glowColor={[1, 0, 0.3]}
+              baseColor={[0.87, 0.52, 0.47]} // Primary color (11 76% 80%) converted to RGB
+              markerColor={[0.87, 0.52, 0.47]} // Primary color for markers
+              glowColor={[0.87, 0.52, 0.47]} // Primary color for glow
             />
           </div>
         </article>
@@ -21,4 +21,3 @@ export default function Globe1() {
     </>
   );
 }
- 

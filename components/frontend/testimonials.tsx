@@ -56,7 +56,7 @@ export function TestimonialCard({
       <div className="select-none text-sm font-normal text-muted-foreground">
         {description}
         <div className="flex flex-row py-1">
-          <Star className="size-4 fill-gradient-text gradient-text" />
+          <Star className="size-4 fill-blue-500 text-blue-500" />
           <Star className="size-4 fill-blue-500 text-blue-500" />
           <Star className="size-4 fill-blue-500 text-blue-500" />
           <Star className="size-4 fill-blue-500 text-blue-500" />

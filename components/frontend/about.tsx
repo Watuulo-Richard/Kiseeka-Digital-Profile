@@ -1,8 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Code2, Globe, Server, Users } from 'lucide-react';
 import Globe1 from './globe-component';
+import { Portfolio } from '@prisma/client';
 
-export default function About() {
+export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
   const features = [
     {
       icon: <Code2 className="h-10 w-10 text-primary" />,
@@ -41,23 +42,11 @@ export default function About() {
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                     About Me
                   </h2>
-                  <p className="mx-auto max-w-[700px] text-muted-foreground md:mx-0 md:text-start md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Experienced Senior Software Engineer with over five years of
-                    expertise as a Full Stack Developer, specializing in
-                    JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.
-                  </p>
                 </div>
 
                 <div className="mx-auto max-w-3xl text-center md:mx-0 md:text-start mt-6">
                   <p className="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
-                    Skilled in designing scalable, secure, and efficient
-                    systems, with a proven track record of collaborating with
-                    remote, cross-functional teams across the US, Australia, and
-                    Nepal. Demonstrated success in delivering impactful
-                    solutions within highly regulated environments, including
-                    healthcare projects, with expertise in HIPAA and SOC2
-                    compliance. Proficient in optimizing system performance and
-                    mentoring teams to achieve sustained technical excellence.
+                    {fetchedProfile.bio}
                   </p>
                 </div>
               </div>

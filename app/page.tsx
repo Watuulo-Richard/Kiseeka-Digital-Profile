@@ -9,7 +9,8 @@ import Experience from '@/components/frontend/experience';
 import Header from '@/components/frontend/header';
 import ScrollToTop from '@/components/frontend/scroll-to-top';
 import Testimonials from '@/components/frontend/testimonials';
-import { getPortfolio } from '@/actions/actions';
+import { getPortfolio, getWorkExperiences } from '@/actions/actions';
+import { getProfile } from '@/actions/profile-action';
 
 // export const metadata: Metadata = {
 //   title: 'Kiseeka Pius | Senior Auditor',
@@ -18,7 +19,9 @@ import { getPortfolio } from '@/actions/actions';
 // };
 
 export default async function Home() {
+  const fetchedProfile = await getProfile()
   const portfolio = await getPortfolio();
+  const fetchedWorkExperiences = await getWorkExperiences()
   // console.log(profile, 'the guy...');
   if (!portfolio) {
     return null;
@@ -26,9 +29,9 @@ export default async function Home() {
   return (
     <div className="w-full">
       <Header />
-      <Hero />
-      <About />
-      <Experience />
+      <Hero fetchedProfile={fetchedProfile[0]}/>
+      <About fetchedProfile={fetchedProfile[0]}/>
+      <Experience fetchedWorkExperiences={fetchedWorkExperiences}/>
       <Projects />
       <Education />
       <Testimonials />

@@ -5,8 +5,9 @@ import { ArrowUpCircle, Download, Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
 import CardFlip from "./card-flip"
 import { RiTwitterXLine } from "react-icons/ri";
+import { Portfolio } from "@prisma/client"
 
-export default function Hero() {
+export default function Hero({fetchedProfile}:{fetchedProfile:Portfolio}) {
   return (
     // <section id="home" className="py-20 md:py-32 flex flex-col items-center justify-center min-h-[90vh]">
     //   <div className="container px-4 md:px-6 mx-auto">
@@ -88,7 +89,7 @@ export default function Hero() {
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                 Hi, I&apos;m{" "}
                 <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Nihal Maskey
+                  {fetchedProfile.title}
                 </span>
               </h1>
               <p className="mx-auto max-w-[700px] text-xl text-muted-foreground md:text-2xl md:text-start md:mx-0">

@@ -1,9 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Skills from "./skills"
-// import Skills from "./skills-content"
+import { WorkExperience } from "@prisma/client"
+import { format } from 'date-fns';
 
-export default function Experience() {
+export default function Experience({fetchedWorkExperiences}:{fetchedWorkExperiences:WorkExperience[]}) {
+  const formatDate = (date: Date | string) => {
+      const dateObj = typeof date === 'string' ? new Date(date) : date;
+      return format(dateObj, 'MMM dd, yyyy');
+    };
   const experiences = [
     {
       title: "Lead Engineer",
@@ -94,30 +99,34 @@ export default function Experience() {
           </div>
 
           <div className="space-y-8 mt-12">
-            {experiences.map((experience, index) => (
+            {fetchedWorkExperiences.map((experience, index) => (
               <div key={index} className="timeline-item">
                 <Card className="border-l-4 border-l-primary transition-all duration-300 hover:shadow-lg">
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                       <div>
-                        <h3 className="text-xl font-bold">{experience.title}</h3>
+                        <h3 className="text-xl font-bold">{experience.position}</h3>
                         <p className="text-muted-foreground">{experience.company}</p>
                       </div>
                       <div className="mt-2 md:mt-0 flex flex-col md:items-end">
                         <Badge variant="outline" className="mb-1 md:mb-0">
-                          {experience.period}
+                          {formatDate(experience.startDate)}
                         </Badge>
-                        <span className="text-sm text-muted-foreground">{experience.location}</span>
                       </div>
                     </div>
                     <ul className="mt-4 space-y-2">
-                      {experience.achievements.map((achievement, i) => (
-                        <li key={i} className="flex items-start">
+                      {/* {experience.achievements.map((achievement, i) => ( */}
+                        <li className="flex items-start max-w-4xl">
                           <span className="mr-2 mt-1 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0"></span>
-                          <span className="text-sm text-muted-foreground">{achievement}</span>
+                          <span className="text-sm text-muted-foreground">{experience.description}</span>
                         </li>
-                      ))}
+                      {/* ))} */}
                     </ul>
+                    <div className="mt-2 md:mt-0 flex flex-col md:items-end">
+                      <Badge variant="outline" className="text-sm text-muted-foreground mb-1 md:mb-0">
+                        Ended on {experience.endDate ? formatDate(experience.endDate) : ''}
+                      </Badge>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
