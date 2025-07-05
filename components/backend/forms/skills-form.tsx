@@ -14,21 +14,18 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
-import {
-  FileText,
-  Info,
-  Loader2,
-  BriefcaseBusiness,
-} from 'lucide-react';
+import { FileText, Info, Loader2, BriefcaseBusiness } from 'lucide-react';
 import { SkillFormTypes, SkillSchema } from '@/schema/schema';
 import { baseUrl } from '@/types/type';
 import { toast } from 'sonner';
-import { Portfolio } from '@prisma/client';
+import { Portfolio, Skill } from '@prisma/client';
 
 export default function SkillForm({
   portfolio,
+  skill,
 }: {
   portfolio: Portfolio;
+  skill: Skill | null;
 }) {
   const {
     register,
@@ -38,46 +35,69 @@ export default function SkillForm({
   } = useForm<SkillFormTypes>({
     resolver: zodResolver(SkillSchema),
     defaultValues: {
-      name: '',
-      level: 0,
-      description: ''
+      name: skill?.name,
+      level: skill?.level as number,
+      description: skill?.description,
     },
   });
 
   const [loading, setLoading] = useState(false);
 
-  async function handleWorkExperienceOnSubmit(
-    SkillFormData: SkillFormTypes,
-  ) {
+  async function handleWorkExperienceOnSubmit(SkillFormData: SkillFormTypes) {
     setLoading(true);
     SkillFormData.portfolioId = portfolio.id;
     // console.log(SkillFormData, 'Jesus...');
-    try {
-      const response = await fetch(`${baseUrl}/api/v1/skillsAPI`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(SkillFormData),
-      });
-      console.log(response);
-      if (response.ok) {
-        setLoading(false);
-        toast.success(
-          'Skill Details Saved Successfully In The System',
+    if (skill) {
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/v1/skillsAPI/${skill.id}`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(SkillFormData),
+          },
         );
-        reset(); // Reset form after successful submission
-      } else {
-        setLoading(false);
         console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          toast.success('Skill Details Updated Successfully In The System');
+          reset(); // Reset form after successful submission
+        } else {
+          setLoading(false);
+          console.log(response);
+          toast.error('Failed To Update Work Skill In The System...🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
         toast.error(
-          'Failed To Save Work Skill In The System...🥺',
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
         );
       }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-      toast.error(
-        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-      );
+    } else {
+      try {
+        const response = await fetch(`${baseUrl}/api/v1/skillsAPI`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(SkillFormData),
+        });
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          toast.success('Skill Details Saved Successfully In The System');
+          reset(); // Reset form after successful submission
+        } else {
+          setLoading(false);
+          console.log(response);
+          toast.error('Failed To Save Work Skill In The System...🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+      }
     }
   }
   // function onCancel() {
@@ -94,11 +114,13 @@ export default function SkillForm({
               <BriefcaseBusiness className="h-4 w-4 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
-               Add a Professional Skill
+              Add a Professional Skill
             </h1>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
-            Showcase your expertise by filling out the details below. Each section helps present your skills clearly and professionally to enhance your digital profile.
+            Showcase your expertise by filling out the details below. Each
+            section helps present your skills clearly and professionally to
+            enhance your digital profile.
           </p>
         </div>
 
@@ -117,7 +139,9 @@ export default function SkillForm({
                     Skill Details
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Demonstrate your capabilities by outlining the specific skills you've mastered. Focus on hands-on experience, achievements, and areas of specialization.
+                    Demonstrate your capabilities by outlining the specific
+                    skills you've mastered. Focus on hands-on experience,
+                    achievements, and areas of specialization.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
@@ -141,7 +165,7 @@ export default function SkillForm({
                       Proficiency Level
                     </Label>
                     <Input
-                      type='number'
+                      type="number"
                       min="0"
                       max="100"
                       placeholder="Specify your proficiency level as a percentage (e.g., 90%)"
@@ -164,7 +188,10 @@ export default function SkillForm({
                     Detailed Skill Description
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Provide a rich description of how you've applied this skill in real-world scenarios—include tasks performed, key achievements, tools or technologies used, and measurable outcomes.
+                    Provide a rich description of how you've applied this skill
+                    in real-world scenarios—include tasks performed, key
+                    achievements, tools or technologies used, and measurable
+                    outcomes.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -202,11 +229,32 @@ export default function SkillForm({
             <Card className="shadow-lg border border-gray-200 bg-white">
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  {loading ? (
+                  {skill ? (
+                    loading ? (
+                      <Button
+                        type="submit"
+                        size="lg"
+                        disabled={loading}
+                        className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      >
+                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                        Updating Your Skill Entry...
+                      </Button>
+                    ) : (
+                      <Button
+                        type="submit"
+                        size="lg"
+                        disabled={loading}
+                        className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      >
+                        Update Skill Details
+                      </Button>
+                    )
+                  ) : loading ? (
                     <Button
                       type="submit"
                       size="lg"
-                      disabled = {loading}
+                      disabled={loading}
                       className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
                       <Loader2 className="h-5 w-5 animate-spin mr-2" />
@@ -216,7 +264,7 @@ export default function SkillForm({
                     <Button
                       type="submit"
                       size="lg"
-                      disabled = {loading}
+                      disabled={loading}
                       className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
                       Save Skill Details

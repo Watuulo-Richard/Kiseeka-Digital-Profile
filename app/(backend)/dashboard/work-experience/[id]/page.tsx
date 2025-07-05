@@ -5,7 +5,7 @@ import React from 'react';
 export default async function page({params}:{params:Promise<{id:string}>}) {
   const {id} = await params
   const workExperience = await getWorkExperienceAction(id)
-  console.log(workExperience, 'Finally Work Experience Fetched Successfully...👍🏾');
+  // console.log(workExperience, 'Finally Work Experience Fetched Successfully...👍🏾');
   if(!workExperience) {
     return null;
   }

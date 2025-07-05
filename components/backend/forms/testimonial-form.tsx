@@ -26,12 +26,14 @@ import { TestimonialFormTypes, TestimonialSchema } from '@/schema/schema';
 import ImageInput from '../image-upload';
 import { toast } from 'sonner';
 import { baseUrl } from '@/types/type';
-import { Portfolio } from '@prisma/client';
+import { Portfolio, Testimonial } from '@prisma/client';
 
 export default function TestimonialForm({
   portfolio,
+  testimonial
 }: {
   portfolio: Portfolio;
+  testimonial: Testimonial | null
 }) {
   const {
     register,
@@ -41,16 +43,16 @@ export default function TestimonialForm({
   } = useForm<TestimonialFormTypes>({
     resolver: zodResolver(TestimonialSchema),
     defaultValues: {
-      fullName: '',
-      email: '',
-      profession: '',
-      image: '',
-      description: '',
+      fullName: testimonial?.fullName,
+      email: testimonial?.email,
+      profession: testimonial?.profession,
+      image: testimonial?.image || '/placeholder.svg',
+      description: testimonial?.description,
     },
   });
 
-  //   const initialImage = initialData?.imageUrl || '/placeholder.svg';
-  const [imageUrl, setImageUrl] = useState('/placeholder.svg');
+    const initialImage = testimonial?.image || '/placeholder.svg';
+  const [imageUrl, setImageUrl] = useState(initialImage);
   const [loading, setLoading] = useState(false);
 
   async function handleOnSubmit(TestimonialData: TestimonialFormTypes) {
@@ -62,28 +64,53 @@ export default function TestimonialForm({
       toast.error('Please upload an image for the referee');
       return;
     }
-    try {
-      const response = await fetch(`${baseUrl}/api/v1/testimonialAPI`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(TestimonialData),
-      });
-      console.log(response);
-      if (response.ok) {
-        setLoading(false);
+    if(testimonial) {
+      try {
+        const response = await fetch(`${baseUrl}/api/v1/testimonialAPI/${testimonial.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(TestimonialData),
+        });
         console.log(response);
-        toast.success('Testimonial Details Have Been Saved Successfully');
-        reset();
-      } else {
+        if (response.ok) {
+          setLoading(false);
+          console.log(response);
+          toast.success('Testimonial Details Have Been Updated Successfully');
+        } else {
+          setLoading(false);
+          toast.error('Failed To Update Testimonial Details...🥺');
+        }
+      } catch (error) {
         setLoading(false);
-        toast.error('Failed To Save Testimonial Details...🥺');
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+        console.log(error);
       }
-    } catch (error) {
-      setLoading(false);
-      toast.error(
-        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-      );
-      console.log(error);
+    } else {
+      try {
+        const response = await fetch(`${baseUrl}/api/v1/testimonialAPI`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(TestimonialData),
+        });
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          console.log(response);
+          toast.success('Testimonial Details Have Been Saved Successfully');
+          reset();
+        } else {
+          setLoading(false);
+          toast.error('Failed To Save Testimonial Details...🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+        console.log(error);
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 import EducationForm from '@/components/backend/forms/education-form'
-import { getPortfolio } from '@/actions/actions';
+import { getEducationAction, getPortfolio } from '@/actions/actions';
 import React from 'react'
 
 export default async function page() {
@@ -10,7 +10,7 @@ export default async function page() {
     }
   return (
     <>
-      <EducationForm portfolio={portfolio[0]}/>
+      <EducationForm portfolio={portfolio[0]} educationBackground={null} />
     </>
   )
 }

@@ -271,7 +271,7 @@ export default function SkillsTable({ title, skills }: {
                     <TableCell>{formatDate(skill.updatedAt)}</TableCell>
                     <TableCell className={clsx('text-right')}>
                       <div className={clsx('flex justify-end gap-2')}>
-                        <Link href={`/dashboard/skill-form/${skill.id}`}>
+                        <Link href={`/dashboard/skills-form/${skill.id}`}>
                           <Button 
                             variant="outline"
                             size="icon"

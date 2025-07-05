@@ -1,10 +1,9 @@
-import { getTestimonialAction, getWorkExperiences } from '@/actions/actions';
 import TestimonialsTable from '@/components/backend/tables/testimonial-table';
-import WorkExperienceTable from '@/components/backend/tables/work-experience-table';
+import { getTestimonialsAction } from '@/actions/actions';
 import React from 'react';
 
 export default async function page() {
-  const testimonials = await getTestimonialAction();
+  const testimonials = await getTestimonialsAction();
 
   return (
     <>

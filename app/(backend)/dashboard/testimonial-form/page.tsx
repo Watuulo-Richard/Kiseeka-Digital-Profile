@@ -11,7 +11,7 @@ export default async function page() {
   }
   return (
     <>
-      <TestimonialForm portfolio={portfolio[0]} />
+      <TestimonialForm portfolio={portfolio[0]} testimonial={null} />
     </>
   );
 }

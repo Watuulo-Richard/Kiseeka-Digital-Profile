@@ -1,14 +1,15 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FileText, Info, Loader2, Link, GlobeLock } from 'lucide-react';
 import { ProjectsFormTypes, ProjectsSchema } from '@/schema/schema';
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
+import { Portfolio, Project } from '@prisma/client';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Portfolio } from '@prisma/client';
 import { baseUrl } from '@/types/type';
 import {
   Card,
@@ -17,16 +18,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Package,
-  FileText,
-  Info,
-  Loader2,
-  Link,
-  GlobeLock,
-} from 'lucide-react';
 
-export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
+export default function ProjectsForm({
+  portfolio,
+  project,
+}: {
+  portfolio: Portfolio;
+  project: Project | null;
+}) {
   const {
     register,
     handleSubmit,
@@ -35,46 +34,67 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
   } = useForm<ProjectsFormTypes>({
     resolver: zodResolver(ProjectsSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      url: ''
+      title: project?.title,
+      description: project?.description as string,
+      url: project?.url as string,
     },
   });
 
   const [loading, setLoading] = useState(false);
 
-
-  async function handleEducationOnSubmit(
-    ProjectFormData: ProjectsFormTypes,
-  ) {
+  async function handleEducationOnSubmit(ProjectFormData: ProjectsFormTypes) {
     ProjectFormData.portfolioId = portfolio.id;
     setLoading(true);
-    try {
-      const response = await fetch(`${baseUrl}/api/v1/projectsAPI`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(ProjectFormData),
-      });
-      console.log(response);
-      if (response.ok) {
-        setLoading(false);
-        toast.success(
-          'Project Saved Successfully In The System',
+    if (project) {
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/v1/projectsAPI/${project.id}`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(ProjectFormData),
+          },
         );
-        reset(); // Reset form after successful submission
-      } else {
-        setLoading(false);
         console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          toast.success('Project Updated Successfully In The System');
+        } else {
+          setLoading(false);
+          console.log(response);
+          toast.error('Failed To Update Project In The System...🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
         toast.error(
-          'Failed To Save Project In The System...🥺',
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
         );
       }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-      toast.error(
-        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-      );
+    } else {
+      try {
+        const response = await fetch(`${baseUrl}/api/v1/projectsAPI`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(ProjectFormData),
+        });
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          toast.success('Project Saved Successfully In The System');
+          reset(); // Reset form after successful submission
+        } else {
+          setLoading(false);
+          console.log(response);
+          toast.error('Failed To Save Project In The System...🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+      }
     }
   }
   // function onCancel() {
@@ -95,7 +115,9 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
             </h1>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
-            Provide detailed information about your project using the structured sections below. Each card is designed to capture a key element of your project to ensure a complete and compelling presentation.
+            Provide detailed information about your project using the structured
+            sections below. Each card is designed to capture a key element of
+            your project to ensure a complete and compelling presentation.
           </p>
         </div>
 
@@ -111,7 +133,7 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <Info className="h-5 w-5 text-gray-600" />
-                    	Project Details
+                    Project Details
                   </CardTitle>
                   <CardDescription className="text-gray-600">
                     Key information about your audit or consultancy assignment
@@ -142,7 +164,8 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                     Project Url
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                     Include a link to the project report, published article, client website, or portfolio reference (if available).
+                    Include a link to the project report, published article,
+                    client website, or portfolio reference (if available).
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
@@ -171,7 +194,8 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
                     Project Description ✅ (kept, it's appropriate)
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Provide a concise summary of the audit or consultancy assignment...
+                    Provide a concise summary of the audit or consultancy
+                    assignment...
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -208,7 +232,29 @@ export default function ProjectsForm({portfolio}:{portfolio:Portfolio}) {
             <Card className="shadow-lg border border-gray-200 bg-white">
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  {loading ? (
+                  {project ? (
+                    <>
+                      {loading ? (
+                        <Button
+                          type="submit"
+                          size="lg"
+                          disabled
+                          className="flex items-center font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        >
+                          <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                          Updating Project, Please Wait...
+                        </Button>
+                      ) : (
+                        <Button
+                          type="submit"
+                          size="lg"
+                          className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        >
+                          Update Project
+                        </Button>
+                      )}
+                    </>
+                  ) : loading ? (
                     <Button
                       type="submit"
                       size="lg"

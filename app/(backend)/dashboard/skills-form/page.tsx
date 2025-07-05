@@ -10,7 +10,7 @@ export default async function page() {
   }
   return (
     <>
-      <SkillForm portfolio={portfolio[0]} />
+      <SkillForm portfolio={portfolio[0]} skill={null} />
     </>
   );
 }

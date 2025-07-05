@@ -40,19 +40,16 @@ export default function ProjectsTable({ title, projects }: {
   title: string;
   projects: Project[]
 }) {
-//   const { getAllMeals } = useMeals();
-  // const { singleMeal } = useSingleMealQuery(slug);
-  // const { updateMeal } = useMeals();
+
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const itemsPerPage = 10;
   const router = useRouter()
 
-  // Filter meals based on search query
+  // Filter Education Background based on search query
   const filteredEducationBackgrounds = useMemo(() => {
     if (!searchQuery.trim()) return projects;
 
@@ -75,7 +72,6 @@ export default function ProjectsTable({ title, projects }: {
   // Handle add new click
   const handleAddNewClick = () => {
     setIsAddingNew(true);
-    setIsModalOpen(true);
   };
 
   // Handle delete click
@@ -124,15 +120,6 @@ export default function ProjectsTable({ title, projects }: {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return format(dateObj, 'MMM dd, yyyy');
   };
-
-  // Format currency
-//   const formatCurrency = (amount: number) => {
-//     return new Intl.NumberFormat('en-UG', {
-//       style: 'currency',
-//       currency: 'UGX',
-//       minimumFractionDigits: 0,
-//     }).format(amount);
-//   };
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
@@ -264,7 +251,7 @@ export default function ProjectsTable({ title, projects }: {
                           <Button 
                             variant="outline"
                             size="icon"
-                              // onClick={() => handleEditClick(meal.slug)}
+                              // onClick={() => handleEditClick(project.id)}
                             title="Edit Work Experience"
                           >
                             <Edit className={clsx('h-4 w-4')} />

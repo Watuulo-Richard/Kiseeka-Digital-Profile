@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Portfolio } from '@prisma/client';
+import { Education, Portfolio } from '@prisma/client';
 import { StartDate } from '../start-date';
 import { baseUrl } from '@/types/type';
 import { EndDate } from '../end-date';
@@ -27,7 +27,7 @@ import {
   CalendarDays,
 } from 'lucide-react';
 
-export default function EducationForm({ portfolio }: { portfolio: Portfolio }) {
+export default function EducationForm({ portfolio, educationBackground }: { portfolio: Portfolio, educationBackground:Education | null }) {
   const {
     register,
     handleSubmit,
@@ -38,10 +38,11 @@ export default function EducationForm({ portfolio }: { portfolio: Portfolio }) {
   } = useForm<EducationFormTypes>({
     resolver: zodResolver(EducationSchema),
     defaultValues: {
-      institution: '',
-      educationLevel: '',
-      startDate: new Date().toISOString(), // Keep as string in form
-      endDate: undefined, // or null, since it's optional
+      institution: educationBackground?.institution,
+      educationLevel: educationBackground?.educationLevel,
+      startDate:  '',
+      endDate: '',
+      description: educationBackground?.description as string
     },
   });
 

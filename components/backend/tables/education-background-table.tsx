@@ -260,7 +260,7 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
                     <TableCell>{formatDate(educationBackground.endDate as Date)}</TableCell>
                     <TableCell className={clsx('text-right')}>
                       <div className={clsx('flex justify-end gap-2')}>
-                        <Link href={`/dashboard/view-education-backgrounds/${educationBackground.id}`}>
+                        <Link href={`/dashboard/education-form/${educationBackground.id}`}>
                           <Button 
                             variant="outline"
                             size="icon"
