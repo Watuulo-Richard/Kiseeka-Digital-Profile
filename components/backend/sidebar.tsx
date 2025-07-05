@@ -1,5 +1,9 @@
 "use client"
 
+import { Home } from "lucide-react"
+import { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
 import {
   BarChart2,
   Settings,
@@ -13,11 +17,6 @@ import {
   Users,
   TableProperties,
 } from "lucide-react"
-
-import { Home } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
-import Image from "next/image"
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)

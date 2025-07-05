@@ -3,6 +3,7 @@ import { getPortfolio } from '@/actions/actions';
 import React from 'react';
 
 export default async function page() {
+  
   const portfolio = await getPortfolio();
   // console.log(profile, 'the guy...');
   if(!portfolio) {
@@ -10,7 +11,7 @@ export default async function page() {
   }
   return (
     <>
-      <WorkExperienceForm portfolio={portfolio[0]} />
+      <WorkExperienceForm portfolio={portfolio[0]} workExperience={null} />
     </>
   );
 }

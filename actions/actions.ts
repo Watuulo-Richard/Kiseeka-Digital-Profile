@@ -114,3 +114,15 @@ export async function getSkillsAction() {
         return []
     }
 }
+export async function getWorkExperienceAction(id:string) {
+    const workexperienceAPIRoute = `${baseUrl}/api/v1/workexperienceAPI/${id}`
+    try {
+        const response = await fetch(workexperienceAPIRoute, { cache: 'no-store' })
+        const workExperience = await response.json()
+        console.log(workExperience.data, 'Finally Work Experience Fetched Successfully...👍🏾');
+        return workExperience.data as WorkExperience
+    } catch (error) {
+        console.log(error);
+        return null
+    }
+}

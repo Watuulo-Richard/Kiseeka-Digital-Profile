@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,12 +28,14 @@ import { baseUrl } from '@/types/type';
 import { toast } from 'sonner';
 import { StartDate } from '../start-date';
 import { EndDate } from '../end-date';
-import { Portfolio } from '@prisma/client';
+import { Portfolio, WorkExperience } from '@prisma/client';
 
 export default function WorkExperienceForm({
   portfolio,
+  workExperience,
 }: {
   portfolio: Portfolio;
+  workExperience: WorkExperience | null;
 }) {
   const {
     register,
@@ -44,15 +47,15 @@ export default function WorkExperienceForm({
   } = useForm<WorkExperienceFormTypes>({
     resolver: zodResolver(workExperienceSchema),
     defaultValues: {
-      position: '',
-      company: '',
-      startDate: new Date().toISOString(), // Keep as string in form
-      endDate: undefined, // or null, since it's optional
+      position: workExperience?.position,
+      company: workExperience?.company,
+      startDate: '',
+      endDate: '',
+      description: workExperience?.description as string,
     },
   });
 
   const [loading, setLoading] = useState(false);
-
   const watchedStartDate = watch('startDate');
   const watchedEndDate = watch('endDate');
 
@@ -71,33 +74,61 @@ export default function WorkExperienceForm({
   ) {
     setLoading(true);
     WorkExperienceFormData.portfolioId = portfolio.id;
-    console.log(WorkExperienceFormData, 'Jesus...');
-    try {
-      const response = await fetch(`${baseUrl}/api/v1/workexperienceAPI`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(WorkExperienceFormData),
-      });
-      console.log(response);
-      if (response.ok) {
-        setLoading(false);
-        toast.success(
-          'Experience Details Saved Successfully In The System',
+    if (workExperience) {
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/v1/workexperienceAPI/${workExperience.id}`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(WorkExperienceFormData),
+          },
         );
-        reset(); // Reset form after successful submission
-      } else {
-        setLoading(false);
         console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          toast.success(
+            'Experience Details Updated Successfully In The System',
+          );
+          reset(); // Reset form after successful submission
+        } else {
+          setLoading(false);
+          console.log(response);
+          toast.error('Failed To Update Work Experience...!!!🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
         toast.error(
-          'Failed To Save Work Experience...🥺 The entry has failed to be recorded in the system.',
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
         );
       }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-      toast.error(
-        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-      );
+    } else {
+      try {
+        const response = await fetch(`${baseUrl}/api/v1/workexperienceAPI`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(WorkExperienceFormData),
+        });
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          toast.success('Experience Details Saved Successfully In The System');
+          reset(); // Reset form after successful submission
+        } else {
+          setLoading(false);
+          console.log(response);
+          toast.error(
+            'Failed To Save Work Experience...🥺 The entry has failed to be recorded in the system.',
+          );
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+      }
     }
   }
   // function onCancel() {
@@ -118,7 +149,10 @@ export default function WorkExperienceForm({
             </h1>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
-            Provide detailed information about your professional journey by completing the structured sections below. Each card highlights a key aspect of your work experience to ensure a complete and polished profile.
+            Provide detailed information about your professional journey by
+            completing the structured sections below. Each card highlights a key
+            aspect of your work experience to ensure a complete and polished
+            profile.
           </p>
         </div>
 
@@ -223,7 +257,8 @@ export default function WorkExperienceForm({
                     Role Description
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Provide a detailed overview of your responsibilities, achievements, and contributions in this position.
+                    Provide a detailed overview of your responsibilities,
+                    achievements, and contributions in this position.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -261,7 +296,29 @@ export default function WorkExperienceForm({
             <Card className="shadow-lg border border-gray-200 bg-white">
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  {loading ? (
+                  {workExperience ? (
+                    <>
+                      {loading ? (
+                        <Button
+                          type="submit"
+                          size="lg"
+                          disabled
+                          className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        >
+                          <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                          Update Work Experience...
+                        </Button>
+                      ) : (
+                        <Button
+                          type="submit"
+                          size="lg"
+                          className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        >
+                          Update Work Experience
+                        </Button>
+                      )}
+                    </>
+                  ) : loading ? (
                     <Button
                       type="submit"
                       size="lg"
@@ -269,7 +326,7 @@ export default function WorkExperienceForm({
                       className="font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
                       <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                      Saving Work Experience, Please Wait...
+                      Saving Work Experience...
                     </Button>
                   ) : (
                     <Button

@@ -261,7 +261,7 @@ export default function WorkExperienceTable({ title, workExperiences }: {
                     <TableCell>{formatDate(workExperience.endDate as Date)}</TableCell>
                     <TableCell className={clsx('text-right')}>
                       <div className={clsx('flex justify-end gap-2')}>
-                        <Link href={`/dashboard/meals/${workExperience.id}`}>
+                        <Link href={`/dashboard/work-experience/${workExperience.id}`}>
                           <Button 
                             variant="outline"
                             size="icon"
