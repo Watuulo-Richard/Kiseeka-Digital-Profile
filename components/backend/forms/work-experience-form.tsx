@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { StartDate } from '../start-date';
 import { baseUrl } from '@/types/type';
 import { EndDate } from '../end-date';
+import { format } from 'date-fns';
 import {
   Card,
   CardContent,
@@ -20,7 +21,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-
 
 import {
   FileText,
@@ -30,7 +30,6 @@ import {
   CalendarDays,
 } from 'lucide-react';
 
-
 export default function WorkExperienceForm({
   portfolio,
   workExperience,
@@ -38,6 +37,10 @@ export default function WorkExperienceForm({
   portfolio: Portfolio;
   workExperience: WorkExperience | null;
 }) {
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return format(dateObj, 'MMM dd, yyyy');
+  };
   const {
     register,
     handleSubmit,
@@ -50,8 +53,8 @@ export default function WorkExperienceForm({
     defaultValues: {
       position: workExperience?.position,
       company: workExperience?.company,
-      startDate: '',
-      endDate: '',
+      startDate: formatDate(workExperience?.startDate || ''),
+      endDate: formatDate(workExperience?.endDate || ''),
       description: workExperience?.description as string,
     },
   });

@@ -12,6 +12,7 @@ import { Education, Portfolio } from '@prisma/client';
 import { StartDate } from '../start-date';
 import { baseUrl } from '@/types/type';
 import { EndDate } from '../end-date';
+import { format } from 'date-fns';
 import {
   Card,
   CardContent,
@@ -27,7 +28,17 @@ import {
   CalendarDays,
 } from 'lucide-react';
 
-export default function EducationForm({ portfolio, educationBackground }: { portfolio: Portfolio, educationBackground:Education | null }) {
+export default function EducationForm({
+  portfolio,
+  educationBackground,
+}: {
+  portfolio: Portfolio;
+  educationBackground: Education | null;
+}) {
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return format(dateObj, 'MMM dd, yyyy');
+  };
   const {
     register,
     handleSubmit,
@@ -40,9 +51,9 @@ export default function EducationForm({ portfolio, educationBackground }: { port
     defaultValues: {
       institution: educationBackground?.institution,
       educationLevel: educationBackground?.educationLevel,
-      startDate:  '',
-      endDate: '',
-      description: educationBackground?.description as string
+      startDate: formatDate(educationBackground?.startDate || ''),
+      endDate: formatDate(educationBackground?.endDate || ''),
+      description: educationBackground?.description as string,
     },
   });
 
@@ -75,16 +86,12 @@ export default function EducationForm({ portfolio, educationBackground }: { port
       console.log(response);
       if (response.ok) {
         setLoading(false);
-        toast.success(
-          'Education Details Saved Successfully In The System',
-        );
+        toast.success('Education Details Saved Successfully In The System');
         reset(); // Reset form after successful submission
       } else {
         setLoading(false);
         console.log(response);
-        toast.error(
-          'Failed To Save Education Background In The System...🥺',
-        );
+        toast.error('Failed To Save Education Background In The System...🥺');
       }
     } catch (error) {
       setLoading(false);
@@ -112,7 +119,9 @@ export default function EducationForm({ portfolio, educationBackground }: { port
             </h1>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
-            Provide details about your academic journey by completing the sections below. Each card highlights a key stage or qualification in your education history.
+            Provide details about your academic journey by completing the
+            sections below. Each card highlights a key stage or qualification in
+            your education history.
           </p>
         </div>
 
@@ -128,7 +137,7 @@ export default function EducationForm({ portfolio, educationBackground }: { port
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <Info className="h-5 w-5 text-gray-600" />
-                     Education Details
+                    Education Details
                   </CardTitle>
                   <CardDescription className="text-gray-600">
                     Provide key information about your academic background.
@@ -214,10 +223,11 @@ export default function EducationForm({ portfolio, educationBackground }: { port
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <FileText className="h-5 w-5 text-gray-600" />
-                     Education Summary
+                    Education Summary
                   </CardTitle>
                   <CardDescription className="text-gray-600">
-                    Provide a brief overview of what you studied, key achievements, and any notable experiences.
+                    Provide a brief overview of what you studied, key
+                    achievements, and any notable experiences.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
