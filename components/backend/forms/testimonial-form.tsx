@@ -30,10 +30,10 @@ import { Portfolio, Testimonial } from '@prisma/client';
 
 export default function TestimonialForm({
   portfolio,
-  testimonial
+  testimonial,
 }: {
   portfolio: Portfolio;
-  testimonial: Testimonial | null
+  testimonial: Testimonial | null;
 }) {
   const {
     register,
@@ -51,7 +51,7 @@ export default function TestimonialForm({
     },
   });
 
-    const initialImage = testimonial?.image || '/placeholder.svg';
+  const initialImage = testimonial?.image || '/placeholder.svg';
   const [imageUrl, setImageUrl] = useState(initialImage);
   const [loading, setLoading] = useState(false);
 
@@ -61,16 +61,20 @@ export default function TestimonialForm({
       (TestimonialData.portfolioId = portfolio.id);
     // console.log(TestimonialData);
     if (!imageUrl) {
+      setLoading(false);
       toast.error('Please upload an image for the referee');
       return;
     }
-    if(testimonial) {
+    if (testimonial) {
       try {
-        const response = await fetch(`${baseUrl}/api/v1/testimonialAPI/${testimonial.id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(TestimonialData),
-        });
+        const response = await fetch(
+          `${baseUrl}/api/v1/testimonialAPI/${testimonial.id}`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(TestimonialData),
+          },
+        );
         console.log(response);
         if (response.ok) {
           setLoading(false);

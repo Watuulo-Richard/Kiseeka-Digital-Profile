@@ -1,8 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { WorkExperienceFormTypes, workExperienceSchema } from '@/schema/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { Portfolio, WorkExperience } from '@prisma/client';
+import { toast } from 'sonner';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { StartDate } from '../start-date';
+import { baseUrl } from '@/types/type';
+import { EndDate } from '../end-date';
 import {
   Card,
   CardContent,
@@ -10,10 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+
 
 import {
   FileText,
@@ -22,13 +29,7 @@ import {
   BriefcaseBusiness,
   CalendarDays,
 } from 'lucide-react';
-import { WorkExperienceFormTypes, workExperienceSchema } from '@/schema/schema';
 
-import { baseUrl } from '@/types/type';
-import { toast } from 'sonner';
-import { StartDate } from '../start-date';
-import { EndDate } from '../end-date';
-import { Portfolio, WorkExperience } from '@prisma/client';
 
 export default function WorkExperienceForm({
   portfolio,

@@ -52,6 +52,7 @@ export default function ProfileForm({
     profileData.profileImage = imageUrl;
     // console.log(profileData);
     if (!imageUrl) {
+      setLoading(false);
       toast.error('Please upload an image for the profile');
       return;
     }
@@ -70,7 +71,6 @@ export default function ProfileForm({
           setLoading(false);
           console.log(response);
           toast.success('Profile Details Have Been Updated Successfully');
-          reset();
         } else {
           setLoading(false);
           toast.error('Failed To Update Profile Details...🥺');
@@ -167,7 +167,7 @@ export default function ProfileForm({
                 </CardTitle>
                 <CardDescription className="text-gray-600">
                   Add a professional image to represent your profile. (Max size:
-                  2MB)
+                  4MB)
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4 w-full">
@@ -224,49 +224,6 @@ export default function ProfileForm({
           <Card className="shadow-lg border border-gray-200 bg-white">
             <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {/* {loading ? (
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={loading}
-                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <Loader className="h-5 w-5 mr-2 animate-spin" />
-                    Saving Profile, Please Wait...
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <SaveAll className="h-5 w-5 mr-2" />
-                    Save Profile
-                  </Button>
-                )}
-
-                {
-                  userPortfolio ? (
-                    <Button
-                    type="submit"
-                    size="lg"
-                    disabled={loading}
-                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <Loader className="h-5 w-5 mr-2 animate-spin" />
-                    Updating Profile...
-                  </Button>
-                  ):(
-                    <Button
-                    type="submit"
-                    size="lg"
-                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <SaveAll className="h-5 w-5 mr-2" />
-                    Update Profile
-                  </Button>
-                  )
-                } */}
                 {userPortfolio ? (
                   <>
                     {loading ? (
@@ -298,7 +255,7 @@ export default function ProfileForm({
                     className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                   >
                     <Loader className="h-5 w-5 mr-2 animate-spin" />
-                    Updating Profile...
+                    Saving Profile...
                   </Button>
                 ) : (
                   <Button

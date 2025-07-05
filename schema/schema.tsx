@@ -6,8 +6,7 @@ export const profileSchema = z.object({
   .min(1, 'Profile name is required')
   .max(100, 'Profile Name must be less than 100 characters'),
   bio: z.string()
-  .min(1, 'Your biography must be at least 10 characters')
-  .max(500, 'Your biography must be less than 500 characters'),
+  .min(10, 'Your biography must be at least 10 characters'),
   profileImage: z.string().optional(),
   userId: z.string().optional(),
 });
