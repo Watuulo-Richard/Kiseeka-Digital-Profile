@@ -6,6 +6,7 @@ import { Bell, ChevronRight } from "lucide-react"
 import Profile01 from "./profile-01"
 import Link from "next/link"
 import { Session } from "next-auth"
+import { ModeToggle } from "../frontend/mode-toggle"
 
 // import { ThemeToggle } from "../theme-toggle"
 
@@ -48,7 +49,7 @@ export default function TopNav({session}:{session:Session}) {
           <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
         </button>
 
-        {/* <ThemeToggle /> */}
+        <ModeToggle />
 
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none">

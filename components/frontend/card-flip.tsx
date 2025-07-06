@@ -23,8 +23,8 @@ export interface CardFlipProps {
 }
 
 export default function CardFlip({
-    title = "Design Systems",
-    subtitle = "Explore the fundamentals",
+    title = "Tap to reveal",
+    subtitle = "Audit • Analyze • Achieve",
     description = "Dive deep into the world of modern UI/UX design.",
     features = ["UI/UX", "Modern Design", "Tailwind CSS", "Kokonut UI"],
     image = '/pius.png',

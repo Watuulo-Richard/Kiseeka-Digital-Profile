@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import { Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/components/frontend/theme-provider';
 
 const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"], 
-  weight: ['400', '500', '600', '700'], 
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-mono',
-  display: 'swap'
+  display: 'swap',
 });
 
 // const geistMono = DM_Mono({
@@ -76,14 +77,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
-    <html lang="en">
-      <body
-        className={`${spaceGrotesk.variable} antialiased`}
-      >
-        {children}
-        <Toaster richColors position="top-center" />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${spaceGrotesk.variable} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster richColors position="top-center" />
+        </ThemeProvider>
       </body>
     </html>
   );

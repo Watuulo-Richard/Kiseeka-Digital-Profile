@@ -53,7 +53,7 @@ export default function SignIn() {
     signIn('google', { callbackUrl: '/dashboard' });
   }
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+    <div className="flex min-h-screen w-full items-center justify-center p-4">
       <motion.div
         className="w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}

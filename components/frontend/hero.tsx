@@ -6,12 +6,25 @@ import Link from 'next/link';
 import CardFlip from './card-flip';
 import { RiTwitterXLine } from 'react-icons/ri';
 import { Portfolio } from '@prisma/client';
+import { TypewriterEffect } from '../ui/typewriter-effect';
 
 export default function Hero({
   fetchedProfile,
 }: {
   fetchedProfile: Portfolio;
 }) {
+  const words = [
+  {
+    text: "I'm ",
+  },
+  {
+    text: `${fetchedProfile.title}`,
+    className: "bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent",
+  },
+  {
+    text: 'Professional-Auditor.',
+  },
+];
   return (
     // <section id="home" className="py-20 md:py-32 flex flex-col items-center justify-center min-h-[90vh]">
     //   <div className="container px-4 md:px-6 mx-auto">
@@ -94,10 +107,7 @@ export default function Hero({
           <div className="w-full lg:w-[60%]">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                Hi, I&apos;m{' '}
-                <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  {fetchedProfile.title}
-                </span>
+                <TypewriterEffect words={words} />
               </h1>
               <p className="mx-auto max-w-[700px] text-xl text-muted-foreground md:text-2xl md:text-start md:mx-0">
                 <span className="js-only">

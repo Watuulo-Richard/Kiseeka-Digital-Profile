@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { ModeToggle } from "./mode-toggle"
 
 // Updated nav items - removed Skills as it's now part of Experience
 const navItems = [
@@ -146,12 +147,12 @@ export default function Header() {
               )
             })}
           </div>
-          {/* <ModeToggle /> */}
+          <ModeToggle />
         </nav>
 
         {/* Mobile Navigation Toggle */}
         <div className="flex items-center md:hidden space-x-4">
-          {/* <ModeToggle /> */}
+          <ModeToggle />
           <Button
             variant="ghost"
             size="icon"
