@@ -2,13 +2,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,6 +12,14 @@ import { SkillFormTypes, SkillSchema } from '@/schema/schema';
 import { baseUrl } from '@/types/type';
 import { toast } from 'sonner';
 import { Portfolio, Skill } from '@prisma/client';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+
 
 export default function SkillForm({
   portfolio,

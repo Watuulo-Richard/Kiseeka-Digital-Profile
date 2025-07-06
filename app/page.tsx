@@ -12,7 +12,7 @@ import ScrollToTop from '@/components/frontend/scroll-to-top';
 import Testimonials from '@/components/frontend/testimonials';
 import { getProfile } from '@/actions/profile-action';
 import EducationBackground from '@/components/frontend/education';
-import { getEducationBackgroundAction, getWorkExperiences } from '@/actions/actions';
+import { getEducationBackgroundAction, getSkillsAction, getWorkExperiences } from '@/actions/actions';
 
 // export const metadata: Metadata = {
 //   title: 'Kiseeka Pius | Senior Auditor',
@@ -23,8 +23,9 @@ import { getEducationBackgroundAction, getWorkExperiences } from '@/actions/acti
 export default async function Home() {
   const fetchedProfile = await getProfile()
   const fetchedWorkExperiences = await getWorkExperiences()
+  const skills = await getSkillsAction()
   const educationBackgrounds = await getEducationBackgroundAction()
-  // console.log(profile, 'the guy...');
+  
   if (!fetchedProfile) {
     return null;
   }
@@ -33,7 +34,7 @@ export default async function Home() {
       <Header />
       <Hero fetchedProfile={fetchedProfile[0]}/>
       <About fetchedProfile={fetchedProfile[0]}/>
-      <Experience fetchedWorkExperiences={fetchedWorkExperiences}/>
+      <Experience fetchedWorkExperiences={fetchedWorkExperiences} skills={skills}/>
       <Projects />
       <EducationBackground educationBackgrounds={educationBackgrounds}/>
       <Testimonials />

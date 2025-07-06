@@ -1,10 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Skills from "./skills"
-import { WorkExperience } from "@prisma/client"
+import { Skill, WorkExperience } from "@prisma/client"
 import { format } from 'date-fns';
 
-export default function Experience({fetchedWorkExperiences}:{fetchedWorkExperiences:WorkExperience[]}) {
+export default function Experience({fetchedWorkExperiences, skills}:{fetchedWorkExperiences:WorkExperience[], skills:Skill[]}) {
   const formatDate = (date: Date | string) => {
       const dateObj = typeof date === 'string' ? new Date(date) : date;
       return format(dateObj, 'MMM dd, yyyy');
@@ -135,7 +135,7 @@ export default function Experience({fetchedWorkExperiences}:{fetchedWorkExperien
 
           {/* Skills Section */}
           <div className="mt-20" id="skills">
-            <Skills />
+            <Skills skills={skills}/>
           </div>
         </div>
       </div>
