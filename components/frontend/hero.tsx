@@ -142,7 +142,8 @@ export default function Hero({
                 className="rounded-full bg-transparent"
               >
                 <a
-                  href="https://resume.nihal.com.np/nihal_maskey.pdf"
+                  href="https://www.papermark.com/view/cmcxe0mdn0001ie049oxs9mig"
+                  // href="https://www.papermark.com/view/cmcxe0mdn0001ie049oxs9mig?previewToken=88ed99c5351d4fadc86f7cef10bbc67af3c96d9ed97154cc73c94d6b33fa8057"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
