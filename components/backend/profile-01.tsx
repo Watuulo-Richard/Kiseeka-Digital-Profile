@@ -1,4 +1,3 @@
-
 import {
   LogOut,
   MoveUpRight,
@@ -20,7 +19,7 @@ interface MenuItem {
 }
 
 interface Profile01Props {
-  session: Session
+  session: Session;
 }
 
 // const defaultProfile = {
@@ -29,13 +28,11 @@ interface Profile01Props {
 //   avatar:
 //     'https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png',
 //   subscription: 'Free Trial',
-//   // session: 
+//   // session:
 // } satisfies Required<Profile01Props>;
 
-export default function Profile01({
-  session
-}: Partial<Profile01Props>) {
-  console.log(session?.user.id)
+export default function Profile01({ session }: Partial<Profile01Props>) {
+  console.log(session?.user.id);
   const menuItems: MenuItem[] = [
     {
       label: 'Edit Your Profile',
@@ -78,7 +75,9 @@ export default function Profile01({
               <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
                 {session?.user.name}
               </h2>
-              <p className="text-zinc-600 dark:text-zinc-400">{session?.user.role}</p>
+              <p className="text-zinc-600 dark:text-zinc-400">
+                {session?.user.role}
+              </p>
             </div>
           </div>
           <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-6" />
@@ -110,10 +109,8 @@ export default function Profile01({
 
             <button
               type="button"
-              className="w-full flex items-center justify-between p-2 
-                                hover:bg-zinc-50 dark:hover:bg-zinc-800/50 
-                                rounded-lg transition-colors duration-200"
-              onClick={() => signOut({callbackUrl:"/sign-in-page"})}
+              className="w-full flex items-center justify-between p-2  hover:bg-zinc-50 dark:hover:bg-zinc-800/50  rounded-lg transition-colors duration-200"
+              onClick={() => signOut({ callbackUrl: '/sign-in-page' })}
             >
               <div className="flex items-center gap-2">
                 <LogOut className="w-4 h-4" />

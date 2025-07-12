@@ -76,20 +76,20 @@ export default function Sidebar() {
                 alt="Kiseeka Pius"
                 width={32}
                 height={32}
-                className="flex-shrink-0 hidden dark:block ring-2 ring-gradient-text dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer"
+                className="flex-shrink-0 hidden dark:hidden ring-2 ring-gradient-text dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer"
               />
               </div>
               <div className="rounded-full overflow-hidden ring-2 ring-gradient-text dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer">
               <Image
                 src="https://j9v2s0d9fs.ufs.sh/f/lPsbSsZAX9SYdNnmqvWekY0wghnZXPrJQ7R45bjNmFBu8SCx"
-                alt="Acme"
+                alt="Kiseeka Pius"
                 width={32}
                 height={32}
                 className="flex-shrink-0 block dark:hidden"
               />
               </div>
               <span className="text-lg font-semibold hover:cursor-pointer gradient-text dark:text-white bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                Kiseeka Pius
+                Kiseka Pius
               </span>
             </div>
           </Link>
@@ -112,7 +112,7 @@ export default function Sidebar() {
 
               <div>
                 <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
-                  Finance
+                  Form Suite
                 </div>
                 <div className="space-y-1">
                   <NavItem href="/dashboard/profile-form" icon={ CircleUser }>

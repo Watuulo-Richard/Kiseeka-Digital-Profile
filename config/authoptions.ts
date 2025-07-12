@@ -3,6 +3,7 @@ import { NextAuthOptions } from 'next-auth';
 import type { Adapter } from 'next-auth/adapters';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import GoogleProvider from 'next-auth/providers/google';
+import LinkedInProvider from 'next-auth/providers/linkedin';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { JWT } from 'next-auth/jwt';
 import { prismaClient } from '@/lib/db';
@@ -30,7 +31,8 @@ export const authOptions: NextAuthOptions = {
       profile(profile) {
         return {
           id: profile.sub,
-          fullName: profile.name || `${profile.given_name}, ${profile.family_name}`,
+          fullName:
+            profile.name || `${profile.given_name}, ${profile.family_name}`,
           email: profile.email,
           image: profile.picture,
           role: 'USER',
@@ -38,6 +40,37 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
+
+    LinkedInProvider({
+      clientId: process.env.LINKEDIN_CLIENT_ID || '',
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET || '',
+      authorization: {
+        params: {
+          scope: 'openid profile email', // Ensure these scopes are enabled in your LinkedIn app
+        },
+      },
+      issuer: 'https://www.linkedin.com',
+      wellKnown:
+        'https://www.linkedin.com/oauth/.well-known/openid-configuration', // Updated discovery URL
+      token: 'https://www.linkedin.com/oauth/v2/accessToken',
+      userinfo: 'https://api.linkedin.com/v2/userinfo',
+      allowDangerousEmailAccountLinking: true,
+      httpOptions: {
+        timeout: 10000,
+      },
+      profile(profile) {
+        return {
+          id: profile.sub,
+          fullName:
+            profile.name || `${profile.given_name} ${profile.family_name}`,
+          email: profile.email,
+          image: profile.picture,
+          role: 'USER',
+          token: Math.floor(Math.random() * 1000000),
+        };
+      },
+    }),
+
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
@@ -50,14 +83,17 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          console.log('Authorize function called with credentials:', credentials);
-          
+          console.log(
+            'Authorize function called with credentials:',
+            credentials,
+          );
+
           if (!credentials?.email || !credentials?.password) {
             throw { error: 'No Inputs Found', status: 401 };
           }
-          
+
           console.log('Pass 1 checked');
-          
+
           const existingUser = await prismaClient.user.findUnique({
             where: { email: credentials.email },
           });
@@ -69,27 +105,30 @@ export const authOptions: NextAuthOptions = {
 
           console.log('Pass 2 Checked');
           console.log(existingUser);
-          
+
           let passwordMatch: boolean = false;
-          
+
           if (existingUser && existingUser.password) {
-            passwordMatch = await compare(credentials.password, existingUser.password);
+            passwordMatch = await compare(
+              credentials.password,
+              existingUser.password,
+            );
           }
-          
+
           if (!passwordMatch) {
             console.log('Password incorrect');
             throw { error: 'Password Incorrect', status: 401 };
           }
-          
+
           console.log('Pass 3 Checked');
-          
+
           const user = {
             id: existingUser.id,
             fullName: existingUser.fullName,
             email: existingUser.email ?? '',
             role: existingUser.role,
           };
-          
+
           console.log('User Compiled');
           console.log(user);
           return user;
@@ -160,12 +199,12 @@ export const authOptions: NextAuthOptions = {
       const dbUser = await prismaClient.user.findFirst({
         where: { email: token?.email ?? '' },
       });
-      
+
       if (!dbUser) {
         token.id = user!.id;
         return token;
       }
-      
+
       return {
         id: dbUser.id,
         fullName: dbUser.fullName,
@@ -174,7 +213,7 @@ export const authOptions: NextAuthOptions = {
         picture: dbUser.image,
       } as JWT;
     },
-    
+
     session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id;

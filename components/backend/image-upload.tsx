@@ -29,7 +29,7 @@ return (
         width="300"
       />
       <UploadButton
-        className=" ut-button:w-full"
+        className="ut-button:w-full ut-button:bg-[#F2B5A0] ut-button:ut-readying:bg-rose-300"
         endpoint={endpoint}
         onClientUploadComplete={(res) => {
           // Do something with the response

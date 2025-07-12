@@ -1,17 +1,17 @@
 'use client';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FileText, Info, Loader2, BriefcaseBusiness } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { SkillFormTypes, SkillSchema } from '@/schema/schema';
+import { toast } from 'sonner';
+import { Textarea } from '@/components/ui/textarea';
+import { Portfolio, Skill } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-
-import { FileText, Info, Loader2, BriefcaseBusiness } from 'lucide-react';
-import { SkillFormTypes, SkillSchema } from '@/schema/schema';
 import { baseUrl } from '@/types/type';
-import { toast } from 'sonner';
-import { Portfolio, Skill } from '@prisma/client';
+
 import {
   Card,
   CardContent,
@@ -106,15 +106,15 @@ export default function SkillForm({
   // };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 p-3">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
+            <div className="p-3 bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
               <BriefcaseBusiness className="h-4 w-4 text-white" />
             </div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
               Add a Professional Skill
             </h1>
           </div>
@@ -128,7 +128,7 @@ export default function SkillForm({
         <div>
           <form
             onSubmit={handleSubmit(handleWorkExperienceOnSubmit)}
-            className="space-y-6"
+            className="space-y-3"
           >
             {/* Grid Layout for Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -277,7 +277,7 @@ export default function SkillForm({
                     // onClick={onCancel}
                     variant="outline"
                     size="lg"
-                    className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
+                    className="bg-[#F2B5A0] text-white hover:border hover:border-[#F2B5A0] hover:bg-transparent font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
                   >
                     Cancel & Reset
                   </Button>

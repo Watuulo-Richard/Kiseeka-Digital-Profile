@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
   try {
     const findUserEducationBackground = await prismaClient.education.findMany({
       orderBy: {
-        institution: 'desc',
+        createdAt: 'desc',
       },
     });
     return NextResponse.json(

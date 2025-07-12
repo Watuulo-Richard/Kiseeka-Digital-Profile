@@ -1,33 +1,36 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Code2, Globe, Server, Users } from 'lucide-react';
+import { Landmark  } from 'lucide-react';
 import Globe1 from './globe-component';
 import { Portfolio } from '@prisma/client';
+import { ChartPie } from './chart-pie';
+import { Users } from './users';
+import { Globe } from './globe';
 
 export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
   const features = [
     {
-      icon: <Code2 className="h-10 w-10 text-primary" />,
-      title: 'Full Stack Development',
+      icon: <Landmark className="h-10 w-10 text-primary" />,
+      title: 'Financial analysis',
       description:
-        'Expertise in JavaScript, TypeScript, React.js, Node.js, and Laravel',
+        'Expertise in Financial statement interpretation.',
     },
     {
-      icon: <Server className="h-10 w-10 text-primary" />,
-      title: 'Cloud Solutions',
+      icon: <ChartPie className="h-10 w-10 text-primary" />,
+      title: 'Analytical and Critical Thinking',
       description:
-        'Proficient with AWS services including SQS, EventBridge, Lambda, and Step Functions',
+        'Able to analyze complex financial data and identify discrepancies or unusual trends.',
     },
     {
       icon: <Users className="h-10 w-10 text-primary" />,
-      title: 'Team Leadership',
+      title: 'Ethical Judgment and Professional Skepticism',
       description:
-        'Led diverse teams of 15+ members across development, design, DevOps, and QA',
+        'Able to remain independent, question inconsistencies, and uphold professional integrity.*',
     },
     {
       icon: <Globe className="h-10 w-10 text-primary" />,
-      title: 'Global Collaboration',
+      title: 'Teamwork and Collaboration',
       description:
-        'Coordinated with remote teams across the US, Australia, and Nepal',
+        'Working well with audit teams and client staff during engagements.',
     },
   ];
 

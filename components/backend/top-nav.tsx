@@ -8,8 +8,6 @@ import Link from "next/link"
 import { Session } from "next-auth"
 import { ModeToggle } from "../frontend/mode-toggle"
 
-// import { ThemeToggle } from "../theme-toggle"
-
 interface BreadcrumbItem {
   label: string
   href?: string
@@ -17,8 +15,10 @@ interface BreadcrumbItem {
 
 export default function TopNav({session}:{session:Session}) {
   const breadcrumbs: BreadcrumbItem[] = [
-    { label: "kokonutUI", href: "#" },
-    { label: "dashboard", href: "#" },
+    { label: "dashboard", href: "/dashboard" },
+    { label: "analytics", href: "#" },
+    { label: "profile", href: "/dashboard/profile-form" },
+    { label: "work experience", href: "/dashboard/work-experience" },
   ]
 
   return (

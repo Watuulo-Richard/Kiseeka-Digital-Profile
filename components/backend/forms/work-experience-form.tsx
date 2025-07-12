@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
 import { Portfolio, WorkExperience } from '@prisma/client';
+import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,6 @@ import { Input } from '@/components/ui/input';
 import { StartDate } from '../start-date';
 import { baseUrl } from '@/types/type';
 import { EndDate } from '../end-date';
-import { format } from 'date-fns';
 import {
   Card,
   CardContent,
@@ -38,7 +38,9 @@ export default function WorkExperienceForm({
   workExperience: WorkExperience | null;
 }) {
   const formatDate = (date: Date | string) => {
+    if(!date) return ''; // Handle null, undefined, or empty string
     const dateObj = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(dateObj.getTime())) return ''; // Handle invalid Date
     return format(dateObj, 'MMM dd, yyyy');
   };
   const {
@@ -55,7 +57,7 @@ export default function WorkExperienceForm({
       company: workExperience?.company,
       startDate: formatDate(workExperience?.startDate || ''),
       endDate: formatDate(workExperience?.endDate || ''),
-      description: workExperience?.description as string,
+      description: workExperience?.description,
     },
   });
 
@@ -145,10 +147,10 @@ export default function WorkExperienceForm({
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
+            <div className="p-3 bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
               <BriefcaseBusiness className="h-4 w-4 text-white" />
             </div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
               Add Work Experience
             </h1>
           </div>
@@ -347,7 +349,7 @@ export default function WorkExperienceForm({
                     // onClick={onCancel}
                     variant="outline"
                     size="lg"
-                    className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
+                    className="bg-[#F2B5A0] text-white hover:border hover:border-[#F2B5A0] hover:bg-transparent font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
                   >
                     Cancel & Reset
                   </Button>

@@ -24,7 +24,7 @@ export const workExperienceSchema = z.object({
     .min(1, 'Company is required')
     .max(100, 'Company must be less than 100 characters'),
   startDate: z.string().datetime(),
-  endDate: z.string().datetime().optional(),
+  endDate: z.string().datetime(),
   description: z
     .string()
     .min(10, 'Description must be at least 10 characters')
@@ -45,7 +45,7 @@ export const EducationSchema = z.object({
     .min(1, 'Education level is required')
     .max(100, 'Education level must be less than 100 characters'),
   startDate: z.string().datetime(),
-  endDate: z.string().datetime().optional(),
+  endDate: z.string().datetime(),
   description: z
     .string()
     .min(10, 'Description must be at least 10 characters')
@@ -56,7 +56,6 @@ export const EducationSchema = z.object({
 export type EducationFormTypes = z.infer<typeof EducationSchema>;
 
 // Zod schema for projects validation
-
 export const ProjectsSchema = z.object({
   title: z
     .string()
@@ -106,8 +105,7 @@ export const TestimonialSchema = z.object({
   description: z
     .string()
     .min(10, 'Description must be at least 10 characters')
-    .max(500, 'Description must be less than 500 characters')
-    .optional(),
+    .max(500, 'Description must be less than 500 characters'),
   portfolioId: z.string().optional(),
 });
 

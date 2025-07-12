@@ -1,11 +1,9 @@
-import TopNav from '@/components/backend/top-nav';
+import { ReactNode } from 'react';
 import Sidebar from '@/components/backend/sidebar';
 import { authOptions } from '@/config/authoptions';
+import TopNav from '@/components/backend/top-nav';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-
-
-import { ReactNode } from 'react';
 
 export default async function BackendLayout({ children }: { children: ReactNode }) {
 const session = await getServerSession(authOptions)
@@ -22,7 +20,7 @@ const session = await getServerSession(authOptions)
     }
     
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar />
       <div className="w-full flex flex-1 flex-col">
         <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23]">

@@ -3,16 +3,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { EducationFormTypes, EducationSchema } from '@/schema/schema';
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
+import { format } from 'date-fns';
+import { Education, Portfolio } from '@prisma/client';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Education, Portfolio } from '@prisma/client';
 import { StartDate } from '../start-date';
 import { baseUrl } from '@/types/type';
 import { EndDate } from '../end-date';
-import { format } from 'date-fns';
 import {
   Card,
   CardContent,
@@ -36,7 +36,9 @@ export default function EducationForm({
   educationBackground: Education | null;
 }) {
   const formatDate = (date: Date | string) => {
+    if (!date) return ''; // Handle null, undefined, or empty string
     const dateObj = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(dateObj.getTime())) return ''; // Handle invalid Date
     return format(dateObj, 'MMM dd, yyyy');
   };
   const {
@@ -53,12 +55,11 @@ export default function EducationForm({
       educationLevel: educationBackground?.educationLevel,
       startDate: formatDate(educationBackground?.startDate || ''),
       endDate: formatDate(educationBackground?.endDate || ''),
-      description: educationBackground?.description as string,
+      description: educationBackground?.description,
     },
   });
 
   const [loading, setLoading] = useState(false);
-
   const watchedStartDate = watch('startDate');
   const watchedEndDate = watch('endDate');
 
@@ -91,7 +92,7 @@ export default function EducationForm({
       } else {
         setLoading(false);
         console.log(response);
-        toast.error('Failed To Save Education Background In The System...🥺');
+        toast.error('Failed To Save Education Details In The System...🥺');
       }
     } catch (error) {
       setLoading(false);
@@ -111,10 +112,10 @@ export default function EducationForm({
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
-              <GraduationCap className="h-4 w-4 text-white" />
+            <div className="p-3 bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
+              <GraduationCap className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
               Add Your Education Background
             </h1>
           </div>
@@ -289,7 +290,7 @@ export default function EducationForm({
                     // onClick={onCancel}
                     variant="outline"
                     size="lg"
-                    className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
+                    className="bg-[#F2B5A0] text-white hover:border hover:border-[#F2B5A0] hover:bg-transparent font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
                   >
                     Cancel & Reset
                   </Button>

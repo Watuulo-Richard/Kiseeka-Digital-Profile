@@ -11,7 +11,6 @@ export default async function page({params}:{params:Promise<{id:string}>}) {
     return null;
   }
   const portfolio = await getPortfolio();
-  // console.log(profile, 'the guy...');
   if(!portfolio) {
     return null;
   }

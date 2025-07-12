@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
   try {
     const findUserWorkExperience = await prismaClient.workExperience.findMany({
       orderBy: {
-        position: 'desc',
+        createdAt: 'desc',
       },
     });
     return NextResponse.json(

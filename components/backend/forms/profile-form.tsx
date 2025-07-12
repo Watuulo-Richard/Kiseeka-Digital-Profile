@@ -1,7 +1,17 @@
 'use client';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FileText, Info, ImagePlus, SaveAll, Loader } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ProfileFormTypes, profileSchema } from '@/schema/schema';
+import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Portfolio } from '@prisma/client';
+import ImageInput from '../image-upload';
+import { baseUrl } from '@/types/type';
 import {
   Card,
   CardContent,
@@ -9,17 +19,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { User } from '@/components/frontend/user';
 
-import { FileText, Info, ImagePlus, SaveAll, User, Loader } from 'lucide-react';
-import { ProfileFormTypes, profileSchema } from '@/schema/schema';
-import ImageInput from '../image-upload';
-import { toast } from 'sonner';
-import { baseUrl } from '@/types/type';
-import { Portfolio } from '@prisma/client';
 
 export default function ProfileForm({
   userId,
@@ -115,10 +116,10 @@ export default function ProfileForm({
         {/* Header */}
         <div className="text-center mb-2">
           <div className="flex items-center justify-center gap-3 mb-2">
-            <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
-              <User className="h-4 w-4 text-white" />
+            <div className="p-3 bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
+              <User className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
               Set Up Your Digital Profile
             </h1>
           </div>
@@ -271,7 +272,7 @@ export default function ProfileForm({
                   type="button"
                   variant="outline"
                   size="lg"
-                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
+                  className="bg-[#F2B5A0] text-white hover:border hover:border-[#F2B5A0] hover:bg-transparent font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
                 >
                   Cancel & Reset
                 </Button>

@@ -20,13 +20,13 @@ import {
   ImagePlus,
   SaveAll,
   Loader,
-  Users,
 } from 'lucide-react';
 import { TestimonialFormTypes, TestimonialSchema } from '@/schema/schema';
 import ImageInput from '../image-upload';
 import { toast } from 'sonner';
 import { baseUrl } from '@/types/type';
 import { Portfolio, Testimonial } from '@prisma/client';
+import { Users } from '@/components/frontend/users';
 
 export default function TestimonialForm({
   portfolio,
@@ -124,10 +124,10 @@ export default function TestimonialForm({
         {/* Header */}
         <div className="text-center mb-2">
           <div className="flex items-center justify-center gap-3 mb-2">
-            <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
-              <Users className="h-4 w-4 text-white" />
+            <div className="p-3 bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
+              <Users className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
               Submit Your Testimonial
             </h1>
           </div>
@@ -284,7 +284,7 @@ export default function TestimonialForm({
                     className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                   >
                     <SaveAll className="h-5 w-5 mr-2" />
-                    Save Profile
+                    Save Testimonial
                   </Button>
                 )}
 
@@ -292,7 +292,7 @@ export default function TestimonialForm({
                   type="button"
                   variant="outline"
                   size="lg"
-                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
+                  className="bg-[#F2B5A0] text-white hover:border hover:border-[#F2B5A0] hover:bg-transparent font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
                 >
                   Cancel & Reset
                 </Button>

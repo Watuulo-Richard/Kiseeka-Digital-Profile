@@ -80,29 +80,29 @@ model Portfolio {
 }
 
 model WorkExperience {
-  id          String   @id @default(cuid())
-  position    String
-  company     String
-  startDate   DateTime
-  endDate     DateTime?
-  description String?
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
-  portfolioId String
-  createdAt     DateTime    @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  id                 String   @id @default(cuid())
+  position           String
+  company            String
+  startDate          DateTime
+  endDate            DateTime
+  description        String
+  portfolio          Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId        String
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime @updatedAt @default(now())
 }
 
 model Education {
-  id          String   @id @default(cuid())
-  institution      String
-  educationLevel      String
-  startDate   DateTime
-  endDate     DateTime?
-  description String?
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
-  portfolioId String
-  createdAt     DateTime    @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  id                String   @id @default(cuid())
+  institution       String
+  educationLevel    String
+  startDate         DateTime
+  endDate           DateTime
+  description       String
+  portfolio         Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId       String
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime @updatedAt @default(now())
 }
 
 model Project {
