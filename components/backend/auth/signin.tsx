@@ -58,7 +58,7 @@ export default function SignIn() {
     signIn('linkedin', { callbackUrl: '/dashboard' });
   }
   return (
-    <div className="flex min-h-screen w-full items-center justify-center ">
+    <div className="flex min-h-screen w-full items-center justify-center">
       <motion.div
         className="w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}
@@ -122,7 +122,7 @@ export default function SignIn() {
                 Sign in to your account
               </h1>
               <p className="mt-2 text-center text-gray-500">
-                Welcome back! Please enter your details
+                Welcome back Pius! Please enter your details
               </p>
             </div>
 
@@ -146,7 +146,7 @@ export default function SignIn() {
                       type="email"
                       // value={email}
                       // onChange={(e) => setEmail(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-teal-500"
+                      className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-[#F2B5A0]"
                       placeholder="Enter your email"
                     />
                     {errors.email && (
@@ -171,7 +171,7 @@ export default function SignIn() {
                       type={showPassword ? 'text' : 'password'}
                       // value={password}
                       // onChange={(e) => setPassword(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-teal-500"
+                      className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-[#F2B5A0] placeholder:text-[#F2B5A0]"
                       placeholder="••••••••"
                     />
                     {errors.password && (
@@ -208,7 +208,7 @@ export default function SignIn() {
                   </div> */}
                   <Link
                     href="#"
-                    className="text-sm font-medium text-teal-600 transition-colors hover:text-teal-500"
+                    className="text-sm font-medium text-[#F2B5A0] transition-colors hover:text-[#F2B5A0]/40"
                   >
                     Forgot password?
                   </Link>
@@ -217,8 +217,8 @@ export default function SignIn() {
                 {isLoading ? (
                   <motion.button
                     type="submit"
-                    className="flex w-full items-center justify-center rounded-xl bg-teal-500 py-3 font-medium text-white"
-                    whileHover={{ scale: 1.02, backgroundColor: '#0D9488' }}
+                    className="flex w-full items-center justify-center rounded-xl bg-[#F2B5A0] py-3 font-medium text-white"
+                    whileHover={{ scale: 1.02, backgroundColor: '#F2B5A0' }}
                     whileTap={{ scale: 0.98 }}
                   >
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -227,8 +227,8 @@ export default function SignIn() {
                 ) : (
                   <motion.button
                     type="submit"
-                    className="flex w-full items-center justify-center rounded-xl bg-teal-500 py-3 font-medium text-white"
-                    whileHover={{ scale: 1.02, backgroundColor: '#0D9488' }}
+                    className="flex w-full items-center justify-center rounded-xl bg-[#F2B5A0] py-3 font-medium text-white"
+                    whileHover={{ scale: 1.02, backgroundColor: '#F2B5A0' }}
                     whileTap={{ scale: 0.98 }}
                   >
                     Sign in
@@ -281,7 +281,7 @@ export default function SignIn() {
                           fill="#EA4335"
                         />
                       </svg> */}
-                      <Loader2 className="mr-2 h-4 w-4 text-emerald-600 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 text-[#F2B5A0] animate-spin" />
                     </motion.button>
                   ) : (
                     <motion.button
@@ -369,7 +369,7 @@ export default function SignIn() {
                 Don&apos;t have an account?{' '}
                 <Link
                   href="/sign-up-page"
-                  className="font-medium text-teal-600 transition-colors hover:text-teal-500"
+                  className="font-medium text-[#F2B5A0] transition-colors hover:text-[#F2B5A0]/40"
                 >
                   Sign up for free
                 </Link>

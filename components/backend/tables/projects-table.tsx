@@ -163,7 +163,7 @@ export default function ProjectsTable({ title, projects }: {
 
   return (
     <>
-      <Card className={clsx('w-full')}>
+      <Card className={clsx('w-full my-6')}>
         <CardHeader
           className={clsx('flex flex-row items-center justify-between')}
         >

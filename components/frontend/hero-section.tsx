@@ -90,36 +90,6 @@ export default function CreativeHeroSection() {
       ref={ref}
       className="relative min-h-screen w-full overflow-hidden py-10"
     >
-      {/* Background elements */}
-      <div className="absolute inset-0 z-0">
-        {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(50,50,50,0.3),rgba(0,0,0,1))]" /> */}
-
-        {/* Grid pattern */}
-        {/* <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              'linear-gradient(hsl(var(--foreground) / 0.1) 1px, transparent 1px), linear-gradient(to right, hsl(var(--foreground) / 0.1) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-          }}
-        /> */}
-
-        {/* Gradient accents */}
-        {/* <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ duration: 1.5 }}
-          className="absolute -left-20 top-20 h-[300px] w-[300px] rounded-full blur-[100px]"
-          style={{ backgroundColor: 'hsl(var(--primary) / 30%)' }}
-        /> */}
-
-        {/* <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ duration: 1.5, delay: 0.3 }}
-          className="absolute -bottom-20 right-20 h-[250px] w-[250px] rounded-full bg-blue-500/20 blur-[100px]"
-        /> */}
-      </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-0">
         <motion.div
@@ -132,8 +102,9 @@ export default function CreativeHeroSection() {
           <div>
             <motion.div
               variants={itemVariants}
-              className="inline-flex items-center px-4 py-2 text-[#3f1c10] rounded-full text-sm font-medium mb-6 backdrop-blur-md"
+              className="inline-flex items-center px-4 py-2 text-[#3f1c10] rounded-full text-sm font-medium mb-6 bg-[#f2b5a0]/40 backdrop-blur-3xl"
             >
+              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#3f1c10]"></span>
               <BookOpen className="w-4 h-4 mr-2" />
               Professional Insights & Analysis
             </motion.div>
@@ -157,15 +128,15 @@ export default function CreativeHeroSection() {
 
             {/* Services */}
             <motion.div variants={itemVariants} className="mb-8">
-              <div className="mb-4 text-sm font-medium text-white/70">
-                Our Services
+              <div className="mb-4 text-lg font-medium text-[#f2b5a0]/70">
+                My Services
               </div>
               {/* Search Bar */}
-              <div className="max-w-md relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div className="max-w-md relative border-2 border-[#f2b5a0] rounded-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#f2b5a0] w-5 h-5" />
                 <Input
                   placeholder="Search articles..."
-                  className="pl-10 py-3 text-lg"
+                  className="pl-10 py-3 text-lg text-[#f2b5a0] placeholder:text-[#f2b5a0]"
                 />
               </div>
             </motion.div>

@@ -111,19 +111,19 @@ export default function ProfileForm({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 p-3">
+    <div className="min-h-screen p-3">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-2">
           <div className="flex items-center justify-center gap-3 mb-2">
             <div className="p-3 bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
-              <User className="h-6 w-6 text-white" />
+              <User className="h-4 w-4 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
               Set Up Your Digital Profile
             </h1>
           </div>
-          <p className="text-gray-600 text-sm max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-white text-sm max-w-2xl mx-auto">
             Complete the structured form below to showcase your personal and
             professional information. Each section is designed to highlight a
             specific area of your profile.
@@ -134,19 +134,19 @@ export default function ProfileForm({
           {/* Grid Layout for Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Profile Information Card */}
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
-              <CardHeader className="border-b border-gray-100">
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                  <Info className="h-5 w-5 text-gray-600" />
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
+              <CardHeader className="border-b border-gray-100 dark:border-[#1F1F23]">
+                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                  <Info className="h-5 w-5 text-gray-600 dark:text-white" />
                   Basic Information
                 </CardTitle>
-                <CardDescription className="text-gray-600">
+                <CardDescription className="text-gray-600 dark:text-white">
                   Provide essential details to begin building your digital
                   profile.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
-                <Label className="text-gray-700 font-semibold">Full Name</Label>
+                <Label className="text-gray-700 dark:text-white font-semibold">Full Name</Label>
                 <Input
                   placeholder="Enter your full name..."
                   {...register('title', { required: true })}
@@ -160,13 +160,13 @@ export default function ProfileForm({
             </Card>
 
             {/* Profile Image */}
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
               <CardHeader className="border-b border-gray-100">
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                  <ImagePlus className="h-5 w-5 text-gray-600" />
+                <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                  <ImagePlus className="h-5 w-5 text-gray-600 dark:text-white" />
                   Upload Your Profile Image
                 </CardTitle>
-                <CardDescription className="text-gray-600">
+                <CardDescription className="text-gray-600 dark:text-white">
                   Add a professional image to represent your profile. (Max size:
                   4MB)
                 </CardDescription>
@@ -182,8 +182,8 @@ export default function ProfileForm({
             </Card>
 
             {/* Description Card */}
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white lg:col-span-2">
-              <CardHeader className="border-b border-gray-100">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23] lg:col-span-2">
+              <CardHeader className="border-b border-gray-100 dark:border-[#1F1F23]">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <FileText className="h-5 w-5 text-gray-600" />
                   Professional Profile
@@ -222,7 +222,7 @@ export default function ProfileForm({
           </div>
 
           {/* Action Buttons Card */}
-          <Card className="shadow-lg border border-gray-200 bg-white">
+          <Card className="shadow-lg border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
             <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 {userPortfolio ? (

@@ -26,7 +26,7 @@ const session = await getServerSession(authOptions)
         <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23]">
           <TopNav session={session}/>
         </header>
-        <main className="flex-1 overflow-auto px-6 py-4 bg-[#fbebe5] dark:bg-[#0F0F12]">
+        <main className="flex-1 overflow-auto px-6 pt-14 py-4 bg-[#fbebe5] dark:bg-[#0F0F12]">
           {children}
         </main>
       </div>

@@ -68,7 +68,7 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-mono);
-    padding-top: 4rem; /* 64px, matches the header height */
+    /* padding-top: 4rem; 64px, matches the header height */
   }
 }
 

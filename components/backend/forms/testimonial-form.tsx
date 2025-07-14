@@ -14,13 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
-import {
-  FileText,
-  Info,
-  ImagePlus,
-  SaveAll,
-  Loader,
-} from 'lucide-react';
+import { FileText, Info, ImagePlus, SaveAll, Loader } from 'lucide-react';
 import { TestimonialFormTypes, TestimonialSchema } from '@/schema/schema';
 import ImageInput from '../image-upload';
 import { toast } from 'sonner';
@@ -56,15 +50,15 @@ export default function TestimonialForm({
   const [loading, setLoading] = useState(false);
 
   async function handleOnSubmit(TestimonialData: TestimonialFormTypes) {
-    setLoading(true);
-    (TestimonialData.image = imageUrl),
-      (TestimonialData.portfolioId = portfolio.id);
-    // console.log(TestimonialData);
     if (!imageUrl) {
       setLoading(false);
       toast.error('Please upload an image for the referee');
       return;
     }
+    setLoading(true);
+    (TestimonialData.image = imageUrl),
+      (TestimonialData.portfolioId = portfolio.id);
+    // console.log(TestimonialData);
     if (testimonial) {
       try {
         const response = await fetch(
@@ -119,13 +113,13 @@ export default function TestimonialForm({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 p-3">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-2">
           <div className="flex items-center justify-center gap-3 mb-2">
             <div className="p-3 bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
-              <Users className="h-6 w-6 text-white" />
+              <Users className="h-4 w-4 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
               Submit Your Testimonial
@@ -142,7 +136,7 @@ export default function TestimonialForm({
           {/* Grid Layout for Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Profile Information Card */}
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <Info className="h-5 w-5 text-gray-600" />
@@ -202,7 +196,7 @@ export default function TestimonialForm({
             </Card>
 
             {/* Testimonial Image */}
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <ImagePlus className="h-5 w-5 text-gray-600" />
@@ -224,7 +218,7 @@ export default function TestimonialForm({
             </Card>
 
             {/* Description Card */}
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white lg:col-span-2">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23] lg:col-span-2">
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <FileText className="h-5 w-5 text-gray-600" />
@@ -264,7 +258,7 @@ export default function TestimonialForm({
           </div>
 
           {/* Action Buttons Card */}
-          <Card className="shadow-lg border border-gray-200 bg-white">
+          <Card className="shadow-lg border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
             <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 {loading ? (

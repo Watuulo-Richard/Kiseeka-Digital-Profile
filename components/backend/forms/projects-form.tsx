@@ -102,7 +102,7 @@ export default function ProjectsForm({
   // };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -129,7 +129,7 @@ export default function ProjectsForm({
             {/* Grid Layout for Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Basic Information Card */}
-              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
+              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <Info className="h-5 w-5 text-gray-600" />
@@ -157,7 +157,7 @@ export default function ProjectsForm({
                 </CardContent>
               </Card>
 
-              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white">
+              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <Link className="h-5 w-5 text-gray-600" />
@@ -187,7 +187,7 @@ export default function ProjectsForm({
               </Card>
 
               {/* Description Card */}
-              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white lg:col-span-2">
+              <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23] lg:col-span-2">
                 <CardHeader className="border-b border-gray-100">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <FileText className="h-5 w-5 text-gray-600" />
@@ -229,7 +229,7 @@ export default function ProjectsForm({
             </div>
 
             {/* Action Buttons Card */}
-            <Card className="shadow-lg border border-gray-200 bg-white">
+            <Card className="shadow-lg border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   {project ? (

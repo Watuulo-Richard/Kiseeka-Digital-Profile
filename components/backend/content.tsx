@@ -5,7 +5,7 @@ import List03 from "./list-03"
 
 export default function Content() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pt-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-[#0F0F12] rounded-xl p-6 flex flex-col border border-gray-200 dark:border-[#1F1F23]">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 text-left flex items-center gap-2 ">
