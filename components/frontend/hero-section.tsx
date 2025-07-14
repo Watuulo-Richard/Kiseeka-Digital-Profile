@@ -95,23 +95,23 @@ export default function CreativeHeroSection() {
         {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(50,50,50,0.3),rgba(0,0,0,1))]" /> */}
 
         {/* Grid pattern */}
-        <div
+        {/* <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
             backgroundImage:
               'linear-gradient(hsl(var(--foreground) / 0.1) 1px, transparent 1px), linear-gradient(to right, hsl(var(--foreground) / 0.1) 1px, transparent 1px)',
             backgroundSize: '40px 40px',
           }}
-        />
+        /> */}
 
         {/* Gradient accents */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
           transition={{ duration: 1.5 }}
           className="absolute -left-20 top-20 h-[300px] w-[300px] rounded-full blur-[100px]"
           style={{ backgroundColor: 'hsl(var(--primary) / 30%)' }}
-        />
+        /> */}
 
         {/* <motion.div
           initial={{ opacity: 0 }}
@@ -132,7 +132,7 @@ export default function CreativeHeroSection() {
           <div>
             <motion.div
               variants={itemVariants}
-              className="inline-flex items-center px-4 py-2 text-blue-800 rounded-full text-sm font-medium mb-6 backdrop-blur-md"
+              className="inline-flex items-center px-4 py-2 text-[#3f1c10] rounded-full text-sm font-medium mb-6 backdrop-blur-md"
             >
               <BookOpen className="w-4 h-4 mr-2" />
               Professional Insights & Analysis
@@ -140,9 +140,9 @@ export default function CreativeHeroSection() {
 
             {/* Animated title */}
             <div className="mb-6 overflow-hidden">
-              <motion.h1 className="flex flex-wrap tracking-tight text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              <motion.h1 className="flex flex-wrap tracking-tight text-4xl md:text-5xl font-bold text-[#f2b5a0] mb-6">
                 Audit & Finance
-                <span className="text-blue-600 block">Insights Blog</span>
+                <span className="text-[#3f1c10] block">Insights Blog</span>
               </motion.h1>
             </div>
 
@@ -257,8 +257,8 @@ export default function CreativeHeroSection() {
                     onClick={() => setActiveProject(index)}
                     className={`h-2 rounded-full transition-all ${
                       activeProject === index
-                        ? 'w-8 bg-purple-500'
-                        : 'w-2 bg-white/30'
+                        ? 'w-8 bg-[#eb9a7e]'
+                        : 'w-2 bg-[#f2b5a0]'
                     }`}
                     aria-label={`View project ${index + 1}`}
                   />
@@ -270,15 +270,15 @@ export default function CreativeHeroSection() {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.2, type: 'spring' }}
-                className="absolute -left-16 top-10 z-40 rounded-lg bg-white/10 p-3 backdrop-blur-md"
+                className="absolute -left-16 top-10 z-40 rounded-lg bg-white/40 p-3 backdrop-blur-md"
               >
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/30 text-purple-400">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f2b5a0] text-white">
                     <Layers className="h-4 w-4" />
                   </div>
-                  <div className="text-xs text-white">
+                  <div className="text-xs text-[#763a26]">
                     <div className="font-medium">Design Process</div>
-                    <div className="text-white/70">
+                    <div className="text-[#763a26]">
                       Strategy → Design → Develop
                     </div>
                   </div>
@@ -289,7 +289,7 @@ export default function CreativeHeroSection() {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.4, type: 'spring' }}
-                className="absolute -right-10 bottom-20 z-40 rounded-lg bg-white/10 p-3 backdrop-blur-md"
+                className="absolute -right-10 bottom-20 z-40 rounded-lg bg-white/40 p-3 backdrop-blur-md"
               >
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/30 text-blue-400">

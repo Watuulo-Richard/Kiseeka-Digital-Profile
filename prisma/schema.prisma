@@ -15,30 +15,29 @@ datasource db {
 }
  
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                        String  @id @default(cuid())
+  userId                    String
+  type                      String
+  provider                  String
+  providerAccountId         String
+  refresh_token             String?
+  access_token              String?
+  expires_at                Int?
+  token_type                String?
+  scope                     String?
+  id_token                  String?
+  session_state             String?
+  user                      User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@unique([provider, providerAccountId])
 }
  
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                        String   @id @default(cuid())
+  sessionToken              String   @unique
+  userId                    String
+  expires                   DateTime
+  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
  
 enum UserRole {
@@ -47,119 +46,148 @@ enum UserRole {
 }
  
 model User {
-  id            String    @id @default(cuid())
-  fullName      String
-  email         String   @unique
-  emailVerified DateTime?
-  image         String?
-  role          UserRole  @default(USER)
-  portfolio     Portfolio?
-  password      String
-  accounts      Account[]
-  sessions      Session[]
-  isVerified     Boolean   @default(false)
-  token         Int
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                        String    @id @default(cuid())
+  fullName                  String
+  email                     String   @unique
+  emailVerified             DateTime?
+  image                     String?
+  role                      UserRole  @default(USER)
+  portfolio                 Portfolio?
+  password                  String
+  accounts                  Account[]
+  sessions                  Session[]
+  isVerified                Boolean   @default(false)
+  token                     Int
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
 }
  
 model Portfolio {
-  id            String      @id @default(cuid())
-  title         String
-  bio           String
-  profileImage  String?
-  user          User        @relation(fields: [userId], references: [id])
-  userId        String      @unique
-  workExperience WorkExperience[]
-  education     Education[]
-  project       Project[]
-  skill         Skill[]
-  award         Award[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id                        String      @id @default(cuid())
+  title                     String
+  bio                       String
+  profileImage              String?
+  user                      User        @relation(fields: [userId], references: [id])
+  userId                    String      @unique
+  emails                    Email[]
+  workExperience            WorkExperience[]
+  education                 Education[]
+  project                   Project[]
+  skill                     Skill[]
+  award                     Award[]
+  blogPostsCategories       BlogPostCategory[]
+  blogPosts                 BlogPost[]
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @updatedAt
 }
 
 model WorkExperience {
-  id                 String   @id @default(cuid())
-  position           String
-  company            String
-  startDate          DateTime
-  endDate            DateTime
-  description        String
-  portfolio          Portfolio @relation(fields: [portfolioId], references: [id])
-  portfolioId        String
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime @updatedAt @default(now())
+  id                        String   @id @default(cuid())
+  position                  String
+  company                   String
+  startDate                 DateTime
+  endDate                   DateTime
+  description               String
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime @updatedAt @default(now())
 }
 
 model Education {
-  id                String   @id @default(cuid())
-  institution       String
-  educationLevel    String
-  startDate         DateTime
-  endDate           DateTime
-  description       String
-  portfolio         Portfolio @relation(fields: [portfolioId], references: [id])
-  portfolioId       String
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime @updatedAt @default(now())
+  id                        String   @id @default(cuid())
+  institution               String
+  educationLevel            String
+  startDate                 DateTime
+  endDate                   DateTime
+  description               String
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime @updatedAt @default(now())
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  url         String?
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
-  portfolioId String
-  createdAt     DateTime    @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  id                        String   @id @default(cuid())
+  title                     String
+  description               String?
+  url                       String?
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime @updatedAt @default(now())
 }
 
 model Skill {
-  id                String   @id @default(cuid())
-  name              String
-  level             Int?
-  description       String
-  portfolio         Portfolio @relation(fields: [portfolioId], references: [id])
-  portfolioId       String
-  createdAt         DateTime    @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  id                        String   @id @default(cuid())
+  name                      String
+  level                     Int?
+  description               String
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime @updatedAt @default(now())
 }
 
 model Testimonial {
-  id                      String   @id @default(cuid())
-
-  fullName                String
-  email                   String
-  image                   String?
-  profession              String
-  description             String
-  portfolioId             String
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
+  id                        String   @id @default(cuid())
+  fullName                  String
+  email                     String
+  image                     String?
+  profession                String
+  description               String
+  portfolioId               String
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
 }
 
 model Award {
-  id          String   @id @default(cuid())
-  title       String
-  organization String?
-  year        Int?
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
-  portfolioId String
-  createdAt     DateTime    @default(now())
- updatedAt DateTime @updatedAt @default(now())
+  id                        String   @id @default(cuid())
+  title                     String
+  organization              String?
+  year                      Int?
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  createdAt                 DateTime    @default(now())
+ updatedAt                  DateTime @updatedAt @default(now())
 }
 
 model Email {
-  id                      String   @id @default(cuid())
+  id                        String   @id @default(cuid())
+  name                      String
+  email                     String
+  subject                   String
+  message                   String
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime? @updatedAt
+}
 
-  name                    String
-  email                   String
-  subject                 String
-  message                 String
-  portfolioId             String
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime? @updatedAt
+model BlogPostCategory {
+  id                        String     @id @default(cuid())
+  title                     String
+  slug                      String     @unique
+  description               String
+  blogPosts                 BlogPost[]
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  createdAt                 DateTime   @default(now())
+  updatedAt                 DateTime   @updatedAt
+}
+model BlogPost {
+  id                        String   @id @default(cuid())
+  title                     String
+  slug                      String    @unique
+  excerpt                   String
+  category                  BlogPostCategory @relation(fields: [blogPostsCategoryId], references: [id])
+  blogPostsCategoryId       String
+  publishDate               DateTime
+  image                     String
+  featured                  Boolean   @default(false)
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
 }
  

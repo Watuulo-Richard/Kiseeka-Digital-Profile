@@ -86,7 +86,6 @@ export const SkillSchema = z.object({
 export type SkillFormTypes = z.infer<typeof SkillSchema>;
 
 // Zod schema for testimonials validation
-
 export const TestimonialSchema = z.object({
   fullName: z
     .string()
@@ -110,8 +109,50 @@ export const TestimonialSchema = z.object({
 });
 
 export type TestimonialFormTypes = z.infer<typeof TestimonialSchema>;
-// Zod schema for email validation
 
+// Zod schema for BlogPostsCategory validation
+export const BlogPostsCategorySchema = z.object({
+  title: z
+    .string()
+    .min(1, 'Blog posts category is required')
+    .max(100, 'Blog posts category must be less than 100 characters'),
+  slug: z
+    .string()
+    .optional(),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(500, 'Description must be less than 500 characters'),
+  portfolioId: z.string().optional(),
+});
+
+export type BlogPostsCategoryFormTypes = z.infer<typeof BlogPostsCategorySchema>;
+
+export const BlogPostsSchema = z.object({
+  title: z
+    .string()
+    .min(1, 'Blog title is required')
+    .max(100, 'Blog title must be less than 100 characters'),
+  slug: z
+    .string()
+    .optional(),
+  publishDate: z
+    .string()
+    .datetime(),
+  excerpt: z
+    .string()
+    .min(10, 'Excerpt must be at least 10 characters')
+    .max(500, 'Excerpt must be less than 500 characters'),
+  image: z.string().optional(),
+  featured: z
+    .boolean().optional(),
+  blogPostsCategoryId: z.string().optional(),
+  portfolioId: z.string().optional(),
+});
+
+export type BlogPostsFormTypes = z.infer<typeof BlogPostsSchema>;
+
+// Zod schema for email validation
 export const EmailSchema = z.object({
   name: z
     .string()

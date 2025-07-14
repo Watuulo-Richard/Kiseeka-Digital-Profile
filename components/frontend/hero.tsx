@@ -155,17 +155,17 @@ export default function Hero({
             <div className="flex gap-4 mt-6 justify-center md:justify-start">
               <Button variant="ghost" size="icon" asChild>
                 <Link
-                  href="https://github.com/maskeynihal"
+                  href="https://x.com/PiusKiseka"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <RiTwitterXLine className="h-5 w-5" />
-                  <span className="sr-only">GitHub</span>
+                  <span className="sr-only">Twitter</span>
                 </Link>
               </Button>
               <Button variant="ghost" size="icon" asChild>
                 <Link
-                  href="https://linkedin.com/in/maskeynihal"
+                  href="https://www.linkedin.com/in/kiseka-pius-064b651a7/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -174,7 +174,7 @@ export default function Hero({
                 </Link>
               </Button>
               <Button variant="ghost" size="icon" asChild>
-                <Link href="mailto:t3w4e0rdaf6f@opayq.com">
+                <Link href="mailto:kisekapius45@gmail.com">
                   <Mail className="h-5 w-5" />
                   <span className="sr-only">Email</span>
                 </Link>

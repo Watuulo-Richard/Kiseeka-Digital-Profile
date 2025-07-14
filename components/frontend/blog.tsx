@@ -1,7 +1,7 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ExternalLink } from "lucide-react"
-import Link from "next/link"
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Blog() {
   return (
@@ -9,9 +9,12 @@ export default function Blog() {
       <div className="container px-4 md:px-6 mx-auto">
         <div className="space-y-12">
           <div className="space-y-4 text-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Blog</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              Blog
+            </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Thoughts, tutorials, and insights on software development
+              Professional Insights Analysis, commentary, and expertise on
+              auditing and financial practices
             </p>
           </div>
 
@@ -20,11 +23,17 @@ export default function Blog() {
               <CardContent className="p-6 text-center">
                 <h3 className="text-xl font-bold mb-4">Visit My Blog</h3>
                 <p className="text-muted-foreground mb-6">
-                  I write about JavaScript, React, Node.js, AWS, and other technologies on my Hashnode blog. Check out
-                  my latest articles and tutorials.
+                  Read My Articles I share insights on internal auditing, risk
+                  management, compliance frameworks, and financial analysis on
+                  my professional blog. Explore my latest thoughts on industry
+                  best practices.
                 </p>
                 <Button asChild>
-                  <Link href="https://nihalmaskey.hashnode.dev" target="_blank" rel="noopener noreferrer">
+                  <Link
+                    href="/blogs-page"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <ExternalLink className="mr-2 h-4 w-4" /> Visit Blog
                   </Link>
                 </Button>
@@ -34,5 +43,5 @@ export default function Blog() {
         </div>
       </div>
     </section>
-  )
+  );
 }

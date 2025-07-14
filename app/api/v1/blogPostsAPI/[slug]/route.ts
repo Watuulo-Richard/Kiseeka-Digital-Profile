@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prismaClient } from "@/lib/db";
 
-export async function GET(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
+export async function GET(request:NextRequest, {params}:{params:Promise<{slug:string}>}) {
     try {
-        const { id } = await params
-        const getUserEducationBackground = await prismaClient.education.findUnique({
+        const { slug } = await params
+        const getUserBlogPost = await prismaClient.blogPost.findUnique({
             where: {
-                id: id
+                slug: slug
             }
         })
         return NextResponse.json({
-            data: getUserEducationBackground,
+            data: getUserBlogPost,
             error: null,
-            message: 'User Education Background Fetched Successfully...!!!✅',
+            message: 'User Blog-Post Fetched Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -22,25 +22,25 @@ export async function GET(request:NextRequest, {params}:{params:Promise<{id:stri
         return NextResponse.json({
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-            message: 'Failed To Fetch User Education Background...!!!🥺',
+            message: 'Failed To Fetch User Blog-Post...!!!🥺',
             status: 500
         }, {
             status: 500
         })
     }
 }
-export async function DELETE(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
+export async function DELETE(request:NextRequest, {params}:{params:Promise<{slug:string}>}) {
     try {
-        const { id } = await params
-        const deleteUserEducationBackground = await prismaClient.education.delete({
+        const { slug } = await params
+        const deleteUserBlogPost = await prismaClient.blogPost.delete({
             where: {
-                id: id
+                slug: slug
             }
         })
         return NextResponse.json({
-            data: deleteUserEducationBackground,
+            data: deleteUserBlogPost,
             error: null,
-            message: 'User Education Background Deleted Successfully...!!!✅',
+            message: 'User Blog-Post Deleted Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -50,27 +50,27 @@ export async function DELETE(request:NextRequest, {params}:{params:Promise<{id:s
         return NextResponse.json({
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-            message: 'Failed To Delete User Education Background...!!!🥺',
+            message: 'Failed To Delete User Blog-Post...!!!🥺',
             status: 500
         }, {
             status: 500
         })
     }
 }
-export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
+export async function PATCH(request:NextRequest, {params}:{params:Promise<{slug:string}>}) {
     try {
-        const { id } = await params
-        const EducationFormData = await request.json()
-        const updateUserEducationBackground = await prismaClient.education.update({
+        const { slug } = await params
+        const BlogPostsFormData = await request.json()
+        const updateUserBlogPosts = await prismaClient.blogPost.update({
             where: {
-                id: id
+                slug: slug
             },
-            data: EducationFormData
+            data: BlogPostsFormData
         })
         return NextResponse.json({
-            data: updateUserEducationBackground,
+            data: updateUserBlogPosts,
             error: null,
-            message: 'User Education Background Updated Successfully...!!!✅',
+            message: 'User Blog-Posts Updated Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -80,7 +80,7 @@ export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:st
         return NextResponse.json({
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-            message: 'Failed To User Education Background...!!!🥺',
+            message: 'Failed To Update User Blog-Posts...!!!🥺',
             status: 500
         }, {
             status: 500

@@ -20,13 +20,13 @@ const session = await getServerSession(authOptions)
     }
     
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-[#fbebe5]">
       <Sidebar />
       <div className="w-full flex flex-1 flex-col">
         <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23]">
           <TopNav session={session}/>
         </header>
-        <main className="flex-1 overflow-auto px-6 py-4 bg-white dark:bg-[#0F0F12]">
+        <main className="flex-1 overflow-auto px-6 py-4 bg-[#fbebe5] dark:bg-[#0F0F12]">
           {children}
         </main>
       </div>

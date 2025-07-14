@@ -15,7 +15,7 @@ export function Highlight({
   return (
     <span
       className={cn(
-        'bg-blue-500/10 p-1 py-0.5 font-bold text-blue-500',
+        'bg-[#fbebe5] dark:bg-transparent p-1 py-0.5 font-bold text-[#F2B5A0]',
         className,
       )}
     >
@@ -56,11 +56,11 @@ export function TestimonialCard({
       <div className="select-none text-sm font-normal text-muted-foreground">
         {description}
         <div className="flex flex-row py-1">
-          <Star className="size-4 fill-blue-500 text-blue-500" />
-          <Star className="size-4 fill-blue-500 text-blue-500" />
-          <Star className="size-4 fill-blue-500 text-blue-500" />
-          <Star className="size-4 fill-blue-500 text-blue-500" />
-          <Star className="size-4 fill-blue-500 text-blue-500" />
+          <Star className="size-4 fill-[#3f1c10] dark:fill-[#F2B5A0] text-[#3f1c10] dark:text-[#F2B5A0]" />
+          <Star className="size-4 fill-[#3f1c10] dark:fill-[#F2B5A0] text-[#3f1c10] dark:text-[#F2B5A0]" />
+          <Star className="size-4 fill-[#3f1c10] dark:fill-[#F2B5A0] text-[#3f1c10] dark:text-[#F2B5A0]" />
+          <Star className="size-4 fill-[#3f1c10] dark:fill-[#F2B5A0] text-[#3f1c10] dark:text-[#F2B5A0]" />
+          <Star className="size-4 fill-[#3f1c10] dark:fill-[#F2B5A0] text-[#3f1c10] dark:text-[#F2B5A0]" />
         </div>
       </div>
 
@@ -70,7 +70,7 @@ export function TestimonialCard({
           height={40}
           src={img || ''}
           alt={name}
-          className="size-10 rounded-full ring-1 ring-blue-500/20 ring-offset-2"
+          className="size-10 rounded-full ring-1 ring-[#F2B5A0] ring-offset-2"
         />
 
         <div>
@@ -235,8 +235,8 @@ export default function Testimonials() {
   return (
     <section className="overflow-x-hidden container relative py-10">
       {/* Decorative elements */}
-      <div className="absolute -left-20 top-20 z-10 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl" />
-      <div className="absolute -right-20 bottom-20 z-10 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl" />
+      <div className="absolute -left-20 top-20 z-10 h-64 w-64 rounded-full bg-[#fbebe5] dark:bg-black blur-3xl" />
+      <div className="absolute -right-20 bottom-20 z-10 h-64 w-64 rounded-full bg-[#fbebe5] dark:bg-black blur-3xl" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -248,11 +248,11 @@ export default function Testimonials() {
         </h2>
         <h3 className="mx-auto mb-8 max-w-lg text-balance text-center text-lg font-medium tracking-tight text-muted-foreground">
           Don&apos;t just take our word for it. Here&apos;s what{' '}
-          <span className="bg-gradient-to-r from-blue-500 to-sky-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-[#3f1c10] to-[#F2B5A0] bg-clip-text text-transparent">
              clients, partners, and colleagues
           </span>{' '}
           are saying about working with{' '}
-          <span className="font-semibold text-blue-500">Kiseeka Pius, Auditor at PKF Uganda.</span>
+          <span className="font-semibold text-[#F2B5A0]">Kiseeka Pius, Auditor at PKF Uganda.</span>
         </h3>
       </motion.div>
 
@@ -287,8 +287,8 @@ export default function Testimonials() {
               </Marquee>
             ))}
         </div>
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 w-full bg-gradient-to-t from-background from-20%"></div>
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 w-full bg-gradient-to-b from-background from-20%"></div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 w-full bg-gradient-to-t from-[#fbebe5] dark:from-black from-20%"></div>
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 w-full bg-gradient-to-b from-[#fbebe5] dark:from-black from-20%"></div>
       </div>
     </section>
   );
