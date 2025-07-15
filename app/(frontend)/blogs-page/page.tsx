@@ -1,3 +1,6 @@
+// At the top of your blogs-page/page.js
+export const dynamic = 'force-dynamic';
+
 import { getUserBlogPosts } from '@/actions/blog-posts-action';
 import CreativeHeroSection from '@/components/frontend/hero-section';
 import { ShinyButton } from '@/components/magicui/shiny-button';
@@ -102,6 +105,7 @@ const categories = [
 
 export default async function Component() {
   const userBlogPosts = await getUserBlogPosts();
+  console.log(userBlogPosts, 'juii...............')
 
   // Format date function
   const formatDate = (date: Date | string) => {
@@ -225,7 +229,8 @@ export default async function Component() {
               <div className="md:flex">
                 <div className="md:w-1/2">
                   <Image
-                    src={userBlogPosts[0].image || '/placeholder.svg'}
+                  // Remember You Have An Svg In Your Images And It's Causing Errors... Remember To Change The Image.
+                    src={userBlogPosts[1].image || '/placeholder.svg'}
                     alt={userBlogPosts[0].title}
                     width={600}
                     height={400}

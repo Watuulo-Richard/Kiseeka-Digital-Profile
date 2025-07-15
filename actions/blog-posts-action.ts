@@ -22,7 +22,7 @@ export async function getUserBlogPosts() {
     try {
         const response = await fetch(blogPostsAPIRoute, { next: { revalidate: REVALIDATE_TIME } })
         const userBlogPosts = await response.json()
-        // console.log(userBlogPosts.data, 'Finally UserBlogPostsCategories Fetched Successfully...👍🏾');
+        console.log(userBlogPosts.data, 'Finally UserBlogPostsCategories Fetched Successfully...👍🏾');
         return userBlogPosts.data as BlogPostTypes[]
     } catch (error) {
         console.log(error);
