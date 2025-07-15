@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prismaClient } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
-  const BlogPostsCategoryFormData = await request.json()
-  console.log(BlogPostsCategoryFormData, 'Data Has Reached The API');
+  // const BlogPostsCategoryFormData = await request.json()
+  // console.log(BlogPostsCategoryFormData, 'Data Has Reached The API');
   try {
     const BlogPostsCategoryFormData = await request.json();
     const createUserBlogPostsCategory = await prismaClient.blogPostCategory.create({

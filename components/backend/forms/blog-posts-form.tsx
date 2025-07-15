@@ -57,8 +57,6 @@ export default function BlogPostsForm({
     resolver: zodResolver(BlogPostsSchema),
     defaultValues: {
       title: '',
-      //   readTime: '',
-      //   publishDate: '',
       image: '/placeholder.svg',
       excerpt: '',
     },

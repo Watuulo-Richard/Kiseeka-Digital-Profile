@@ -84,7 +84,7 @@ export function DateAndTime({
           </PopoverContent>
         </Popover>
       </div>
-      <div className="flex flex-col gap-3">
+      {/* <div className="flex flex-col gap-3">
         <Label htmlFor="time-picker" className="px-1">
           Time
         </Label>
@@ -96,7 +96,7 @@ export function DateAndTime({
           // onChange={handleTimeChange}
           className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
-      </div>
+      </div> */}
     </div>
   );
 }
