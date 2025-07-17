@@ -113,7 +113,7 @@ export default function BlogComponent({
       </header>
 
       {/* Hero Section */}
-      <section className="py-6 px-4 sm:px-6 lg:px-8">
+      <section className="py-8 px-4 sm:px-6 lg:px-8">
         <CreativeHeroSection />
       </section>
 
@@ -156,13 +156,6 @@ export default function BlogComponent({
       {/* Main Content */}
       <section className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Category Filter */}
-          <CategoryFilter
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            userBlogPostsCategories={userBlogPostsCategories}
-          />
-
           {/* Featured Post */}
           <div className="mb-16">
             <h2 className="text-2xl font-bold text-gray-900 mb-8">
@@ -213,6 +206,14 @@ export default function BlogComponent({
             <h2 className="text-2xl font-bold text-gray-900 mb-8">
               Latest Articles
             </h2>
+            <div className="">
+              {/* Category Filter */}
+          <CategoryFilter
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            userBlogPostsCategories={userBlogPostsCategories}
+          />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPostsByCategory.map((post) => (
                 <Card
@@ -292,20 +293,20 @@ export default function BlogComponent({
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-[#F2B5A0] text-white/60 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-4 mb-4">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">KP</span>
+                <div className="w-10 h-10 bg-gray-600/80 rounded-full flex items-center justify-center">
+                  <span className="text-[#F2B5A0] font-bold text-lg">KP</span>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold">Kiseeka Pius</h3>
-                  <p className="text-gray-400">Professional Auditor</p>
+                  <p className="text-gray-600/80">Professional Auditor</p>
                 </div>
               </div>
-              <p className="text-gray-400 mb-4">
+              <p className="text-gray-600/80 mb-4">
                 Providing professional auditing services and insights to help
                 organizations maintain financial integrity and regulatory
                 compliance.
@@ -338,7 +339,7 @@ export default function BlogComponent({
                           fill="#EA4335"
                         />
                       </svg>
-                      <p className="text-[#F2B5A0]">
+                      <p className="text-gray-600/70">
                         Login To Your Dashboard With Google
                       </p>
                     </div>
@@ -348,7 +349,7 @@ export default function BlogComponent({
             </div>
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-600/80">
                 <li>
                   <Link href="#" className="hover:text-white transition-colors">
                     About
@@ -373,7 +374,7 @@ export default function BlogComponent({
             </div>
             <div>
               <h4 className="font-semibold mb-4">Categories</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-600/80">
                 <li>
                   <Link href="#" className="hover:text-white transition-colors">
                     Internal Controls
@@ -397,21 +398,21 @@ export default function BlogComponent({
               </ul>
             </div>
           </div>
-          <Separator className="my-8 bg-gray-800" />
+          <Separator className="my-8 bg-gray-600/80" />
           <div className="flex flex-col sm:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              © 2024 Kiseeka Pius. All rights reserved.
+            <p className="text-gray-600/80 text-sm">
+              © 2025 Kiseeka Pius. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 sm:mt-0">
               <Link
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-600/80 hover:text-white transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-600/80 hover:text-white transition-colors"
               >
                 Terms of Service
               </Link>

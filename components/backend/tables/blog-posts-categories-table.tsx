@@ -34,14 +34,15 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
 import { baseUrl } from '@/types/type';
-import { Testimonial } from '@prisma/client';
+import { BlogPostCategory } from '@prisma/client';
 
-
-export default function TestimonialsTable({ title, testimonials }: {
+export default function BlogPostsCategoriesTable({
+  title,
+  userBlogPostsCategories,
+}: {
   title: string;
-  testimonials: Testimonial[]
+  userBlogPostsCategories: BlogPostCategory[];
 }) {
-
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,20 +50,20 @@ export default function TestimonialsTable({ title, testimonials }: {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const itemsPerPage = 10;
-  const router = useRouter()
+  const router = useRouter();
 
   // Filter meals based on search query
-  const filteredMeals = useMemo(() => {
-    if (!searchQuery.trim()) return testimonials;
+  const filteredUserBlogPostsCategories = useMemo(() => {
+    if (!searchQuery.trim()) return userBlogPostsCategories;
 
     const query = searchQuery.toLowerCase();
-    return testimonials.filter(
-      (testimonial) =>
-        testimonial.fullName.toLowerCase().includes(query) ||
-        testimonial.email.toLowerCase().includes(query) ||
-        testimonial.id.toLowerCase().includes(query),
+    return userBlogPostsCategories.filter(
+      (category) =>
+        category.title.toLowerCase().includes(query) ||
+        category.slug.toLowerCase().includes(query) ||
+        category.id.toLowerCase().includes(query),
     );
-  }, [testimonials, searchQuery]);
+  }, [userBlogPostsCategories, searchQuery]);
 
   // Handle add new click
   const handleAddNewClick = () => {
@@ -71,32 +72,32 @@ export default function TestimonialsTable({ title, testimonials }: {
   };
 
   // Handle delete click
-  async function handleDeleteClick(testimonialId: string) {
+  async function handleDeleteClick(categoryId: string) {
     try {
-      if (testimonialId) {
-        setIsDeleting(testimonialId);
+      if (categoryId) {
+        setIsDeleting(categoryId);
       }
       const response = await fetch(
-        `${baseUrl}/api/v1/testimonialsAPI/${testimonialId}`,
+        `${baseUrl}/api/v1/blogPostsCategoryAPI/${categoryId}`,
         {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
         },
       );
-      console.log(response), 'Jesus';
+      
       if (response.ok) {
         setIsDeleting(null);
-        toast.success('Testimonial Deleted Successfully...✅');
-        console.log(response);
-        router.push('/dashboard/view-testimonials')
+        toast.success('Blog-PostCategory Deleted Successfully');
+        // console.log(response);
+        router.push('/dashboard/view-blog-posts-categories');
       } else {
         setIsDeleting(null);
-        toast.error('Failed To Delete Testimonials...!!!🥺');
+        toast.error('Failed To Delete Blog-PostCategory...!!!🥺');
         console.log(response);
       }
     } catch (error) {
       setIsDeleting(null);
-      toast.error('❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️', {
+      toast.error('Failed to Work Experience', {
         description:
           error instanceof Error ? error.message : 'Unknown error occurred',
       });
@@ -109,7 +110,9 @@ export default function TestimonialsTable({ title, testimonials }: {
   };
 
   // Calculate total pages
-  const totalPages = Math.ceil(filteredMeals.length / itemsPerPage);
+  const totalPages = Math.ceil(
+    filteredUserBlogPostsCategories.length / itemsPerPage,
+  );
 
   // Format date function
   const formatDate = (date: Date | string) => {
@@ -166,14 +169,16 @@ export default function TestimonialsTable({ title, testimonials }: {
           <div>
             <CardTitle className={clsx('text-2xl')}>{title}</CardTitle>
             <p className={clsx('text-muted-foreground mt-1')}>
-              {testimonials.length}{' '}
-              {testimonials.length === 1 ? 'testimonial' : 'testimonials'}
+              {userBlogPostsCategories.length}{' '}
+              {userBlogPostsCategories.length === 1
+                ? 'Blog-PostsCategory'
+                : 'Blog-PostsCategories'}
             </p>
           </div>
-          <Button className='' onClick={handleAddNewClick}>
+          <Button className="" onClick={handleAddNewClick}>
             {/* <Plus className={clsx('mr-2 h-4 w-4')} /> */}
-            <Link href='/dashboard/work-experience'>
-                Add Testimonial
+            <Link href="/dashboard/blog-posts-category">
+              Add Blog-PostsCategory
             </Link>
           </Button>
         </CardHeader>
@@ -188,7 +193,7 @@ export default function TestimonialsTable({ title, testimonials }: {
                 )}
               />
               <Input
-                placeholder="Search testimonial..."
+                placeholder="Search blog-post category..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={clsx('pl-8 w-full md:w-80')}
@@ -206,7 +211,7 @@ export default function TestimonialsTable({ title, testimonials }: {
             </div>
             <Button
               variant="outline"
-            //   onClick={exportToExcel}
+              //   onClick={exportToExcel}
               disabled={isExporting}
             >
               {isExporting ? (
@@ -226,55 +231,48 @@ export default function TestimonialsTable({ title, testimonials }: {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Image</TableHead>
-                <TableHead>FullName</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Profession</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Description</TableHead>
                 <TableHead>CreatedAt</TableHead>
                 <TableHead>UpdatedAt</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {testimonials.length > 0 ? (
-                testimonials.map((testimonial) => (
-                  <TableRow key={testimonial.id}>
+              {userBlogPostsCategories.length > 0 ? (
+                userBlogPostsCategories.map((category) => (
+                  <TableRow key={category.id}>
                     <TableCell className={clsx('font-medium')}>
-                      <Card className="w-12 h-12 rounded overflow-hidden shadow-lg">
-                        <img
-                          className="h-full w-full object-fit-contain overflow-hidden"
-                          src={testimonial.image || '/placeholder.svg'}
-                          alt={testimonial.fullName}
-                        />
-                      </Card>
+                      {category.title}
                     </TableCell>
-                    <TableCell>{testimonial.fullName}</TableCell>
-                    <TableCell>{testimonial.email}</TableCell>
-                    <TableCell>{testimonial.profession}</TableCell>
-                    <TableCell>{formatDate(testimonial.createdAt)}</TableCell>
-                    <TableCell>{formatDate(testimonial.updatedAt)}</TableCell>
+                    <TableCell>
+                      {category.description.trim().substring(0, 10) + '...'}
+                    </TableCell>
+                    <TableCell>{formatDate(category.createdAt)}</TableCell>
+                    <TableCell>{formatDate(category.updatedAt)}</TableCell>
                     <TableCell className={clsx('text-right')}>
                       <div className={clsx('flex justify-end gap-2')}>
-                        <Link href={`/dashboard/testimonial-form/${testimonial.id}`}>
-                          <Button 
+                        <Link
+                          href={`/dashboard/blog-posts-category/${category.id}`}
+                        >
+                          <Button
                             variant="outline"
                             size="icon"
-                              // onClick={() => handleEditClick(meal.slug)}
-                            title="Edit Testimonial"
+                            // onClick={() => handleEditClick(meal.slug)}
+                            title="Edit Blog-Post Category"
                           >
                             <Edit className={clsx('h-4 w-4')} />
-                            
                           </Button>
                         </Link>
                         <Button
                           variant="outline"
                           size="icon"
                           className={clsx('text-destructive')}
-                          onClick={() => handleDeleteClick(testimonial.id)}
-                          disabled={isDeleting === testimonial.id}
+                          onClick={() => handleDeleteClick(category.id)}
+                          disabled={isDeleting === category.id}
                           title="Delete Testimonial"
                         >
-                          {isDeleting === testimonial.id ? (
+                          {isDeleting === category.id ? (
                             <Loader2 className={clsx('h-4 w-4 animate-spin')} />
                           ) : (
                             <Trash2 className={clsx('h-4 w-4')} />
@@ -288,8 +286,8 @@ export default function TestimonialsTable({ title, testimonials }: {
                 <TableRow>
                   <TableCell colSpan={7} className={clsx('text-center py-6')}>
                     {searchQuery
-                      ? 'No matching testimonials found'
-                      : 'No testimonial found'}
+                      ? 'No matching categories found'
+                      : 'No category found'}
                   </TableCell>
                 </TableRow>
               )}

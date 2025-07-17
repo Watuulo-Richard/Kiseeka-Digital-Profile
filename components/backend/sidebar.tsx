@@ -65,8 +65,7 @@ export default function Sidebar() {
       >
         <div className="h-full flex flex-col">
           <Link
-            href="https://kokonutui.com/"
-            target="_blank"
+            href="/dashboard"
             rel="noopener noreferrer"
             className="h-16 px-6 flex items-center border-b border-gray-200 dark:border-[#1F1F23]"
           >
@@ -102,10 +101,10 @@ export default function Sidebar() {
                   Overview
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Home}>
+                  <NavItem href="/dashboard" icon={Home}>
                     Dashboard
                   </NavItem>
-                  <NavItem href="#" icon={BarChart2}>
+                  <NavItem href="/dashboard" icon={BarChart2}>
                     Analytics
                   </NavItem>
                 </div>
@@ -162,6 +161,12 @@ export default function Sidebar() {
                   </NavItem>
                   <NavItem href="/dashboard/view-testimonials" icon={TableProperties}>
                     Testimonials
+                  </NavItem>
+                  <NavItem href="/dashboard/view-blog-posts-categories" icon={TableProperties}>
+                    Blog Categories
+                  </NavItem>
+                  <NavItem href="/dashboard/view-blog-posts" icon={TableProperties}>
+                    Blog Posts
                   </NavItem>
                 </div>
               </div>

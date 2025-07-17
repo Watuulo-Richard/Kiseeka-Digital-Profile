@@ -88,7 +88,7 @@ export default function CreativeHeroSection() {
   return (
     <div
       ref={ref}
-      className="relative min-h-screen w-full overflow-hidden py-10"
+      className="relative w-full overflow-hidden py-10"
     >
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-0">
