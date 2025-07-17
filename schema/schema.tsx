@@ -128,6 +128,7 @@ export const BlogPostsCategorySchema = z.object({
 
 export type BlogPostsCategoryFormTypes = z.infer<typeof BlogPostsCategorySchema>;
 
+// Zod schema for BlogPosts validation
 export const BlogPostsSchema = z.object({
   title: z
     .string()
@@ -151,6 +152,27 @@ export const BlogPostsSchema = z.object({
 });
 
 export type BlogPostsFormTypes = z.infer<typeof BlogPostsSchema>;
+
+// Zod schema for Comments validation
+export const CommentSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Blog title is required')
+    .max(100, 'Blog title must be less than 100 characters'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address')
+    .transform((email) => email.toLowerCase().trim()),
+  viewerComment: z
+    .string()
+    .min(10, 'Viewer Comment must be at least 10 characters')
+    .max(500, 'Viewer Comment must be less than 500 characters'),
+  blogPostId: z.string().optional(),
+  portfolioId: z.string().optional(),
+});
+
+export type CommentFormTypes = z.infer<typeof CommentSchema>;
 
 // Zod schema for email validation
 export const EmailSchema = z.object({

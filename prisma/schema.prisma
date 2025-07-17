@@ -77,6 +77,7 @@ model Portfolio {
   award                     Award[]
   blogPostsCategories       BlogPostCategory[]
   blogPosts                 BlogPost[]
+  comments                  Comment[]
   createdAt                 DateTime    @default(now())
   updatedAt                 DateTime    @updatedAt
 }
@@ -185,6 +186,20 @@ model BlogPost {
   publishDate               DateTime
   image                     String
   featured                  Boolean   @default(false)
+  portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId               String
+  comments                  Comment[]
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+}
+
+model Comment {
+  id                        String   @id @default(cuid())
+  name                      String
+  email                     String
+  viewerComment             String
+  blogPost                  BlogPost  @relation(fields: [blogPostId], references: [id])
+  blogPostId                String
   portfolio                 Portfolio @relation(fields: [portfolioId], references: [id])
   portfolioId               String
   createdAt                 DateTime  @default(now())

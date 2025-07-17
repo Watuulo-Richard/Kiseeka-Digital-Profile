@@ -80,7 +80,7 @@ export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:st
         return NextResponse.json({
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-            message: 'Failed To User Project...!!!🥺',
+            message: 'Failed To Update User Project...!!!🥺',
             status: 500
         }, {
             status: 500

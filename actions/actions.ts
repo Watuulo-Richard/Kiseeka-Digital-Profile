@@ -17,19 +17,6 @@ export async function getUserById(id: string) {
     }
 }
 
-
-// export async function getPortfolioById(id: string) {
-//     const profileAPIRoute = `${baseUrl}/api/v1/profileAPI/${id}`
-//     try {
-//         const response = await fetch(profileAPIRoute, { cache: 'no-store' })
-//         const profile = await response.json()
-//         // console.log(profile, 'Finally Am In The System...👍🏾');
-//         return profile.data as Portfolio
-//     } catch (error) {
-//         console.log(error);
-//         return null
-//     }
-// }
 const profileAPIRoute = `${baseUrl}/api/v1/profileAPI`
 export async function getPortfolio() {
     try {
@@ -48,7 +35,7 @@ export async function getUserPortfolio(id:string) {
     try {
         const response = await fetch(profileAPIRoute, { next: { revalidate: REVALIDATE_TIME } })
         const profile = await response.json()
-        console.log(profile, 'Finally Portfolio In The System...👍🏾');
+        // console.log(profile, 'Finally Portfolio In The System...👍🏾');
         return profile.data as Portfolio
     } catch (error) {
         console.log(error);

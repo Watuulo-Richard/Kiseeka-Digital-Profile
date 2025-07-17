@@ -4,15 +4,15 @@ import { prismaClient } from "@/lib/db";
 export async function GET(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
     try {
         const { id } = await params
-        const getUserEducationBackground = await prismaClient.education.findUnique({
+        const getUserComment = await prismaClient.comment.findUnique({
             where: {
                 id: id
             }
         })
         return NextResponse.json({
-            data: getUserEducationBackground,
+            data: getUserComment,
             error: null,
-            message: 'User Education Background Fetched Successfully...!!!✅',
+            message: 'User Comment Fetched Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -22,7 +22,7 @@ export async function GET(request:NextRequest, {params}:{params:Promise<{id:stri
         return NextResponse.json({
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-            message: 'Failed To Fetch User Education Background...!!!🥺',
+            message: 'Failed To Fetch User Comment...!!!🥺',
             status: 500
         }, {
             status: 500
@@ -32,15 +32,15 @@ export async function GET(request:NextRequest, {params}:{params:Promise<{id:stri
 export async function DELETE(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
     try {
         const { id } = await params
-        const deleteUserEducationBackground = await prismaClient.education.delete({
+        const deleteUserComment = await prismaClient.comment.delete({
             where: {
                 id: id
             }
         })
         return NextResponse.json({
-            data: deleteUserEducationBackground,
+            data: deleteUserComment,
             error: null,
-            message: 'User Education Background Deleted Successfully...!!!✅',
+            message: 'User Comment Deleted Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -50,7 +50,7 @@ export async function DELETE(request:NextRequest, {params}:{params:Promise<{id:s
         return NextResponse.json({
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-            message: 'Failed To Delete User Education Background...!!!🥺',
+            message: 'Failed To Delete User Comment...!!!🥺',
             status: 500
         }, {
             status: 500
@@ -60,17 +60,17 @@ export async function DELETE(request:NextRequest, {params}:{params:Promise<{id:s
 export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:string}>}) {
     try {
         const { id } = await params
-        const EducationFormData = await request.json()
-        const updateUserEducationBackground = await prismaClient.education.update({
+        const CommentFormData = await request.json()
+        const updateUserEducationBackground = await prismaClient.comment.update({
             where: {
                 id: id
             },
-            data: EducationFormData
+            data: CommentFormData
         })
         return NextResponse.json({
             data: updateUserEducationBackground,
             error: null,
-            message: 'User Education Background Updated Successfully...!!!✅',
+            message: 'User Comment Updated Successfully...!!!✅',
             status: 200
         }, {
             status: 200
@@ -80,7 +80,7 @@ export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:st
         return NextResponse.json({
             data: null,
             error: '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-            message: 'Failed To Update User Education Background...!!!🥺',
+            message: 'Failed To Update User Comment...!!!🥺',
             status: 500
         }, {
             status: 500

@@ -2,26 +2,24 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prismaClient } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
-  // const BlogPostFormData = await request.json()
-  // console.log(BlogPostFormData, 'Data Has Reached The API');
+  // const CommentFormData = await request.json()
+  // console.log(CommentFormData, 'Data Has Reached The API');
   try {
-    const BlogPostFormData = await request.json();
-    const createUserBlogPost = await prismaClient.blogPost.create({
+    const CommentFormData = await request.json();
+    const createUserComment = await prismaClient.comment.create({
       data: {
-        title: BlogPostFormData.title,
-        excerpt: BlogPostFormData.excerpt,
-        publishDate: BlogPostFormData.publishDate,
-        image: BlogPostFormData.image,
-        slug: BlogPostFormData.slug,
-        blogPostsCategoryId: BlogPostFormData.blogPostsCategoryId,
-        portfolioId: BlogPostFormData.portfolioId,
+        name: CommentFormData.name,
+        email: CommentFormData.email,
+        viewerComment: CommentFormData.viewerComment,
+        blogPostId: CommentFormData.blogPostId,
+        portfolioId: CommentFormData.portfolioId,
       },
     });
     return NextResponse.json(
       {
-        data: createUserBlogPost,
+        data: createUserComment,
         error: null,
-        message: 'User Blog-Post Saved Successfully...!!!✅',
+        message: 'User Comment Saved Successfully...!!!✅',
         status: 201,
       },
       {
@@ -35,7 +33,7 @@ export async function POST(request: NextRequest) {
         data: null,
         error:
           '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-        message: 'Failed To Save User Blog-Post...!!!🥺',
+        message: 'Failed To Save User Comment...!!!🥺',
         status: 500,
       },
       {
@@ -47,20 +45,16 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const findUserBlogPosts = await prismaClient.blogPost.findMany({
+    const findUserComment = await prismaClient.comment.findMany({
       orderBy: {
         createdAt: 'desc',
       },
-      include: {
-        category: true,
-        comments: true,
-      }
     });
     return NextResponse.json(
       {
-        data: findUserBlogPosts,
+        data: findUserComment,
         error: null,
-        message: 'User Blog-Posts Fetched Successfully...!!!✅',
+        message: 'User Comment Fetched Successfully...!!!✅',
         status: 200,
       },
       {
@@ -74,7 +68,7 @@ export async function GET(request: NextRequest) {
         data: null,
         error:
           '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-        message: 'Failed To Fetch User Blog-Posts...!!!🥺',
+        message: 'Failed To Fetch User Comment...!!!🥺',
         status: 500,
       },
       {
