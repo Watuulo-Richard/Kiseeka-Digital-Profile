@@ -85,9 +85,9 @@ export default function Projects() {
           </div>
 
           {/* Include Open Source section directly under Projects */}
-          <div className="mt-20">
+          {/* <div className="mt-20">
             <OpenSource />
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

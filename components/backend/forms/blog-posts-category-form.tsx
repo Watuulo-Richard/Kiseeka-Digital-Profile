@@ -1,19 +1,18 @@
 'use client';
 
-import {
-  BlogPostsCategoryFormTypes,
-  BlogPostsCategorySchema,
-} from '@/schema/schema';
+import { BlogPostsCategoryFormTypes, BlogPostsCategorySchema } from '@/schema/schema';
+import { FileText, Info, SaveAll, Loader } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
+import { BlogPostCategory, Portfolio } from '@prisma/client';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { Users } from '@/components/frontend/users';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Portfolio } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 import { baseUrl } from '@/types/type';
 import {
   Card,
@@ -23,12 +22,13 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import { FileText, Info, SaveAll, Loader } from 'lucide-react';
 
 export default function BlogPostsCategoryForm({
   portfolio,
+  userBlogPostsCategory,
 }: {
   portfolio: Portfolio;
+  userBlogPostsCategory: BlogPostCategory | null;
 }) {
   const {
     register,
@@ -38,74 +38,76 @@ export default function BlogPostsCategoryForm({
   } = useForm<BlogPostsCategoryFormTypes>({
     resolver: zodResolver(BlogPostsCategorySchema),
     defaultValues: {
-      title: '',
-      description: '',
+      title: userBlogPostsCategory?.title,
+      description: userBlogPostsCategory?.description,
     },
   });
 
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   async function handleOnSubmit(
     BlogPostsCategoryFormData: BlogPostsCategoryFormTypes,
   ) {
     setLoading(true);
-    BlogPostsCategoryFormData.slug = BlogPostsCategoryFormData.title.split(' ').join('-').toLocaleLowerCase()
+    BlogPostsCategoryFormData.slug = BlogPostsCategoryFormData.title
+      .split(' ')
+      .join('-')
+      .toLocaleLowerCase();
     BlogPostsCategoryFormData.portfolioId = portfolio.id;
     console.log(BlogPostsCategoryFormData);
 
-    // if (testimonial) {
-    //   try {
-    //     const response = await fetch(
-    //       `${baseUrl}/api/v1/testimonialAPI/${testimonial.id}`,
-    //       {
-    //         method: 'PATCH',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(TestimonialData),
-    //       },
-    //     );
-    //     console.log(response);
-    //     if (response.ok) {
-    //       setLoading(false);
-    //       console.log(response);
-    //       toast.success('Testimonial Details Have Been Updated Successfully');
-    //     } else {
-    //       setLoading(false);
-    //       toast.error('Failed To Update Testimonial Details...🥺');
-    //     }
-    //   } catch (error) {
-    //     setLoading(false);
-    //     toast.error(
-    //       '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-    //     );
-    //     console.log(error);
-    //   }
-    // } else {
-    try {
-      const response = await fetch(`${baseUrl}/api/v1/blogPostsCategoryAPI`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(BlogPostsCategoryFormData),
-      });
-      console.log(response);
-      if (response.ok) {
-        setLoading(false);
-        console.log(response);
-        toast.success(
-          'Blog Posts Category Details Have Been Saved Successfully',
+    if (userBlogPostsCategory) {
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/v1/blogPostsCategoryAPI/${userBlogPostsCategory.slug}`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(BlogPostsCategoryFormData),
+          },
         );
-        reset();
-      } else {
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          console.log(response);
+          toast.success('Blog-Posts Category Details Updated Successfully');
+          router.push('/dashboard/view-blog-posts-categories');
+        } else {
+          setLoading(false);
+          toast.error('Failed To Update Blog-Posts Category Details...🥺');
+        }
+      } catch (error) {
         setLoading(false);
-        toast.error('Failed To Save Blog Posts Category Details...🥺');
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+        console.log(error);
       }
-    } catch (error) {
-      setLoading(false);
-      toast.error(
-        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-      );
-      console.log(error);
+    } else {
+      try {
+        const response = await fetch(`${baseUrl}/api/v1/blogPostsCategoryAPI`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(BlogPostsCategoryFormData),
+        });
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          console.log(response);
+          toast.success('Blog-Posts Category Details Saved Successfully');
+          reset();
+        } else {
+          setLoading(false);
+          toast.error('Failed To Save Blog-Posts Category Details...🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+        console.log(error);
+      }
     }
-    // }
   }
 
   return (
@@ -205,7 +207,28 @@ export default function BlogPostsCategoryForm({
           <Card className="shadow-lg border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
             <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {loading ? (
+                {userBlogPostsCategory ? (
+                  loading ? (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      disabled={loading}
+                      className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <Loader className="h-5 w-5 mr-2 animate-spin" />
+                      Updating Category Blog, Please Wait...
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <SaveAll className="h-5 w-5 mr-2" />
+                      Update Blog Category
+                    </Button>
+                  )
+                ) : loading ? (
                   <Button
                     type="submit"
                     size="lg"

@@ -17,6 +17,19 @@ export async function getUserBlogPostsCategories() {
     }
 }
 
+export async function getUserBlogPostsCategoryBySlug(slug:string) {
+    const blogPostCategoryAPIRoute = `${baseUrl}/api/v1/blogPostsCategoryAPI/${slug}`
+    try {
+        const response = await fetch(blogPostCategoryAPIRoute, { next: { revalidate: REVALIDATE_TIME } })
+        const userBlogPostsCategory = await response.json()
+        console.log(userBlogPostsCategory.data, 'Finally UserBlogPostsCategory Fetched Successfully...👍🏾');
+        return userBlogPostsCategory.data as BlogPostCategory
+    } catch (error) {
+        console.log(error);
+        return null
+    }
+}
+
 const blogPostsAPIRoute = `${baseUrl}/api/v1/blogPostsAPI`
 export async function getUserBlogPosts() {
     try {

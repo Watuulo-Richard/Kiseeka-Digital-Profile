@@ -1,8 +1,13 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { format } from 'date-fns';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { format } from 'date-fns';
+import { baseUrl, BlogPostCommentTypes } from '@/types/type';
+import React, { useMemo, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Pagination,
   PaginationContent,
@@ -29,12 +34,6 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import Link from 'next/link';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import React, { useMemo, useState } from 'react';
-import { baseUrl, BlogPostCommentTypes } from '@/types/type';
-import { BlogPostCategory } from '@prisma/client';
 
 export default function BlogPostsTable({
   title,
@@ -266,13 +265,13 @@ export default function BlogPostsTable({
                     <TableCell className={clsx('text-right')}>
                       <div className={clsx('flex justify-end gap-2')}>
                         <Link
-                          href={`/dashboard/blog-posts-form/${userBlogPost.id}`}
+                          href={`/dashboard/blog-posts-form/${userBlogPost.slug}`}
                         >
                           <Button
                             variant="outline"
                             size="icon"
                             // onClick={() => handleEditClick(meal.slug)}
-                            title="Edit Blog-Post Category"
+                            title="Edit Blog-Post"
                           >
                             <Edit className={clsx('h-4 w-4')} />
                           </Button>

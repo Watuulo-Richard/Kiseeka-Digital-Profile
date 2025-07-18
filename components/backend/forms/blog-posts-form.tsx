@@ -25,7 +25,7 @@ import {
 import { BlogPostsFormTypes, BlogPostsSchema } from '@/schema/schema';
 import ImageInput from '../image-upload';
 import { toast } from 'sonner';
-import { baseUrl } from '@/types/type';
+import { baseUrl, BlogPostCommentTypes } from '@/types/type';
 import { BlogPostCategory, Portfolio } from '@prisma/client';
 import { Users } from '@/components/frontend/users';
 import { DateAndTime } from '../date-and-time';
@@ -38,14 +38,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { format } from 'date-fns';
 
 export default function BlogPostsForm({
   portfolio,
   userBlogPostsCategories,
+  userBlogPost
 }: {
   portfolio: Portfolio;
   userBlogPostsCategories: BlogPostCategory[];
+  userBlogPost: BlogPostCommentTypes | null
 }) {
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return format(dateObj, 'MMM dd, yyyy');
+  };
+
   const {
     register,
     handleSubmit,
@@ -56,20 +64,29 @@ export default function BlogPostsForm({
   } = useForm<BlogPostsFormTypes>({
     resolver: zodResolver(BlogPostsSchema),
     defaultValues: {
-      title: '',
-      image: '/placeholder.svg',
-      excerpt: '',
+      title: userBlogPost?.title || '',
+      image: userBlogPost?.image || '',
+      excerpt: userBlogPost?.excerpt || '',
+      // Fix: Use proper date handling
+      publishDate: userBlogPost?.publishDate 
+        ? (typeof userBlogPost.publishDate === 'string' 
+           ? userBlogPost.publishDate 
+           : userBlogPost.publishDate.toISOString())
+        : new Date().toISOString(),
+      // Fix: Use category ID instead of title
+      blogPostsCategoryId: userBlogPost?.category?.id || '',
     },
   });
 
-  //   const initialImage = testimonial?.image || '/placeholder.svg';
-  const [imageUrl, setImageUrl] = useState('/placeholder.svg');
+  const initialImage = userBlogPost?.image || '/placeholder.svg';
+  const [imageUrl, setImageUrl] = useState(initialImage);
   const [loading, setLoading] = useState(false);
-  const [blogCategory, setBlogCategory] = useState('');
-  console.log(blogCategory, 'okeeta...');
+  // Fix: Initialize with existing category ID if editing
+  const [blogCategory, setBlogCategory] = useState(userBlogPost?.category?.id || '');
+  
   const watchedStartDate = watch('publishDate');
 
-  //   Handle publish Date Change
+  // Handle publish Date Change
   function handlePublishDateChange(date: Date) {
     setValue('publishDate', date.toISOString(), { shouldValidate: true });
   }
@@ -77,7 +94,7 @@ export default function BlogPostsForm({
   async function handleOnSubmit(BlogPostsFormData: BlogPostsFormTypes) {
     if (!imageUrl) {
       setLoading(false);
-      toast.error('Please upload an image for the referee');
+      toast.error('Please upload an image for the blog post');
       return;
     }
     if (!blogCategory) {
@@ -85,67 +102,73 @@ export default function BlogPostsForm({
       toast.error('Please select a blog category');
       return;
     }
+    
     setLoading(true);
-    (BlogPostsFormData.image = imageUrl),
-      (BlogPostsFormData.slug = BlogPostsFormData.title
-        .split(' ')
-        .join('-')
-        .toLocaleLowerCase()),
-      (BlogPostsFormData.portfolioId = portfolio.id);
+    
+    // Set additional fields
+    BlogPostsFormData.image = imageUrl;
+    BlogPostsFormData.slug = BlogPostsFormData.title
+      .split(' ')
+      .join('-')
+      .toLowerCase(); // Fix: toLowerCase() instead of toLocaleLowerCase()
+    BlogPostsFormData.portfolioId = portfolio.id;
     BlogPostsFormData.blogPostsCategoryId = blogCategory;
-    // console.log(TestimonialData);
-    console.log(BlogPostsFormData, 'hello...');
-    // if (testimonial) {
-    //   try {
-    //     const response = await fetch(
-    //       `${baseUrl}/api/v1/testimonialAPI/${testimonial.id}`,
-    //       {
-    //         method: 'PATCH',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(TestimonialData),
-    //       },
-    //     );
-    //     console.log(response);
-    //     if (response.ok) {
-    //       setLoading(false);
-    //       console.log(response);
-    //       toast.success('Testimonial Details Have Been Updated Successfully');
-    //     } else {
-    //       setLoading(false);
-    //       toast.error('Failed To Update Testimonial Details...🥺');
-    //     }
-    //   } catch (error) {
-    //     setLoading(false);
-    //     toast.error(
-    //       '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-    //     );
-    //     console.log(error);
-    //   }
-    // } else {
-    try {
-      const response = await fetch(`${baseUrl}/api/v1/blogPostsAPI`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(BlogPostsFormData),
-      });
-      console.log(response);
-      if (response.ok) {
-        setLoading(false);
+    
+    console.log(BlogPostsFormData);
+    
+    if (userBlogPost) {
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/v1/blogPostsAPI/${userBlogPost.slug}`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(BlogPostsFormData),
+          },
+        );
+        
         console.log(response);
-        toast.success('Blog-Posts Details Have Been Saved Successfully');
-        reset();
-      } else {
+        if (response.ok) {
+          setLoading(false);
+          console.log(response);
+          toast.success('Blog-Post Details Updated Successfully');
+        } else {
+          setLoading(false);
+          toast.error('Failed To Update Blog-Post Details...🥺');
+        }
+      } catch (error) {
         setLoading(false);
-        toast.error('Failed To Save Blog-Posts Details...🥺');
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+        console.log(error);
       }
-    } catch (error) {
-      setLoading(false);
-      toast.error(
-        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-      );
-      console.log(error);
-    }
-    // }
+    } else {
+      try {
+        const response = await fetch(`${baseUrl}/api/v1/blogPostsAPI`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(BlogPostsFormData),
+        });
+        
+        console.log(response);
+        if (response.ok) {
+          setLoading(false);
+          console.log(response);
+          toast.success('Blog-Post Details Saved Successfully');
+          reset();
+        } else {
+          setLoading(false);
+          toast.error('Failed To Save Blog-Posts Details...🥺');
+        }
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        );
+        console.log(error);
+      }
+    } // Fix: Added missing closing brace
   }
 
   return (
@@ -176,33 +199,33 @@ export default function BlogPostsForm({
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <Info className="h-5 w-5 text-gray-600" />
-                  Referee Information
+                  Blog Post Information
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Please provide your details so your testimonial can be
-                  verified and properly attributed.
+                  Please provide the blog post details and select appropriate category.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
                 <div className="">
                   <Label className="text-gray-700 font-semibold">
-                    Blog-Posts Title
+                    Blog Post Title
                   </Label>
                   <Input
-                    placeholder="e.g., Watuulo Richard..."
+                    placeholder="Enter blog post title..."
                     {...register('title', { required: true })}
                   />
                   {errors.title && (
                     <p className="text-sm text-destructive">
-                      Blog-Posts title is required...
+                      Blog post title is required...
                     </p>
                   )}
                 </div>
                 <div className="">
+                  <Label className="text-gray-700 font-semibold">
+                    Category
+                  </Label>
                   <Select
-                    onValueChange={(blogCategory) =>
-                      setBlogCategory(blogCategory)
-                    }
+                    onValueChange={(value) => setBlogCategory(value)}
                     value={blogCategory}
                   >
                     <SelectTrigger className="w-full">
@@ -210,14 +233,12 @@ export default function BlogPostsForm({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>blog-posts categories</SelectLabel>
-                        {userBlogPostsCategories.map((category) => {
-                          return (
-                            <SelectItem key={category.id} value={category.id}>
-                              {category.title}
-                            </SelectItem>
-                          );
-                        })}
+                        <SelectLabel>Blog post categories</SelectLabel>
+                        {userBlogPostsCategories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.title}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -227,10 +248,10 @@ export default function BlogPostsForm({
                     <CardHeader className="border-b border-gray-100">
                       <CardTitle className="flex items-center gap-2 text-gray-900">
                         <CalendarDays className="h-5 w-5 text-gray-600" />
-                        Start & End Dates
+                        Publish Date
                       </CardTitle>
                       <CardDescription className="text-gray-600">
-                        Specify the period you attended this institution
+                        Select when this blog post should be published
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="p-6 space-y-4">
@@ -252,21 +273,20 @@ export default function BlogPostsForm({
               </CardContent>
             </Card>
 
-            {/* Testimonial Image */}
+            {/* Blog Post Image */}
             <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <ImagePlus className="h-5 w-5 text-gray-600" />
-                  Upload Referee Image
+                  Upload Blog Post Image
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Add a professional image to represent your profile. (Max size:
-                  2MB)
+                  Add a featured image for your blog post. (Max size: 2MB)
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4 w-full">
                 <ImageInput
-                  title="Blog-Post Photo"
+                  title="Blog Post Photo"
                   imageUrl={imageUrl}
                   setImageUrl={setImageUrl}
                   endpoint="imageUploader"
@@ -279,20 +299,18 @@ export default function BlogPostsForm({
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <FileText className="h-5 w-5 text-gray-600" />
-                  Professional Profile
+                  Blog Post Excerpt
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Summarize your career journey, unique value, and
-                  accomplishments that define who you are.
+                  Write a brief excerpt that summarizes your blog post content.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
                 <Label className="text-gray-700 font-semibold">
-                  Provide a detailed overview of your expertise, experience, and
-                  what sets you apart.
+                  Blog Post Excerpt
                 </Label>
                 <Textarea
-                  placeholder="Share your professional background, key skills, achievements, and what makes you stand out..."
+                  placeholder="Write a compelling excerpt that gives readers a preview of your blog post..."
                   className="min-h-32 resize-none"
                   {...register('excerpt', { required: true })}
                 />
@@ -301,15 +319,6 @@ export default function BlogPostsForm({
                     Excerpt is required...
                   </p>
                 )}
-                {/* <FormDescription className="flex justify-between items-center">
-                        <span className="text-gray-500">
-                          Write a compelling description that highlights your
-                          product's key features
-                        </span>
-                        <span className="font-medium text-blue-600">
-                          {field.value?.length || 0}/500 characters
-                        </span>
-                      </FormDescription> */}
               </CardContent>
             </Card>
           </div>
@@ -318,31 +327,59 @@ export default function BlogPostsForm({
           <Card className="shadow-lg border border-gray-200 bg-white dark:bg-[#0F0F12] dark:border-[#1F1F23]">
             <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {loading ? (
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={loading}
-                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <Loader className="h-5 w-5 mr-2 animate-spin" />
-                    Saving Blog-Post, Please Wait...
-                  </Button>
+                {userBlogPost ? (
+                  loading ? (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      disabled={loading}
+                      className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <Loader className="h-5 w-5 mr-2 animate-spin" />
+                      Updating Blog Post, Please Wait...
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <SaveAll className="h-5 w-5 mr-2" />
+                      Update Blog Post
+                    </Button>
+                  )
                 ) : (
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <SaveAll className="h-5 w-5 mr-2" />
-                    Save Blog-Post
-                  </Button>
+                  loading ? (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      disabled={loading}
+                      className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <Loader className="h-5 w-5 mr-2 animate-spin" />
+                      Saving Blog Post, Please Wait...
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <SaveAll className="h-5 w-5 mr-2" />
+                      Save Blog Post
+                    </Button>
+                  )
                 )}
 
                 <Button
                   type="button"
                   variant="outline"
                   size="lg"
+                  onClick={() => {
+                    reset();
+                    setBlogCategory('');
+                    setImageUrl('/placeholder.svg');
+                  }}
                   className="bg-[#F2B5A0] text-white hover:border hover:border-[#F2B5A0] hover:bg-transparent font-semibold px-8 py-3 shadow-md hover:shadow-lg transition-all duration-300"
                 >
                   Cancel & Reset

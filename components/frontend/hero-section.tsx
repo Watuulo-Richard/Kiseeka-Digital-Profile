@@ -2,14 +2,12 @@
 
 import { motion, useAnimation, useInView, easeInOut } from 'framer-motion';
 import {
-  ArrowRight,
   BookOpen,
   ChevronRight,
   Eye,
   Layers,
   MessageSquare,
   MousePointer,
-  Play,
   Search,
 } from 'lucide-react';
 import Image from 'next/image';

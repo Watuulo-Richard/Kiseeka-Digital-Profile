@@ -5,13 +5,13 @@ import React from 'react'
 
 export default async function page() {
   const portfolio = await getPortfolio();
-    // console.log(profile, 'the guy...');
+    // console.log(profile);
     if(!portfolio) {
       return null;
     }
   return (
     <>
-      <BlogPostsCategoryForm portfolio={portfolio[0]} />
+      <BlogPostsCategoryForm portfolio={portfolio[0]} userBlogPostsCategory={null} />
     </>
   )
 }

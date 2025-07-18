@@ -253,7 +253,7 @@ export default function BlogPostsCategoriesTable({
                     <TableCell className={clsx('text-right')}>
                       <div className={clsx('flex justify-end gap-2')}>
                         <Link
-                          href={`/dashboard/blog-posts-category/${category.id}`}
+                          href={`/dashboard/blog-posts-category/${category.slug}`}
                         >
                           <Button
                             variant="outline"

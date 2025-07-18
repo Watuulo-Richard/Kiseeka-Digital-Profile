@@ -13,7 +13,7 @@ export default async function page() {
     const userBlogPostsCategories = await getUserBlogPostsCategories()
   return (
     <>
-      <BlogPostsForm portfolio={portfolio[0]} userBlogPostsCategories={userBlogPostsCategories}/>
+      <BlogPostsForm portfolio={portfolio[0]} userBlogPostsCategories={userBlogPostsCategories} userBlogPost={null}/>
     </>
   )
 }
