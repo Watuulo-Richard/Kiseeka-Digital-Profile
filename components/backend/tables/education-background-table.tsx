@@ -85,7 +85,7 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
         setIsDeleting(educationBackgroundId);
       }
       const response = await fetch(
-        `${baseUrl}/api/v1/workexperienceAPI/${educationBackgroundId}`,
+        `${baseUrl}/api/v1/educationAPI/${educationBackgroundId}`,
         {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },

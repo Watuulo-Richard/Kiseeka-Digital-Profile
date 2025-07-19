@@ -81,13 +81,13 @@ export default function SkillsTable({ title, skills }: {
   };
 
   // Handle delete click
-  async function handleDeleteClick(testimonialId: string) {
+  async function handleDeleteClick(skillId: string) {
     try {
-      if (testimonialId) {
-        setIsDeleting(testimonialId);
+      if (skillId) {
+        setIsDeleting(skillId);
       }
       const response = await fetch(
-        `${baseUrl}/api/v1/testimonialsAPI/${testimonialId}`,
+        `${baseUrl}/api/v1/skillsAPI/${skillId}`,
         {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
