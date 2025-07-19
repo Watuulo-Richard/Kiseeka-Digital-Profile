@@ -23,12 +23,11 @@ export const workExperienceSchema = z.object({
     .string()
     .min(1, 'Company is required')
     .max(100, 'Company must be less than 100 characters'),
-  startDate: z.string().datetime(),
-  endDate: z.string().datetime(),
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().min(1, 'End date is required'),
   description: z
     .string()
-    .min(10, 'Description must be at least 10 characters')
-    .max(500, 'Description must be less than 500 characters'),
+    .min(1, 'Description must be at least 1 character'),
   portfolioId: z.string().optional()
 });
 
@@ -38,17 +37,17 @@ export type WorkExperienceFormTypes = z.infer<typeof workExperienceSchema>;
 export const EducationSchema = z.object({
   institution: z
     .string()
-    .min(1, 'Education is required')
-    .max(100, 'Education must be less than 100 characters'),
+    .min(1, 'Education is required'),
+    // .max(100, 'Education must be less than 100 characters'),
   educationLevel: z
     .string()
-    .min(1, 'Education level is required')
-    .max(100, 'Education level must be less than 100 characters'),
-  startDate: z.string().datetime(),
-  endDate: z.string().datetime(),
+    .min(1, 'Education level is required'),
+    // .max(100, 'Education level must be less than 100 characters'),
+  startDate: z.string().date(),
+  endDate: z.string().date(),
   description: z
     .string()
-    .min(1, 'Description must be at least 10 characters'),
+    .min(1, 'Description must be at least one character'),
   portfolioId: z.string().optional()
 });
 

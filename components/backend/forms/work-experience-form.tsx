@@ -55,8 +55,8 @@ export default function WorkExperienceForm({
     defaultValues: {
       position: workExperience?.position,
       company: workExperience?.company,
-      startDate: formatDate(workExperience?.startDate || ''),
-      endDate: formatDate(workExperience?.endDate || ''),
+      startDate: workExperience?.startDate ? new Date(workExperience.startDate).toISOString() : '',
+      endDate: workExperience?.endDate ? new Date(workExperience.endDate).toISOString() : '',
       description: workExperience?.description,
     },
   });
@@ -90,6 +90,7 @@ export default function WorkExperienceForm({
             body: JSON.stringify(WorkExperienceFormData),
           },
         );
+        console.log(WorkExperienceFormData, 'kiseeka')
         console.log(response);
         if (response.ok) {
           setLoading(false);

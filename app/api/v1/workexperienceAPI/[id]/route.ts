@@ -61,11 +61,19 @@ export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:st
     try {
         const { id } = await params
         const WorkExperienceFormData = await request.json()
+        
+        // Convert date strings to Date objects if they exist
+    const processedData = {
+      ...WorkExperienceFormData,
+      startDate: WorkExperienceFormData.startDate ? new Date(WorkExperienceFormData.startDate) : undefined,
+      endDate: WorkExperienceFormData.endDate ? new Date(WorkExperienceFormData.endDate) : undefined,
+    };
+
         const updateUserWorkExperience = await prismaClient.workExperience.update({
             where: {
                 id: id
             },
-            data: WorkExperienceFormData
+            data: processedData
         })
         return NextResponse.json({
             data: updateUserWorkExperience,
