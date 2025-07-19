@@ -48,8 +48,7 @@ export const EducationSchema = z.object({
   endDate: z.string().datetime(),
   description: z
     .string()
-    .min(10, 'Description must be at least 10 characters')
-    .max(500, 'Description must be less than 500 characters'),
+    .min(1, 'Description must be at least 10 characters'),
   portfolioId: z.string().optional()
 });
 
