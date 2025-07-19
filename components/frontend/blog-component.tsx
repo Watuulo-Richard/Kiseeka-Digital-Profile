@@ -1,12 +1,12 @@
 'use client';
 
+import { useEffect, useMemo, useState } from 'react';
 import CreativeHeroSection from '@/components/frontend/hero-section';
 import CategoryFilter from '@/components/frontend/category-filter';
 import { ShinyButton } from '@/components/magicui/shiny-button';
 import { CalendarIcon } from '@/components/frontend/calender';
 import { BlogPostCategory } from '@prisma/client';
 import { format } from 'date-fns';
-import { useEffect, useMemo, useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { BlogPostCommentTypes } from '@/types/type';
 import { Button } from '@/components/ui/button';
@@ -31,6 +31,7 @@ import {
   Shield,
   FileText,
 } from 'lucide-react';
+import { ModeToggle } from './mode-toggle';
 
 export default function BlogComponent({
   userBlogPosts,
@@ -83,13 +84,13 @@ export default function BlogComponent({
                 <span className="text-white font-bold text-lg">KP</span>
               </div>
               <div>
-                <h1 className="text-lg font-bold text-gray-900">
+                <h1 className="text-lg font-bold text-gray-900 dark:text-[#F2B5A0]">
                   Kiseeka Pius
                 </h1>
                 <p className="text-sm text-gray-600">Professional Auditor</p>
               </div>
             </div>
-            <nav className="hidden md:flex space-x-8">
+            <nav className="hidden md:flex md:items-center space-x-8">
               <Link
                 href="/home"
                 className="text-gray-600 hover:text-[#F2B5A0] transition-colors"
@@ -117,6 +118,7 @@ export default function BlogComponent({
               >
                 Contact
               </Link>
+              <ModeToggle />
             </nav>
           </div>
         </div>
@@ -132,31 +134,31 @@ export default function BlogComponent({
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <FileText className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-blue-100 dark:bg-[#253E4C] rounded-lg flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-6 h-6 text-blue-600 dark:text-[#F2B5A0]" />
               </div>
-              <div className="text-3xl font-bold text-gray-900">50+</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-[#F2B5A0]">50+</div>
               <div className="text-gray-600">Articles Published</div>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="w-6 h-6 text-green-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900">15K+</div>
+              <div className="text-3xl font-bold text-gray-900  dark:text-[#F2B5A0]">15K+</div>
               <div className="text-gray-600">Monthly Readers</div>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Shield className="w-6 h-6 text-purple-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900">10+</div>
+              <div className="text-3xl font-bold text-gray-900  dark:text-[#F2B5A0]">10+</div>
               <div className="text-gray-600">Years Experience</div>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <User className="w-6 h-6 text-orange-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900">500+</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-[#F2B5A0]">500+</div>
               <div className="text-gray-600">Clients Served</div>
             </div>
           </div>
@@ -168,7 +170,7 @@ export default function BlogComponent({
         <div className="max-w-7xl mx-auto">
           {/* Featured Post */}
           <div className="mb-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-[#F2B5A0] mb-8">
               Featured Article
             </h2>
             <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -285,7 +287,7 @@ export default function BlogComponent({
       {/* Newsletter Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-[#F2B5A0] mb-4">
             Stay Updated with Professional Insights
           </h2>
           <p className="text-lg text-gray-600 mb-8">
@@ -303,7 +305,7 @@ export default function BlogComponent({
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#F2B5A0] text-white/60 py-12 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-[#F2B5A0] dark:bg-black/5 text-white/60 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
