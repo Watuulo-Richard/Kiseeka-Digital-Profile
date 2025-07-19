@@ -61,7 +61,7 @@ export async function PATCH(request:NextRequest, {params}:{params:Promise<{id:st
     try {
         const { id } = await params
         const SkillFormData = await request.json()
-        const updateUserSkill = await prismaClient.workExperience.update({
+        const updateUserSkill = await prismaClient.skill.update({
             where: {
                 id: id
             },
