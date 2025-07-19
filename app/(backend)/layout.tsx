@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 
 export default async function BackendLayout({ children }: { children: ReactNode }) {
 const session = await getServerSession(authOptions)
-  // console.log(session?.user,);
+  // console.log(session?.user);
     if(!session) {
       return(
         redirect('/sign-in-page')

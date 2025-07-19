@@ -5,11 +5,12 @@ import { Portfolio } from '@prisma/client';
 import { ChartPie } from './chart-pie';
 import { Users } from './users';
 import { Globe } from './globe';
+import { BadgeDollarSign } from './finance';
 
 export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
   const features = [
     {
-      icon: <Landmark className="h-10 w-10 text-primary" />,
+      icon: <BadgeDollarSign className="h-10 w-10 text-primary" />,
       title: 'Financial analysis',
       description:
         'Expertise in Financial statement interpretation.',

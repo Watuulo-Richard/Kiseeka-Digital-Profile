@@ -6,7 +6,7 @@ import { ShinyButton } from '@/components/magicui/shiny-button';
 import { CalendarIcon } from '@/components/frontend/calender';
 import { BlogPostCategory } from '@prisma/client';
 import { format } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { BlogPostCommentTypes } from '@/types/type';
 import { Button } from '@/components/ui/button';
@@ -39,6 +39,16 @@ export default function BlogComponent({
   userBlogPosts: BlogPostCommentTypes[];
   userBlogPostsCategories: BlogPostCategory[];
 }) {
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+      function handleScroll() {
+        setScrolled(window.scrollY > 10)
+      }
+  
+      window.addEventListener("scroll", handleScroll)
+  
+      return () => window.removeEventListener("scroll", handleScroll)
+    }, [])
   const [selectedCategory, setSelectedCategory] = useState<string>('All Posts');
 
   const filteredPostsByCategory = useMemo(() => {
@@ -65,7 +75,7 @@ export default function BlogComponent({
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="shadow-sm border-b">
+      <header className={`shadow-sm border-b ${scrolled ? "bg-background/70 backdrop-blur-lg shadow-sm border-b border-border/50" : "bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
@@ -405,13 +415,17 @@ export default function BlogComponent({
             </p>
             <div className="flex space-x-6 mt-4 sm:mt-0">
               <Link
-                href="#"
+                href="https://www.papermark.com/view/cmd9vdozc0001jx04diaf3rdb"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-600/80 hover:text-white transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
-                href="#"
+                href="https://www.papermark.com/view/cmd9w4c5l0001jp046ppfegoz"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-600/80 hover:text-white transition-colors"
               >
                 Terms of Service

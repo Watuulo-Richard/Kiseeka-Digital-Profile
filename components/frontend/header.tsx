@@ -27,7 +27,6 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
-  const pathname = usePathname()
 
   // Function to determine which section is currently in view
   const determineActiveSection = useCallback(() => {
