@@ -1,6 +1,6 @@
 "use client"
 
-import { Home } from "lucide-react"
+import { BookOpen, Home } from "lucide-react"
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -18,6 +18,7 @@ import {
   TableProperties,
 } from "lucide-react"
 import { Box } from "./box"
+import { FileChartColumn } from "./file-icon"
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -133,10 +134,10 @@ export default function Sidebar() {
                   <NavItem href="/dashboard/testimonial-form" icon={Users}>
                     Testimonial
                   </NavItem>
-                  <NavItem href="/dashboard/blog-posts-category" icon={Box}>
+                  <NavItem href="/dashboard/blog-posts-category" icon={BookOpen}>
                     Blog Category Form
                   </NavItem>
-                  <NavItem href="/dashboard/blog-posts-form" icon={Box}>
+                  <NavItem href="/dashboard/blog-posts-form" icon={FileChartColumn}>
                     Blog Posts Form
                   </NavItem>
                 </div>
