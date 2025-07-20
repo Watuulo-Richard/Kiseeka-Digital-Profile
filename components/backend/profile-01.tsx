@@ -22,15 +22,6 @@ interface Profile01Props {
   session: Session;
 }
 
-// const defaultProfile = {
-//   name: 'Eugene An',
-//   role: 'Prompt Engineer',
-//   avatar:
-//     'https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png',
-//   subscription: 'Free Trial',
-//   // session:
-// } satisfies Required<Profile01Props>;
-
 export default function Profile01({ session }: Partial<Profile01Props>) {
   console.log(session?.user.id);
   const menuItems: MenuItem[] = [

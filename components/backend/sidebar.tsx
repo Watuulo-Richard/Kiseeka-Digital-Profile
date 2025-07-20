@@ -85,7 +85,7 @@ export default function Sidebar() {
                 alt="Kiseeka Pius"
                 width={32}
                 height={32}
-                className="flex-shrink-0 block dark:hidden"
+                className="flex-shrink-0 block"
               />
               </div>
               <span className="text-lg font-semibold hover:cursor-pointer gradient-text dark:text-white bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">

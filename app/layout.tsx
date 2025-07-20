@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
-import { Space_Grotesk } from 'next/font/google';
-import './globals.css';
-import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/frontend/theme-provider';
+import { Space_Grotesk } from 'next/font/google';
+import { Toaster } from '@/components/ui/sonner';
+import type { Metadata } from 'next';
+import './globals.css';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -11,28 +11,21 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-// const geistMono = DM_Mono({
-//   variable: '--font-geist-mono',
-//   subsets: ['latin'],
-//   weight: ['400'], // Add the required weight(s) here
-// });
-
 export const metadata: Metadata = {
-  title: 'Kiseeka Pius | Senior Auditor',
+  title: 'Kiseka Pius | Senior Auditor',
   description:
-    'Portfolio of Kiseeka Pius, a Senior Auditor specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.',
+    'Portfolio of Kiseka Pius, a Senior Auditor at PKF Uganda, specializing in financial auditing, compliance, and risk management.',
   keywords: [
-    'Kiseeka Pius',
-    'Software Engineer',
-    'Full Stack Developer',
-    'JavaScript',
-    'TypeScript',
-    'React',
-    'Node.js',
-    'AWS',
+    'Kiseka Pius',
+    'Senior Auditor',
+    'Financial Auditor',
+    'PKF Uganda',
+    'Auditing',
+    'Compliance',
+    'Risk Management',
   ],
-  authors: [{ name: 'Kiseeka Pius' }],
-  creator: 'Kiseeka Pius',
+  authors: [{ name: 'kiseka Pius' }],
+  creator: 'kiseka Pius',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -43,33 +36,33 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://nihalmaskey.com',
-    title: 'Kiseeka Pius | Senior Software Engineer',
+    url: 'https://kisekapius.com',
+    title: 'kiseka Pius | Senior Auditor',
     description:
-      'Portfolio of Kiseeka Pius, a Senior Software Engineer specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.',
-    siteName: 'Kiseeka Pius Portfolio',
+      'Portfolio of kiseka Pius, a Senior Auditor at PKF Uganda, specializing in financial auditing, compliance, and risk management.',
+    siteName: 'kiseka Pius Portfolio',
     images: [
       {
         url: '/favicon.png',
         width: 512,
         height: 512,
-        alt: 'Kiseeka Pius Logo',
+        alt: 'kiseka Pius Logo',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kiseeka Pius | Senior Software Engineer',
+    title: 'kiseka Pius | Senior Auditor',
     description:
-      'Portfolio of Kiseeka Pius, a Senior Software Engineer specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.',
-    creator: '@kiseekapius',
+      'Portfolio of kiseka Pius, a Senior Auditor at PKF Uganda, specializing in financial auditing, compliance, and risk management.',
+    creator: '@kisekapius',
     images: ['/favicon.png'],
   },
   robots: {
     index: true,
     follow: true,
   },
-  metadataBase: new URL('http://localhost:3000'), // Add this to fix the warning
+  metadataBase: new URL('http://localhost:3000'),
 };
 
 export default async function RootLayout({
