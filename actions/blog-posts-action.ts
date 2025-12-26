@@ -1,4 +1,4 @@
-import { baseUrl, BlogPostCommentTypes } from "@/types/type";
+import { baseUrl, BlogPostAndRelatedBlogPostType, BlogPostCommentTypes } from "@/types/type";
 import { BlogPostCategory } from "@prisma/client";
 
 // Add revalidate time (in seconds) for ISR
@@ -49,7 +49,7 @@ export async function getUserBlogPostBySlugAction(slug: string) {
         const response = await fetch(userBlogPostAPIRoute, { next: { revalidate: REVALIDATE_TIME } })
         const userBlogPost = await response.json()
         // console.log(userBlogPost.data, 'Finally UserBlogPost Fetched Successfully...👍🏾');
-        return userBlogPost.data as BlogPostCommentTypes
+        return userBlogPost.data as BlogPostAndRelatedBlogPostType
     } catch (error) {
         console.log(error);
         return null

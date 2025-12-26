@@ -1,16 +1,15 @@
 export const dynamic = 'force-dynamic'
 
-import Hero from '@/components/frontend/hero';
 import Blog from '@/components/frontend/blog';
+import Hero from '@/components/frontend/hero';
 import About from '@/components/frontend/about';
-import Contact from '@/components/frontend/contact';
-import Projects from '@/components/frontend/projects';
-import Education from '@/components/frontend/education';
-import Experience from '@/components/frontend/experience';
 import Header from '@/components/frontend/header';
+import Contact from '@/components/frontend/contact';
+import { getProfile } from '@/actions/profile-action';
+import Projects from '@/components/frontend/projects';
+import Experience from '@/components/frontend/experience';
 import ScrollToTop from '@/components/frontend/scroll-to-top';
 import Testimonials from '@/components/frontend/testimonials';
-import { getProfile } from '@/actions/profile-action';
 import EducationBackground from '@/components/frontend/education';
 import { getEducationBackgroundAction, getSkillsAction, getWorkExperiences } from '@/actions/actions';
 

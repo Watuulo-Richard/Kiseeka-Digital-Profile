@@ -275,3 +275,29 @@ html {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--primary)) hsl(var(--background));
 }
+
+/* Prevent nested scrolling */
+.ProseMirror {
+  max-height: calc(100vh - 400px) !important;
+  overflow-y: auto !important;
+}
+
+/* Ensure no horizontal scroll on editor */
+.prose {
+  max-width: 100% !important;
+}
+
+/* Fix for editor container */
+.ProseMirror-focused {
+  outline: none !important;
+}
+
+/* Remove double scrollbars */
+body {
+  overflow: hidden;
+}
+
+html, body {
+  max-height: 100vh;
+  height: 100vh;
+}

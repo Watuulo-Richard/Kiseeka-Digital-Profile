@@ -7,6 +7,7 @@ import CardFlip from './card-flip';
 import { RiTwitterXLine } from 'react-icons/ri';
 import { Portfolio } from '@prisma/client';
 import { TypewriterEffect } from '../ui/typewriter-effect';
+import TypewriterTitle from '../kokonutui/type-writer';
 
 export default function Hero({
   fetchedProfile,
@@ -107,7 +108,7 @@ export default function Hero({
           <div className="w-full lg:w-[60%]">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                <TypewriterEffect words={words} />
+                <TypewriterTitle />
               </h1>
               <p className="mx-auto max-w-[700px] text-xl text-muted-foreground md:text-2xl md:text-start md:mx-0">
                 <span className="js-only">
@@ -115,7 +116,7 @@ export default function Hero({
                 </span>
                 <noscript>
                   <span>
-                    Hi, I'm Kiseeka Pius Professional Auditor & ACCA Candidate
+                    Hi, I'm Kiseka Pius Professional Auditor & ACCA Candidate
                     Delivering comprehensive audit solutions and ensuring
                     financial compliance with over 2 years of specialized
                     experience

@@ -250,14 +250,14 @@ export default function BlogPostsTable({
                       </Card>
                     </TableCell>
                     <TableCell>
-                      {userBlogPost.title}
+                      {userBlogPost.title.trim().substring(0, 5) + '...'}
                     </TableCell>
                     <TableCell>
                       {userBlogPost.excerpt.trim().substring(0, 10) + '...'}
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       {userBlogPost.category.title}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>
                       {formatDate(userBlogPost.publishDate)}
                     </TableCell>

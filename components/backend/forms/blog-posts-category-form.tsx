@@ -1,27 +1,29 @@
-'use client';
+"use client";
 
-import { BlogPostsCategoryFormTypes, BlogPostsCategorySchema } from '@/schema/schema';
-import { FileText, Info, SaveAll, Loader } from 'lucide-react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import React, { useState } from 'react';
-import { BlogPostCategory, Portfolio } from '@prisma/client';
-import { toast } from 'sonner';
-import { Textarea } from '@/components/ui/textarea';
-import { Users } from '@/components/frontend/users';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useRouter } from 'next/navigation';
-import { baseUrl } from '@/types/type';
+import {
+  BlogPostsCategoryFormTypes,
+  BlogPostsCategorySchema,
+} from "@/schema/schema";
+import { FileText, Info, SaveAll, Loader } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+import { BlogPostCategory, Portfolio } from "@prisma/client";
+import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
+import { Users } from "@/components/frontend/users";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { baseUrl } from "@/types/type";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-
+} from "@/components/ui/card";
 
 export default function BlogPostsCategoryForm({
   portfolio,
@@ -46,64 +48,62 @@ export default function BlogPostsCategoryForm({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   async function handleOnSubmit(
-    BlogPostsCategoryFormData: BlogPostsCategoryFormTypes,
+    BlogPostsCategoryFormData: BlogPostsCategoryFormTypes
   ) {
     setLoading(true);
     BlogPostsCategoryFormData.slug = BlogPostsCategoryFormData.title
-      .split(' ')
-      .join('-')
+      .split(" ")
+      .join("-")
       .toLocaleLowerCase();
     BlogPostsCategoryFormData.portfolioId = portfolio.id;
-    console.log(BlogPostsCategoryFormData);
 
     if (userBlogPostsCategory) {
       try {
         const response = await fetch(
           `${baseUrl}/api/v1/blogPostsCategoryAPI/${userBlogPostsCategory.slug}`,
           {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(BlogPostsCategoryFormData),
-          },
+          }
         );
-        console.log(response);
         if (response.ok) {
           setLoading(false);
-          console.log(response);
-          toast.success('Blog-Posts Category Details Updated Successfully');
-          router.push('/dashboard/view-blog-posts-categories');
+          toast.success("Blog-Posts Category Details Updated Successfully");
+          router.push("/dashboard/view-blog-posts-categories");
         } else {
           setLoading(false);
-          toast.error('Failed To Update Blog-Posts Category Details...🥺');
+          toast.error("Failed To Update Blog-Posts Category Details...🥺");
         }
       } catch (error) {
         setLoading(false);
         toast.error(
-          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+          "❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️"
         );
         console.log(error);
       }
     } else {
       try {
         const response = await fetch(`${baseUrl}/api/v1/blogPostsCategoryAPI`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(BlogPostsCategoryFormData),
         });
         console.log(response);
         if (response.ok) {
           setLoading(false);
           console.log(response);
-          toast.success('Blog-Posts Category Details Saved Successfully');
+          toast.success("Blog-Posts Category Details Saved Successfully");
           reset();
+          router.push("/dashboard/view-blog-posts-categories");
         } else {
           setLoading(false);
-          toast.error('Failed To Save Blog-Posts Category Details...🥺');
+          toast.error("Failed To Save Blog-Posts Category Details...🥺");
         }
       } catch (error) {
         setLoading(false);
         toast.error(
-          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+          "❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️"
         );
         console.log(error);
       }
@@ -120,13 +120,12 @@ export default function BlogPostsCategoryForm({
               <Users className="h-6 w-6 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
-              Submit Your Blog Posts Category Details
+              Create or Update Blog Category
             </h1>
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
-            Kindly fill out the form below to share a professional testimonial
-            for Kiseeka Pius. Your insights and endorsement help strengthen his
-            digital profile and credibility.
+            Use this form to create or update a blog category. Categories help
+            organize blog posts and improve content structure and navigation.
           </p>
         </div>
 
@@ -138,25 +137,24 @@ export default function BlogPostsCategoryForm({
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <Info className="h-5 w-5 text-gray-600" />
-                  Referee Information
+                  Category Information
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Please provide your details so your testimonial can be
-                  verified and properly attributed.
+                  Provide basic information about the blog category.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
                 <div className="">
                   <Label className="text-gray-700 font-semibold">
-                    Blog Posts Category Title
+                    Category Name
                   </Label>
                   <Input
-                    placeholder="e.g., Watuulo Richard..."
-                    {...register('title', { required: true })}
+                    placeholder="e.g., Finance, Technology, Personal Development..."
+                    {...register("title", { required: true })}
                   />
                   {errors.title && (
                     <p className="text-sm text-destructive">
-                      Blog posts category title is required...
+                      {errors.title.message}
                     </p>
                   )}
                 </div>
@@ -168,26 +166,25 @@ export default function BlogPostsCategoryForm({
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <FileText className="h-5 w-5 text-gray-600" />
-                  Professional Profile
+                  Category Description
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Summarize your career journey, unique value, and
-                  accomplishments that define who you are.
+                  Describe what this blog category is about and the type of
+                  content it will contain.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
                 <Label className="text-gray-700 font-semibold">
-                  Provide a detailed overview of your expertise, experience, and
-                  what sets you apart.
+                  Category Description
                 </Label>
                 <Textarea
-                  placeholder="Share your professional background, key skills, achievements, and what makes you stand out..."
+                  placeholder="Write a brief description explaining the focus of this category and the kind of blog posts readers can expect..."
                   className="min-h-32 resize-none"
-                  {...register('description', { required: true })}
+                  {...register("description", { required: true })}
                 />
                 {errors.description && (
                   <p className="text-sm text-destructive">
-                    Biography is required...
+                    {errors.description.message}
                   </p>
                 )}
                 {/* <FormDescription className="flex justify-between items-center">
@@ -216,7 +213,7 @@ export default function BlogPostsCategoryForm({
                       className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
                       <Loader className="h-5 w-5 mr-2 animate-spin" />
-                      Updating Category Blog, Please Wait...
+                      Updating Blog Category, Please Wait...
                     </Button>
                   ) : (
                     <Button
@@ -236,7 +233,7 @@ export default function BlogPostsCategoryForm({
                     className="text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                   >
                     <Loader className="h-5 w-5 mr-2 animate-spin" />
-                    Saving Category Blog, Please Wait...
+                    Saving Blog Category, Please Wait...
                   </Button>
                 ) : (
                   <Button
@@ -260,7 +257,9 @@ export default function BlogPostsCategoryForm({
               </div>
 
               <div className="text-center mt-4">
-                <p className="text-sm text-gray-500">All fields are required</p>
+                <p className="text-sm text-gray-500">
+                  All category fields are required
+                </p>
               </div>
             </CardContent>
           </Card>

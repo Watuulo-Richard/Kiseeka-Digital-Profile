@@ -1,27 +1,22 @@
-export const dynamic = 'force-dynamic';
-import React from 'react'
-import { getProfile } from '@/actions/profile-action';
-import BlogPostDetail from '@/components/frontend/blog-detail'
-import { getUserBlogPostBySlugAction } from '@/actions/blog-posts-action';
+export const dynamic = "force-dynamic";
 
-export default async function page({params}:{params:Promise<{slug:string}>}) {
-  const { slug } = await params
-  const userBlogPost = await getUserBlogPostBySlugAction(slug)
-  const fetchedProfile = await getProfile()
-  // console.log(fetchedProfile, '................')
-  if(!fetchedProfile) {
-    return
-  }
-  if(!userBlogPost) {
-    return (
-      <div className='flex justify-center items-center'>
-        <h1>No Data Found...</h1>
-      </div>
-    )
-  }
+import { getUserBlogPostBySlugAction } from "@/actions/blog-posts-action";
+import BlogPostDetail from "@/components/frontend/blog/blog-detail/blog-detail";
+import { SiteNav } from "@/components/frontend/blog/site-nav";
+
+export default async function page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const blogFromAPI = await getUserBlogPostBySlugAction(slug);
   return (
     <>
-      <BlogPostDetail userBlogPost={userBlogPost} fetchedProfile={fetchedProfile[0]} />
+      <div className="">
+        <SiteNav />
+        <BlogPostDetail blog={blogFromAPI} />
+      </div>
     </>
-  )
+  );
 }

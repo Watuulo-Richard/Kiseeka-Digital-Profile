@@ -16,9 +16,11 @@ import {
   Hammer,
   Users,
   TableProperties,
+  X,
 } from "lucide-react"
-import { Box } from "./box"
 import { FileChartColumn } from "./file-icon"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/lib/utils"
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -43,138 +45,151 @@ export default function Sidebar() {
         className="flex items-center px-3 py-2 text-sm rounded-md transition-colors text-gray-600 dark:text-gray-300 hover:text-white dark:hover:text-white hover:bg-rose-300/95 dark:hover:bg-[#1F1F23]"
       >
         <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
-        {children}
+        <span className="truncate">{children}</span>
       </Link>
     )
   }
 
   return (
     <>
+      {/* Mobile Menu Button */}
       <button
         type="button"
-        className="lg:hidden fixed top-4 left-4 z-[70] p-2 rounded-lg bg-[#fbebe5] dark:bg-[#0F0F12] shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-[70] p-2 rounded-lg bg-[#fbebe5] dark:bg-[#0F0F12] shadow-md hover:shadow-lg transition-shadow"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle menu"
       >
         <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
       </button>
+
+      {/* Sidebar */}
       <nav
-        className={`
-                fixed inset-y-0 left-0 z-[70] w-64 bg-[#fbebe5] dark:bg-[#0F0F12] transform transition-transform duration-200 ease-in-out
-                lg:translate-x-0 lg:static lg:w-64 border-r border-gray-200 dark:border-[#1F1F23]
-                ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
-            `}
+        className={cn(
+          "fixed inset-y-0 left-0 z-[70] w-72 sm:w-80 lg:w-64 xl:w-72 bg-[#fbebe5] dark:bg-[#0F0F12] transform transition-transform duration-300 ease-in-out",
+          "lg:translate-x-0 lg:static border-r border-gray-200 dark:border-[#1F1F23]",
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        )}
       >
         <div className="h-full flex flex-col">
-          <Link
-            href="/dashboard"
-            rel="noopener noreferrer"
-            className="h-16 px-6 flex items-center border-b border-gray-200 dark:border-[#1F1F23]"
-          >
-            <div className="flex items-center gap-3">
-              <div className="rounded-full overflow-hidden">
+          {/* Header */}
+          <div className="h-16 sm:h-20 lg:h-16 px-4 sm:px-6 flex items-center justify-between border-b border-gray-200 dark:border-[#1F1F23] flex-shrink-0">
+            <Link
+              href="/dashboard"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 min-w-0"
+            >
+              <div className="rounded-full overflow-hidden ring-2 ring-gradient-text dark:ring-[#2B2B30] w-8 h-8 sm:w-10 sm:h-10 lg:w-8 lg:h-8 flex-shrink-0">
                 <Image
-                src="https://j9v2s0d9fs.ufs.sh/f/lPsbSsZAX9SYdNnmqvWekY0wghnZXPrJQ7R45bjNmFBu8SCx"
-                alt="Kiseeka Pius"
-                width={32}
-                height={32}
-                className="flex-shrink-0 hidden dark:hidden ring-2 ring-gradient-text dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer"
-              />
+                  src="https://j9v2s0d9fs.ufs.sh/f/lPsbSsZAX9SYdNnmqvWekY0wghnZXPrJQ7R45bjNmFBu8SCx"
+                  alt="Kiseeka Pius"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="rounded-full overflow-hidden ring-2 ring-gradient-text dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer">
-              <Image
-                src="https://j9v2s0d9fs.ufs.sh/f/lPsbSsZAX9SYdNnmqvWekY0wghnZXPrJQ7R45bjNmFBu8SCx"
-                alt="Kiseeka Pius"
-                width={32}
-                height={32}
-                className="flex-shrink-0 block"
-              />
-              </div>
-              <span className="text-lg font-semibold hover:cursor-pointer gradient-text dark:text-white bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              <span className="text-base sm:text-lg lg:text-base font-semibold hover:cursor-pointer gradient-text dark:text-white bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent truncate">
                 Kiseka Pius
               </span>
-            </div>
-          </Link>
+            </Link>
 
-          <div className="flex-1 overflow-y-auto py-4 px-4">
-            <div className="space-y-6">
-              <div>
-                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
-                  Overview
-                </div>
-                <div className="space-y-1">
-                  <NavItem href="/dashboard" icon={Home}>
-                    Dashboard
-                  </NavItem>
-                  <NavItem href="/dashboard" icon={BarChart2}>
-                    Analytics
-                  </NavItem>
-                </div>
-              </div>
-
-              <div>
-                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
-                  Form Suite
-                </div>
-                <div className="space-y-1">
-                  <NavItem href="/dashboard/profile-form" icon={ CircleUser }>
-                    Profile
-                  </NavItem>
-                  <NavItem href="/dashboard/work-experience" icon={BriefcaseBusiness}>
-                    Work Experience
-                  </NavItem>
-                  <NavItem href="/dashboard/education-form" icon={GraduationCap}>
-                    Education
-                  </NavItem>
-                  <NavItem href="/dashboard/projects-form" icon={GlobeLock}>
-                    Projects
-                  </NavItem>
-                  <NavItem href="/dashboard/skills-form" icon={Hammer}>
-                    Skill
-                  </NavItem>
-                  <NavItem href="/dashboard/testimonial-form" icon={Users}>
-                    Testimonial
-                  </NavItem>
-                  <NavItem href="/dashboard/blog-posts-category" icon={BookOpen}>
-                    Blog Category Form
-                  </NavItem>
-                  <NavItem href="/dashboard/blog-posts-form" icon={FileChartColumn}>
-                    Blog Posts Form
-                  </NavItem>
-                </div>
-              </div>
-
-              <div>
-                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
-                  Table OverView
-                </div>
-                <div className="space-y-1">
-                  <NavItem href="/dashboard/view-work-experiences" icon={TableProperties}>
-                    Work Experiences
-                  </NavItem>
-                  <NavItem href="/dashboard/view-education-backgrounds" icon={TableProperties}>
-                    Education Background
-                  </NavItem>
-                  <NavItem href="/dashboard/view-projects" icon={TableProperties}>
-                    Projects
-                  </NavItem>
-                  <NavItem href="/dashboard/view-skills" icon={TableProperties}>
-                    Skills
-                  </NavItem>
-                  <NavItem href="/dashboard/view-testimonials" icon={TableProperties}>
-                    Testimonials
-                  </NavItem>
-                  <NavItem href="/dashboard/view-blog-posts-categories" icon={TableProperties}>
-                    Blog Categories
-                  </NavItem>
-                  <NavItem href="/dashboard/view-blog-posts" icon={TableProperties}>
-                    Blog Posts
-                  </NavItem>
-                </div>
-              </div>
-            </div>
+            {/* Close button for mobile */}
+            <button
+              type="button"
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-[#1F1F23] transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            </button>
           </div>
 
-          <div className="px-4 py-4 border-t border-gray-200 dark:border-[#1F1F23]">
+          {/* Scrollable Navigation */}
+          <ScrollArea className="flex-1">
+            <div className="py-4 px-3 sm:px-4">
+              <div className="space-y-6">
+                {/* Overview Section */}
+                <div>
+                  <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
+                    Overview
+                  </div>
+                  <div className="space-y-1">
+                    <NavItem href="/dashboard" icon={Home}>
+                      Dashboard
+                    </NavItem>
+                    <NavItem href="/dashboard" icon={BarChart2}>
+                      Analytics
+                    </NavItem>
+                  </div>
+                </div>
+
+                {/* Form Suite Section */}
+                <div>
+                  <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
+                    Form Suite
+                  </div>
+                  <div className="space-y-1">
+                    <NavItem href="/dashboard/profile-form" icon={CircleUser}>
+                      Profile
+                    </NavItem>
+                    <NavItem href="/dashboard/work-experience" icon={BriefcaseBusiness}>
+                      Work Experience
+                    </NavItem>
+                    <NavItem href="/dashboard/education-form" icon={GraduationCap}>
+                      Education
+                    </NavItem>
+                    <NavItem href="/dashboard/projects-form" icon={GlobeLock}>
+                      Projects
+                    </NavItem>
+                    <NavItem href="/dashboard/skills-form" icon={Hammer}>
+                      Skill
+                    </NavItem>
+                    <NavItem href="/dashboard/testimonial-form" icon={Users}>
+                      Testimonial
+                    </NavItem>
+                    <NavItem href="/dashboard/blog-posts-category" icon={BookOpen}>
+                      Blog Category
+                    </NavItem>
+                    <NavItem href="/dashboard/blog-posts-form" icon={FileChartColumn}>
+                      Blog Posts
+                    </NavItem>
+                  </div>
+                </div>
+
+                {/* Table Overview Section */}
+                <div>
+                  <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
+                    Table Overview
+                  </div>
+                  <div className="space-y-1">
+                    <NavItem href="/dashboard/view-work-experiences" icon={TableProperties}>
+                      Work Experiences
+                    </NavItem>
+                    <NavItem href="/dashboard/view-education-backgrounds" icon={TableProperties}>
+                      Education
+                    </NavItem>
+                    <NavItem href="/dashboard/view-projects" icon={TableProperties}>
+                      Projects
+                    </NavItem>
+                    <NavItem href="/dashboard/view-skills" icon={TableProperties}>
+                      Skills
+                    </NavItem>
+                    <NavItem href="/dashboard/view-testimonials" icon={TableProperties}>
+                      Testimonials
+                    </NavItem>
+                    <NavItem href="/dashboard/view-blog-posts-categories" icon={TableProperties}>
+                      Blog Categories
+                    </NavItem>
+                    <NavItem href="/dashboard/view-blog-posts" icon={TableProperties}>
+                      Blog Posts
+                    </NavItem>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ScrollArea>
+
+          {/* Footer */}
+          <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-gray-200 dark:border-[#1F1F23] flex-shrink-0">
             <div className="space-y-1">
               <NavItem href="#" icon={Settings}>
                 Settings
@@ -187,10 +202,12 @@ export default function Sidebar() {
         </div>
       </nav>
 
+      {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-[65] lg:hidden"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[65] lg:hidden transition-opacity duration-300"
           onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
         />
       )}
     </>
