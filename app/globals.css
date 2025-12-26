@@ -294,7 +294,7 @@ html {
 
 /* Remove double scrollbars */
 body {
-  overflow: hidden;
+  /* overflow: hidden !important; */
 }
 
 html, body {
