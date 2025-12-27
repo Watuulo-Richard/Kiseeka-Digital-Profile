@@ -4,6 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -23,11 +29,14 @@ import {
 import clsx from 'clsx';
 import {
   Edit,
+  Eye,
   FileSpreadsheet,
   Loader2,
   Search,
   Trash2,
   X,
+  Briefcase,
+  Calendar,
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -36,24 +45,26 @@ import React, { useMemo, useState } from 'react';
 import { baseUrl } from '@/types/type';
 import { WorkExperience } from '@prisma/client';
 
-
-export default function WorkExperienceTable({ title, workExperiences }: {
+export default function WorkExperienceTable({
+  title,
+  workExperiences,
+}: {
   title: string;
-  workExperiences: WorkExperience[]
+  workExperiences: WorkExperience[];
 }) {
-//   const { getAllMeals } = useMeals();
-  // const { singleMeal } = useSingleMealQuery(slug);
-  // const { updateMeal } = useMeals();
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [selectedWorkExperience, setSelectedWorkExperience] =
+    useState<WorkExperience | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const itemsPerPage = 10;
-  const router = useRouter()
+  const router = useRouter();
 
-  // Filter meals based on search query
+  // Filter work experiences based on search query
   const filteredMeals = useMemo(() => {
     if (!searchQuery.trim()) return workExperiences;
 
@@ -62,16 +73,15 @@ export default function WorkExperienceTable({ title, workExperiences }: {
       (workExperience) =>
         workExperience.position.toLowerCase().includes(query) ||
         workExperience.company.toLowerCase().includes(query) ||
-        workExperience.id.toLowerCase().includes(query),
+        workExperience.id.toLowerCase().includes(query)
     );
   }, [workExperiences, searchQuery]);
 
-  // Handle edit click
-  // async function handleEditClick (meal: MealPropTypes) {
-  //   setIsAddingNew(false);
-  //   router.push(`/dashboard/meals/${meal.slug}`)
-  //   setIsModalOpen(true);
-  // };
+  // Handle view detail click
+  const handleViewDetail = (workExperience: WorkExperience) => {
+    setSelectedWorkExperience(workExperience);
+    setIsDetailModalOpen(true);
+  };
 
   // Handle add new click
   const handleAddNewClick = () => {
@@ -90,14 +100,14 @@ export default function WorkExperienceTable({ title, workExperiences }: {
         {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
-        },
+        }
       );
       console.log(response), 'Jesus';
       if (response.ok) {
         setIsDeleting(null);
         toast.success('Work Experience Deleted successfully...✅');
         console.log(response);
-        router.push('/dashboard/view-work-experiences')
+        router.push('/dashboard/view-work-experiences');
       } else {
         setIsDeleting(null);
         toast.error('Failed To Delete Work Experience...!!!🥺');
@@ -120,48 +130,41 @@ export default function WorkExperienceTable({ title, workExperiences }: {
   // Calculate total pages
   const totalPages = Math.ceil(filteredMeals.length / itemsPerPage);
 
+  // Get current page items
+  const currentItems = filteredMeals.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   // Format date function
-  const formatDate = (date: Date | string) => {
+  const formatDate = (date: Date | string | null) => {
+    if (!date) return 'Present';
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return format(dateObj, 'MMM dd, yyyy');
   };
-
-  // Format currency
-//   const formatCurrency = (amount: number) => {
-//     return new Intl.NumberFormat('en-UG', {
-//       style: 'currency',
-//       currency: 'UGX',
-//       minimumFractionDigits: 0,
-//     }).format(amount);
-//   };
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
     const pageNumbers = [];
 
     if (totalPages <= 5) {
-      // Show all pages if 5 or fewer
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
       }
     } else {
-      // Show first page, current page and neighbors, and last page
       if (currentPage <= 3) {
-        // Near the beginning
         for (let i = 1; i <= 4; i++) {
           pageNumbers.push(i);
         }
         pageNumbers.push('ellipsis');
         pageNumbers.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
-        // Near the end
         pageNumbers.push(1);
         pageNumbers.push('ellipsis');
         for (let i = totalPages - 3; i <= totalPages; i++) {
           pageNumbers.push(i);
         }
       } else {
-        // Middle
         pageNumbers.push(1);
         pageNumbers.push('ellipsis');
         pageNumbers.push(currentPage - 1);
@@ -179,37 +182,44 @@ export default function WorkExperienceTable({ title, workExperiences }: {
     <>
       <Card className={clsx('w-full my-6')}>
         <CardHeader
-          className={clsx('flex flex-row items-center justify-between')}
+          className={clsx(
+            'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'
+          )}
         >
           <div>
-            <CardTitle className={clsx('text-2xl')}>{title}</CardTitle>
-            <p className={clsx('text-muted-foreground mt-1')}>
+            <CardTitle className={clsx('text-xl sm:text-2xl')}>
+              {title}
+            </CardTitle>
+            <p className={clsx('text-muted-foreground mt-1 text-sm')}>
               {workExperiences.length}{' '}
-              {workExperiences.length === 1 ? 'work experience' : 'work experiences'}
+              {workExperiences.length === 1
+                ? 'work experience'
+                : 'work experiences'}
             </p>
           </div>
-          <Button className='' onClick={handleAddNewClick}>
-            {/* <Plus className={clsx('mr-2 h-4 w-4')} /> */}
-            <Link href='/dashboard/work-experience'>
-                Add Experience
-            </Link>
+          <Button className="w-full sm:w-auto" onClick={handleAddNewClick}>
+            <Link href="/dashboard/work-experience">Add Experience</Link>
           </Button>
         </CardHeader>
 
         <CardContent>
           {/* Search and Export */}
-          <div className={clsx('flex items-center justify-between mb-4')}>
-            <div className={clsx('relative max-w-sm')}>
+          <div
+            className={clsx(
+              'flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-4'
+            )}
+          >
+            <div className={clsx('relative w-full sm:max-w-sm')}>
               <Search
                 className={clsx(
-                  'absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground',
+                  'absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground'
                 )}
               />
               <Input
                 placeholder="Search work experience..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={clsx('pl-8 w-full md:w-80')}
+                className={clsx('pl-8 w-full')}
               />
               {searchQuery && (
                 <Button
@@ -224,8 +234,8 @@ export default function WorkExperienceTable({ title, workExperiences }: {
             </div>
             <Button
               variant="outline"
-            //   onClick={exportToExcel}
               disabled={isExporting}
+              className="w-full sm:w-auto"
             >
               {isExporting ? (
                 <>
@@ -241,66 +251,169 @@ export default function WorkExperienceTable({ title, workExperiences }: {
             </Button>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Position</TableHead>
-                <TableHead>Company</TableHead>
-                <TableHead>StartDate</TableHead>
-                <TableHead>EndDate</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {workExperiences.length > 0 ? (
-                workExperiences.map((workExperience) => (
-                  <TableRow key={workExperience.id}>
-                    <TableCell>{workExperience.position}</TableCell>
-                    <TableCell>{workExperience.company}</TableCell>
-                    <TableCell>{formatDate(workExperience.startDate)}</TableCell>
-                    <TableCell>{formatDate(workExperience.endDate as Date)}</TableCell>
-                    <TableCell className={clsx('text-right')}>
-                      <div className={clsx('flex justify-end gap-2')}>
-                        <Link href={`/dashboard/work-experience/${workExperience.id}`}>
-                          <Button 
+          {/* Desktop Table View */}
+          <div className="hidden lg:block overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Position</TableHead>
+                  <TableHead>Company</TableHead>
+                  <TableHead>StartDate</TableHead>
+                  <TableHead>EndDate</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentItems.length > 0 ? (
+                  currentItems.map((workExperience) => (
+                    <TableRow key={workExperience.id}>
+                      <TableCell className="font-medium">
+                        {workExperience.position}
+                      </TableCell>
+                      <TableCell>{workExperience.company}</TableCell>
+                      <TableCell>
+                        {formatDate(workExperience.startDate)}
+                      </TableCell>
+                      <TableCell>
+                        {formatDate(workExperience.endDate as Date)}
+                      </TableCell>
+                      <TableCell className={clsx('text-right')}>
+                        <div className={clsx('flex justify-end gap-2')}>
+                          <Button
                             variant="outline"
                             size="icon"
-                              // onClick={() => handleEditClick(meal.slug)}
-                            title="Edit Work Experience"
+                            onClick={() => handleViewDetail(workExperience)}
+                            title="View Details"
                           >
-                            <Edit className={clsx('h-4 w-4')} />
-                            
+                            <Eye className={clsx('h-4 w-4')} />
                           </Button>
-                        </Link>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className={clsx('text-destructive')}
-                          onClick={() => handleDeleteClick(workExperience.id)}
-                          disabled={isDeleting === workExperience.id}
-                          title="Delete Work Experience"
-                        >
-                          {isDeleting === workExperience.id ? (
-                            <Loader2 className={clsx('h-4 w-4 animate-spin')} />
-                          ) : (
-                            <Trash2 className={clsx('h-4 w-4')} />
-                          )}
-                        </Button>
-                      </div>
+                          <Link
+                            href={`/dashboard/work-experience/${workExperience.id}`}
+                          >
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              title="Edit Work Experience"
+                            >
+                              <Edit className={clsx('h-4 w-4')} />
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className={clsx('text-destructive')}
+                            onClick={() => handleDeleteClick(workExperience.id)}
+                            disabled={isDeleting === workExperience.id}
+                            title="Delete Work Experience"
+                          >
+                            {isDeleting === workExperience.id ? (
+                              <Loader2
+                                className={clsx('h-4 w-4 animate-spin')}
+                              />
+                            ) : (
+                              <Trash2 className={clsx('h-4 w-4')} />
+                            )}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className={clsx('text-center py-6')}
+                    >
+                      {searchQuery
+                        ? 'No matching work experiences found'
+                        : 'No work experiences found'}
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className={clsx('text-center py-6')}>
-                    {searchQuery
-                      ? 'No matching work experiences found'
-                      : 'No work experiences found'}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Mobile/Tablet Card View */}
+          <div className="lg:hidden space-y-4">
+            {currentItems.length > 0 ? (
+              currentItems.map((workExperience) => (
+                <Card key={workExperience.id} className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                        <Briefcase className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-lg">
+                          {workExperience.position}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {workExperience.company}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      <span>
+                        {formatDate(workExperience.startDate)} -{' '}
+                        {formatDate(workExperience.endDate as Date)}
+                      </span>
+                    </div>
+
+                    {workExperience.description && (
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        {workExperience.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2 mt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleViewDetail(workExperience)}
+                    >
+                      <Eye className="h-4 w-4 mr-1" />
+                      View
+                    </Button>
+                    <Link
+                      href={`/dashboard/work-experience/${workExperience.id}`}
+                      className="flex-1"
+                    >
+                      <Button variant="outline" size="sm" className="w-full">
+                        <Edit className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive"
+                      onClick={() => handleDeleteClick(workExperience.id)}
+                      disabled={isDeleting === workExperience.id}
+                    >
+                      {isDeleting === workExperience.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <Card className="p-8">
+                <p className="text-center text-muted-foreground">
+                  {searchQuery
+                    ? 'No matching work experiences found'
+                    : 'No work experiences found'}
+                </p>
+              </Card>
+            )}
+          </div>
 
           {totalPages > 1 && (
             <div className={clsx('mt-4')}>
@@ -314,7 +427,7 @@ export default function WorkExperienceTable({ title, workExperiences }: {
                       className={clsx(
                         currentPage === 1
                           ? 'pointer-events-none opacity-50'
-                          : 'cursor-pointer',
+                          : 'cursor-pointer'
                       )}
                     />
                   </PaginationItem>
@@ -331,13 +444,13 @@ export default function WorkExperienceTable({ title, workExperiences }: {
                           className={clsx(
                             currentPage === page
                               ? 'bg-primary text-primary-foreground'
-                              : 'cursor-pointer',
+                              : 'cursor-pointer'
                           )}
                         >
                           {page}
                         </PaginationLink>
                       </PaginationItem>
-                    ),
+                    )
                   )}
 
                   <PaginationItem>
@@ -348,7 +461,7 @@ export default function WorkExperienceTable({ title, workExperiences }: {
                       className={clsx(
                         currentPage === totalPages
                           ? 'pointer-events-none opacity-50'
-                          : 'cursor-pointer',
+                          : 'cursor-pointer'
                       )}
                     />
                   </PaginationItem>
@@ -359,98 +472,115 @@ export default function WorkExperienceTable({ title, workExperiences }: {
         </CardContent>
       </Card>
 
-      {/* Sales Person Modal (for both Edit and Add) */}
-      {/* <Dialog
-        open={isModalOpen}
-        onOpenChange={(open) => {
-          if (!isSaving) {
-            setIsModalOpen(open);
-          }
-        }}
-      >
-        <DialogContent className="sm:max-w-[425px]">
+      {/* Detail Modal */}
+      <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {isAddingNew ? 'Add New Sales Person' : 'Edit Sales Person'}
-            </DialogTitle>
+            <DialogTitle>Work Experience Details</DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter sales person's name"
-                        {...field}
-                        disabled={isSaving}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+          {selectedWorkExperience && (
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                  <Briefcase className="h-8 w-8 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-2xl font-bold">
+                    {selectedWorkExperience.position}
+                  </h2>
+                  <p className="text-lg text-muted-foreground">
+                    {selectedWorkExperience.company}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      Start Date
+                    </label>
+                    <p className="text-base mt-1">
+                      {formatDate(selectedWorkExperience.startDate)}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      End Date
+                    </label>
+                    <p className="text-base mt-1">
+                      {formatDate(selectedWorkExperience.endDate as Date)}
+                    </p>
+                  </div>
+                </div>
+
+                {selectedWorkExperience.description && (
+                  <div>
+                    <label className="text-sm font-semibold text-muted-foreground">
+                      Description
+                    </label>
+                    <p className="text-base mt-1 whitespace-pre-wrap">
+                      {selectedWorkExperience.description}
+                    </p>
+                  </div>
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="+25676xxxxxx"
-                        {...field}
-                        disabled={isSaving}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="example@domain.com"
-                        type="email"
-                        {...field}
-                        disabled={isSaving}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="button" variant="outline" disabled={isSaving}>
-                    Cancel
+
+                {/* {selectedWorkExperience.responsibilities && (
+                  <div>
+                    <label className="text-sm font-semibold text-muted-foreground">
+                      Responsibilities
+                    </label>
+                    <p className="text-base mt-1 whitespace-pre-wrap">
+                      {selectedWorkExperience.responsibilities}
+                    </p>
+                  </div>
+                )} */}
+
+                {/* {selectedWorkExperience.achievements && (
+                  <div>
+                    <label className="text-sm font-semibold text-muted-foreground">
+                      Achievements
+                    </label>
+                    <p className="text-base mt-1 whitespace-pre-wrap">
+                      {selectedWorkExperience.achievements}
+                    </p>
+                  </div>
+                )} */}
+
+                <div className="pt-2 border-t">
+                  <label className="text-sm font-semibold text-muted-foreground">
+                    ID
+                  </label>
+                  <p className="text-base mt-1 font-mono text-sm break-all">
+                    {selectedWorkExperience.id}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <Link
+                  href={`/dashboard/work-experience/${selectedWorkExperience.id}`}
+                  className="flex-1"
+                >
+                  <Button variant="default" className="w-full">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Experience
                   </Button>
-                </DialogClose>
-                <Button type="submit" disabled={isSaving}>
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {isAddingNew ? 'Adding...' : 'Saving...'}
-                    </>
-                  ) : isAddingNew ? (
-                    'Add Sales Person'
-                  ) : (
-                    'Save Changes'
-                  )}
+                </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDetailModalOpen(false)}
+                  className="flex-1"
+                >
+                  Close
                 </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+              </div>
+            </div>
+          )}
         </DialogContent>
-      </Dialog> */}
+      </Dialog>
     </>
   );
 }

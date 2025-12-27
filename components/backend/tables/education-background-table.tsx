@@ -20,9 +20,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import clsx from 'clsx';
 import {
   Edit,
+  Eye,
   FileSpreadsheet,
   Loader2,
   Search,
@@ -40,19 +49,18 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
   title: string;
   educationBackgrounds: Education[]
 }) {
-//   const { getAllMeals } = useMeals();
-  // const { singleMeal } = useSingleMealQuery(slug);
-  // const { updateMeal } = useMeals();
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [selectedEducation, setSelectedEducation] = useState<Education | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const itemsPerPage = 10;
-  const router = useRouter()
+  const router = useRouter();
 
-  // Filter meals based on search query
+  // Filter education backgrounds based on search query
   const filteredEducationBackgrounds = useMemo(() => {
     if (!searchQuery.trim()) return educationBackgrounds;
 
@@ -61,16 +69,14 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
       (educationBackground) =>
         educationBackground.institution.toLowerCase().includes(query) ||
         educationBackground.educationLevel.toLowerCase().includes(query)
-        // educationBackground.description.toLowerCase().includes(query),
     );
   }, [educationBackgrounds, searchQuery]);
 
-  // Handle edit click
-  // async function handleEditClick (meal: MealPropTypes) {
-  //   setIsAddingNew(false);
-  //   router.push(`/dashboard/meals/${meal.slug}`)
-  //   setIsModalOpen(true);
-  // };
+  // Handle view detail click
+  const handleViewDetail = (education: Education) => {
+    setSelectedEducation(education);
+    setIsDetailModalOpen(true);
+  };
 
   // Handle add new click
   const handleAddNewClick = () => {
@@ -91,12 +97,12 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
           headers: { 'Content-Type': 'application/json' },
         },
       );
-      console.log(response), 'Jesus';
+      
       if (response.ok) {
         setIsDeleting(null);
         toast.success('Education Background Deleted successfully...✅');
         console.log(response);
-        router.push('/dashboard/view-education-backgrounds')
+        router.push('/dashboard/view-education-backgrounds');
       } else {
         setIsDeleting(null);
         toast.error('Failed To Delete Education Background...!!!🥺');
@@ -104,7 +110,7 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
       }
     } catch (error) {
       setIsDeleting(null);
-      toast.error('Failed to Education Background', {
+      toast.error('Failed to Delete Education Background', {
         description:
           error instanceof Error ? error.message : 'Unknown error occurred',
       });
@@ -120,47 +126,40 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
   const totalPages = Math.ceil(filteredEducationBackgrounds.length / itemsPerPage);
 
   // Format date function
-  const formatDate = (date: Date | string) => {
+  const formatDate = (date: Date | string | null) => {
+    if (!date) return 'Present';
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return format(dateObj, 'MMM dd, yyyy');
   };
 
-  // Format currency
-//   const formatCurrency = (amount: number) => {
-//     return new Intl.NumberFormat('en-UG', {
-//       style: 'currency',
-//       currency: 'UGX',
-//       minimumFractionDigits: 0,
-//     }).format(amount);
-//   };
+  const paginatedEducationBackgrounds = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredEducationBackgrounds.slice(startIndex, endIndex);
+  }, [filteredEducationBackgrounds, currentPage, itemsPerPage]);
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
     const pageNumbers = [];
 
     if (totalPages <= 5) {
-      // Show all pages if 5 or fewer
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
       }
     } else {
-      // Show first page, current page and neighbors, and last page
       if (currentPage <= 3) {
-        // Near the beginning
         for (let i = 1; i <= 4; i++) {
           pageNumbers.push(i);
         }
         pageNumbers.push('ellipsis');
         pageNumbers.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
-        // Near the end
         pageNumbers.push(1);
         pageNumbers.push('ellipsis');
         for (let i = totalPages - 3; i <= totalPages; i++) {
           pageNumbers.push(i);
         }
       } else {
-        // Middle
         pageNumbers.push(1);
         pageNumbers.push('ellipsis');
         pageNumbers.push(currentPage - 1);
@@ -178,18 +177,17 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
     <>
       <Card className={clsx('w-full my-6')}>
         <CardHeader
-          className={clsx('flex flex-row items-center justify-between')}
+          className={clsx('flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4')}
         >
           <div>
-            <CardTitle className={clsx('text-2xl')}>{title}</CardTitle>
-            <p className={clsx('text-muted-foreground mt-1')}>
+            <CardTitle className={clsx('text-xl sm:text-2xl')}>{title}</CardTitle>
+            <p className={clsx('text-muted-foreground mt-1 text-sm')}>
               {educationBackgrounds.length}{' '}
               {educationBackgrounds.length === 1 ? 'Education Background' : 'Education Backgrounds'}
             </p>
           </div>
-          <Button className='' onClick={handleAddNewClick}>
-            {/* <Plus className={clsx('mr-2 h-4 w-4')} /> */}
-            <Link href='/dashboard/work-experience'>
+          <Button className="w-full sm:w-auto" onClick={handleAddNewClick}>
+            <Link href='/dashboard/education-form'>
                 Add Education Background
             </Link>
           </Button>
@@ -197,18 +195,18 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
 
         <CardContent>
           {/* Search and Export */}
-          <div className={clsx('flex items-center justify-between mb-4')}>
-            <div className={clsx('relative max-w-sm')}>
+          <div className={clsx('flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4')}>
+            <div className={clsx('relative w-full sm:max-w-sm')}>
               <Search
                 className={clsx(
                   'absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground',
                 )}
               />
               <Input
-                placeholder="Search work experience..."
+                placeholder="Search education background..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={clsx('pl-8 w-full md:w-80')}
+                className={clsx('pl-8 w-full')}
               />
               {searchQuery && (
                 <Button
@@ -223,8 +221,8 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
             </div>
             <Button
               variant="outline"
-            //   onClick={exportToExcel}
               disabled={isExporting}
+              className="w-full sm:w-auto"
             >
               {isExporting ? (
                 <>
@@ -240,71 +238,151 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
             </Button>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Institution</TableHead>
-                <TableHead>Education Level</TableHead>
-                <TableHead>StartDate</TableHead>
-                <TableHead>EndDate</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {educationBackgrounds.length > 0 ? (
-                educationBackgrounds.map((educationBackground) => (
-                  <TableRow key={educationBackground.id}>
-                    <TableCell>{educationBackground.institution}</TableCell>
-                    <TableCell>{educationBackground.educationLevel}</TableCell>
-                    <TableCell>{formatDate(educationBackground.startDate)}</TableCell>
-                    <TableCell>{formatDate(educationBackground.endDate as Date)}</TableCell>
-                    <TableCell className={clsx('text-right')}>
-                      <div className={clsx('flex justify-end gap-2')}>
-                        <Link href={`/dashboard/education-form/${educationBackground.id}`}>
-                          <Button 
+          {/* Mobile Card View */}
+          <div className="block lg:hidden space-y-4">
+            {paginatedEducationBackgrounds.length > 0 ? (
+              paginatedEducationBackgrounds.map((educationBackground) => (
+                <Card key={educationBackground.id} className="overflow-hidden">
+                  <div className="p-4">
+                    <h3 className="font-semibold text-base mb-1">
+                      {educationBackground.institution}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {educationBackground.educationLevel}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>{formatDate(educationBackground.startDate)}</span>
+                      <span>→</span>
+                      <span>{formatDate(educationBackground.endDate)}</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 px-2 py-2 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleViewDetail(educationBackground)}
+                    >
+                      <Eye className="h-4 w-4 mr-1" />
+                      View
+                    </Button>
+                    <Link
+                      href={`/dashboard/education-form/${educationBackground.id}`}
+                      className="flex-1"
+                    >
+                      <Button variant="outline" size="sm" className="w-full">
+                        <Edit className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive"
+                      onClick={() => handleDeleteClick(educationBackground.id)}
+                      disabled={isDeleting === educationBackground.id}
+                    >
+                      {isDeleting === educationBackground.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <Card className="p-6 text-center text-muted-foreground">
+                {searchQuery
+                  ? 'No matching education backgrounds found'
+                  : 'No education background found'}
+              </Card>
+            )}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden lg:block overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[200px]">Institution</TableHead>
+                  <TableHead className="min-w-[150px]">Education Level</TableHead>
+                  <TableHead className="min-w-[120px]">Start Date</TableHead>
+                  <TableHead className="min-w-[120px]">End Date</TableHead>
+                  <TableHead className="text-right min-w-[180px]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedEducationBackgrounds.length > 0 ? (
+                  paginatedEducationBackgrounds.map((educationBackground) => (
+                    <TableRow key={educationBackground.id}>
+                      <TableCell className="font-medium">
+                        <div className="max-w-[250px] truncate">
+                          {educationBackground.institution}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="max-w-[200px] truncate">
+                          {educationBackground.educationLevel}
+                        </div>
+                      </TableCell>
+                      <TableCell>{formatDate(educationBackground.startDate)}</TableCell>
+                      <TableCell>{formatDate(educationBackground.endDate)}</TableCell>
+                      <TableCell className={clsx('text-right')}>
+                        <div className={clsx('flex justify-end gap-2')}>
+                          <Button
                             variant="outline"
                             size="icon"
-                              // onClick={() => handleEditClick(meal.slug)}
-                            title="Edit Work Experience"
+                            onClick={() => handleViewDetail(educationBackground)}
+                            title="View Details"
                           >
-                            <Edit className={clsx('h-4 w-4')} />
-                            
+                            <Eye className={clsx('h-4 w-4')} />
                           </Button>
-                        </Link>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className={clsx('text-destructive')}
-                          onClick={() => handleDeleteClick(educationBackground.id)}
-                          disabled={isDeleting === educationBackground.id}
-                          title="Delete Work Experience"
-                        >
-                          {isDeleting === educationBackground.id ? (
-                            <Loader2 className={clsx('h-4 w-4 animate-spin')} />
-                          ) : (
-                            <Trash2 className={clsx('h-4 w-4')} />
-                          )}
-                        </Button>
-                      </div>
+                          <Link href={`/dashboard/education-form/${educationBackground.id}`}>
+                            <Button 
+                              variant="outline"
+                              size="icon"
+                              title="Edit Education Background"
+                            >
+                              <Edit className={clsx('h-4 w-4')} />
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className={clsx('text-destructive')}
+                            onClick={() => handleDeleteClick(educationBackground.id)}
+                            disabled={isDeleting === educationBackground.id}
+                            title="Delete Education Background"
+                          >
+                            {isDeleting === educationBackground.id ? (
+                              <Loader2 className={clsx('h-4 w-4 animate-spin')} />
+                            ) : (
+                              <Trash2 className={clsx('h-4 w-4')} />
+                            )}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className={clsx('text-center py-6')}>
+                      {searchQuery
+                        ? 'No matching education backgrounds found'
+                        : 'No education background found'}
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className={clsx('text-center py-6')}>
-                    {searchQuery
-                      ? 'No matching education backgrounds found'
-                      : 'No education background found'}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
 
+          {/* Pagination */}
           {totalPages > 1 && (
             <div className={clsx('mt-4')}>
               <Pagination>
-                <PaginationContent>
+                <PaginationContent className="flex-wrap">
                   <PaginationItem>
                     <PaginationPrevious
                       onClick={() =>
@@ -320,7 +398,7 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
 
                   {getPageNumbers().map((page, index) =>
                     page === 'ellipsis' ? (
-                      <PaginationItem key={`ellipsis-${index}`}>
+                      <PaginationItem key={`ellipsis-${index}`} className="hidden sm:block">
                         <PaginationEllipsis />
                       </PaginationItem>
                     ) : (
@@ -358,98 +436,103 @@ export default function EducationBackgroundTable({ title, educationBackgrounds }
         </CardContent>
       </Card>
 
-      {/* Sales Person Modal (for both Edit and Add) */}
-      {/* <Dialog
-        open={isModalOpen}
-        onOpenChange={(open) => {
-          if (!isSaving) {
-            setIsModalOpen(open);
-          }
-        }}
-      >
-        <DialogContent className="sm:max-w-[425px]">
+      {/* Detail Modal */}
+      <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>
-              {isAddingNew ? 'Add New Sales Person' : 'Edit Sales Person'}
-            </DialogTitle>
+            <DialogTitle>Education Background Details</DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter sales person's name"
-                        {...field}
-                        disabled={isSaving}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+          {selectedEducation && (
+            <ScrollArea className="max-h-[calc(90vh-8rem)] pr-4">
+              <div className="space-y-6">
+                {/* Institution */}
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    Institution
+                  </h3>
+                  <p className="text-lg font-semibold">{selectedEducation.institution}</p>
+                </div>
+
+                {/* Education Level */}
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    Education Level
+                  </h3>
+                  <p className="text-base">{selectedEducation.educationLevel}</p>
+                </div>
+
+                {/* Degree/Field of Study */}
+                {selectedEducation.educationLevel && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      Degree / Field of Study
+                    </h3>
+                    <p className="text-base">{selectedEducation.educationLevel}</p>
+                  </div>
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="+25676xxxxxx"
-                        {...field}
-                        disabled={isSaving}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+
+                {/* Duration */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      Start Date
+                    </h3>
+                    <p className="text-sm">
+                      {formatDate(selectedEducation.startDate)}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      End Date
+                    </h3>
+                    <p className="text-sm">
+                      {formatDate(selectedEducation.endDate)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Description/Details */}
+                {selectedEducation.description && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      Description
+                    </h3>
+                    <p className="text-sm leading-relaxed">{selectedEducation.description}</p>
+                  </div>
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="example@domain.com"
-                        type="email"
-                        {...field}
-                        disabled={isSaving}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="button" variant="outline" disabled={isSaving}>
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button type="submit" disabled={isSaving}>
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {isAddingNew ? 'Adding...' : 'Saving...'}
-                    </>
-                  ) : isAddingNew ? (
-                    'Add Sales Person'
-                  ) : (
-                    'Save Changes'
-                  )}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+
+                {/* ID */}
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    Record ID
+                  </h3>
+                  <p className="text-xs font-mono bg-muted px-2 py-1 rounded break-all">
+                    {selectedEducation.id}
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-4 border-t">
+                  <Link
+                    href={`/dashboard/education-form/${selectedEducation.id}`}
+                    className="flex-1"
+                  >
+                    <Button variant="default" className="w-full">
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit Education
+                    </Button>
+                  </Link>
+                  <DialogClose asChild>
+                    <Button variant="outline" className="flex-1">
+                      Close
+                    </Button>
+                  </DialogClose>
+                </div>
+              </div>
+            </ScrollArea>
+          )}
         </DialogContent>
-      </Dialog> */}
+      </Dialog>
     </>
   );
 }

@@ -5,9 +5,9 @@ import React from 'react';
 export default function page() {
   return (
     <>
-    <BackgroundBeamsWithCollision className='min-h-screen'>
+
       <SignIn />
-    </BackgroundBeamsWithCollision>
+
     </>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Github, Linkedin, Loader2, Twitter } from 'lucide-react';
+import { ArrowRight, Loader2, Linkedin, Twitter } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { userDetailsSchema, UserDetailTypes } from '@/schema/schema';
 import { toast } from 'sonner';
@@ -68,24 +68,24 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
   }
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex min-h-[500px] w-full">
       {/* Left side - Form */}
-      <div className="flex w-full flex-col items-center justify-center p-4 lg:w-1/2 lg:p-2">
+      <div className="flex w-full flex-col items-center justify-center p-4 lg:w-1/2">
         <motion.div
           className="w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="mb-4">
+          <div className="mb-3">
             <motion.div
-              className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600"
+              className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-600"
               whileHover={{ scale: 1.05, rotate: 5 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
               <svg
-                width="24"
-                height="24"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -99,25 +99,22 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
                 />
               </svg>
             </motion.div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Create your account to get started.
+            <h1 className="text-lg font-bold text-gray-900 sm:text-xl">
+              Create your account
             </h1>
-            <p className="mt-2 text-gray-600 text-xs">
-              After signing up, you’ll receive a verification link in your
-              email.📩 Please check your inbox and verify your account. 🔐 Once
-              verified, you can sign in and access your personal portfolio
-              dashboard. Start your journey now!
+            <p className="mt-1 text-xs text-gray-600">
+              After signing up, verify your email with the link sent to your inbox.
             </p>
           </div>
 
           <form
             onSubmit={handleSubmit(handleSignUpOnSubmit)}
-            className="space-y-6"
+            className="space-y-4"
           >
             <div>
               <label
                 htmlFor="fullName"
-                className="mb-1 block text-sm font-medium text-gray-700"
+                className="mb-1 block text-xs font-medium text-gray-700 sm:text-sm"
               >
                 Full Name
               </label>
@@ -125,11 +122,11 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
                 {...register('fullName', { required: true })}
                 id="fullName"
                 type="text"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500 sm:py-2.5"
                 placeholder="Watuulo Richard"
               />
               {errors.fullName && (
-                <span className="text-sm text-destructive">
+                <span className="text-xs text-destructive sm:text-sm">
                   FullName is required...
                 </span>
               )}
@@ -138,7 +135,7 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             <div>
               <label
                 htmlFor="email"
-                className="mb-1 block text-sm font-medium text-gray-700"
+                className="mb-1 block text-xs font-medium text-gray-700 sm:text-sm"
               >
                 Email Address
               </label>
@@ -146,11 +143,11 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
                 {...register('email', { required: true })}
                 id="email"
                 type="email"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500 sm:py-2.5"
                 placeholder="name@example.com"
               />
               {errors.email && (
-                <span className="text-sm text-destructive">
+                <span className="text-xs text-destructive sm:text-sm">
                   Email is required...
                 </span>
               )}
@@ -159,7 +156,7 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             <div>
               <label
                 htmlFor="password"
-                className="mb-1 block text-sm font-medium text-gray-700"
+                className="mb-1 block text-xs font-medium text-gray-700 sm:text-sm"
               >
                 Password
               </label>
@@ -167,13 +164,11 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
                 {...register('password', { required: true })}
                 id="password"
                 type="password"
-                // value={password}
-                // onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500 sm:py-2.5"
                 placeholder="••••••••"
               />
               {errors.password && (
-                <span className="text-sm text-destructive">
+                <span className="text-xs text-destructive sm:text-sm">
                   Password is required...
                 </span>
               )}
@@ -182,59 +177,59 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             {loading ? (
               <motion.button
                 type="submit"
-                className="flex w-full items-center justify-center rounded-lg bg-indigo-600 py-3 font-medium text-white"
+                className="flex w-full items-center justify-center rounded-lg bg-indigo-600 py-2 text-xs font-medium text-white disabled:cursor-not-allowed sm:py-2.5 sm:text-sm"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Creating Account, Please Wait...
-                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                Creating Account...
+                <Loader2 className="ml-1.5 h-3.5 w-3.5 animate-spin sm:ml-2 sm:h-4 sm:w-4" />
               </motion.button>
             ) : (
               <motion.button
                 type="submit"
-                className="flex w-full items-center justify-center rounded-lg bg-indigo-600 py-3 font-medium text-white"
+                className="flex w-full items-center justify-center rounded-lg bg-indigo-600 py-2 text-xs font-medium text-white sm:py-2.5 sm:text-sm"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 Create Account
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4" />
               </motion.button>
             )}
           </form>
 
-          <div className="mt-4">
+          <div className="mt-3">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>
               </div>
-              <div className="relative flex justify-center text-sm">
+              <div className="relative flex justify-center text-xs sm:text-sm">
                 <span className="bg-white px-2 text-gray-500">
                   Or continue with
                 </span>
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="mt-4 grid grid-cols-2 gap-2.5">
               <motion.button
                 type="button"
-                className="inline-flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                className="inline-flex w-full justify-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <Linkedin className="h-5 w-5 text-gray-700" />
+                <Linkedin className="h-4 w-4 text-gray-700 sm:h-5 sm:w-5" />
               </motion.button>
               <motion.button
                 type="button"
-                className="inline-flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                className="inline-flex w-full justify-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <Twitter className="h-5 w-5 text-blue-400" />
+                <Twitter className="h-4 w-4 text-blue-400 sm:h-5 sm:w-5" />
               </motion.button>
             </div>
           </div>
 
-          <p className="mt-8 text-center text-sm text-gray-600">
+          <p className="mt-5 text-center text-xs text-gray-600 sm:text-sm">
             Already have an account?{' '}
             <Link
               href="/sign-in-page"
@@ -247,15 +242,15 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
       </div>
 
       {/* Right side - Illustration */}
-      <div className="hidden w-1/2 items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-700 p-12 lg:flex">
+      <div className="hidden w-1/2 items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-700 p-6 lg:flex">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative w-full max-w-lg"
+          className="relative w-full max-w-md"
         >
           <motion.div
-            className="absolute -left-4 top-0 h-72 w-72 rounded-full bg-purple-300 opacity-70 mix-blend-multiply blur-xl filter"
+            className="absolute -left-3 top-0 h-48 w-48 rounded-full bg-purple-300 opacity-70 mix-blend-multiply blur-xl filter"
             animate={{
               x: [0, 30, 0],
               y: [0, 40, 0],
@@ -267,7 +262,7 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             }}
           />
           <motion.div
-            className="absolute -right-4 top-0 h-72 w-72 rounded-full bg-indigo-300 opacity-70 mix-blend-multiply blur-xl filter"
+            className="absolute -right-3 top-0 h-48 w-48 rounded-full bg-indigo-300 opacity-70 mix-blend-multiply blur-xl filter"
             animate={{
               x: [0, -20, 0],
               y: [0, 30, 0],
@@ -279,7 +274,7 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             }}
           />
           <motion.div
-            className="absolute -bottom-8 left-20 h-72 w-72 rounded-full bg-pink-300 opacity-70 mix-blend-multiply blur-xl filter"
+            className="absolute -bottom-6 left-16 h-48 w-48 rounded-full bg-pink-300 opacity-70 mix-blend-multiply blur-xl filter"
             animate={{
               x: [0, 15, 0],
               y: [0, -20, 0],
@@ -363,16 +358,15 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
           </motion.div>
 
           <motion.div
-            className="mt-8 text-center text-white"
+            className="mt-6 text-center text-white"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <h2 className="mb-2 text-2xl font-bold">
-              Welcome to Kiseeka Pius' Digital Space — a place where creativity
-              meets code.
+            <h2 className="mb-2 text-lg font-bold sm:text-xl">
+              Welcome to Kiseka Pius' Digital Space
             </h2>
-            <p className="text-white opacity-80">
+            <p className="text-sm text-white opacity-80">
               Explore a portfolio crafted with passion, precision, and purpose.
             </p>
           </motion.div>

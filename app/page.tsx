@@ -1,44 +1,52 @@
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
-import Blog from '@/components/frontend/blog';
-import Hero from '@/components/frontend/hero';
-import About from '@/components/frontend/about';
-import Header from '@/components/frontend/header';
-import Contact from '@/components/frontend/contact';
-import { getProfile } from '@/actions/profile-action';
-import Projects from '@/components/frontend/projects';
-import Experience from '@/components/frontend/experience';
-import ScrollToTop from '@/components/frontend/scroll-to-top';
-import Testimonials from '@/components/frontend/testimonials';
-import EducationBackground from '@/components/frontend/education';
-import { getEducationBackgroundAction, getSkillsAction, getWorkExperiences } from '@/actions/actions';
+import Blog from "@/components/frontend/blog";
+import Hero from "@/components/frontend/hero";
+import About from "@/components/frontend/about";
+import Header from "@/components/frontend/header";
+import Contact from "@/components/frontend/contact";
+import { getProfile } from "@/actions/profile-action";
+import Experience from "@/components/frontend/experience";
+import ScrollToTop from "@/components/frontend/scroll-to-top";
+import Testimonials from "@/components/frontend/testimonials";
+import EducationBackground from "@/components/frontend/education";
+import {
+  getEducationBackgroundAction,
+  getSkillsAction,
+  getWorkExperiences,
+} from "@/actions/actions";
+import GalleryComp from "@/components/frontend/dome-gallery/gallery-comp";
 
 // export const metadata: Metadata = {
-//   title: 'Kiseeka Pius | Senior Auditor',
+//   title: 'Kiseka Pius | Senior Auditor',
 //   description:
 //     'Portfolio of Nihal Maskey, a Senior Software Engineer specializing in JavaScript, TypeScript, React.js, Node.js, Laravel, and AWS.',
 // };
 
 export default async function Home() {
-  const fetchedProfile = await getProfile()
-  const fetchedWorkExperiences = await getWorkExperiences()
-  const skills = await getSkillsAction()
-  const educationBackgrounds = await getEducationBackgroundAction()
-  
+  const fetchedProfile = await getProfile();
+  const fetchedWorkExperiences = await getWorkExperiences();
+  const skills = await getSkillsAction();
+  const educationBackgrounds = await getEducationBackgroundAction();
+
   if (!fetchedProfile) {
     return null;
   }
   return (
     <div className="w-full">
       <Header />
-      <Hero fetchedProfile={fetchedProfile[0]}/>
-      <About fetchedProfile={fetchedProfile[0]}/>
-      <Experience fetchedWorkExperiences={fetchedWorkExperiences} skills={skills}/>
-      <Projects />
-      <EducationBackground educationBackgrounds={educationBackgrounds}/>
+      <Hero fetchedProfile={fetchedProfile[0]} />
+      <About fetchedProfile={fetchedProfile[0]} />
+      <Experience
+        fetchedWorkExperiences={fetchedWorkExperiences}
+        skills={skills}
+      />
+      {/* <Projects /> */}
+      <EducationBackground educationBackgrounds={educationBackgrounds} />
       <Testimonials />
+      <GalleryComp />
       <Blog />
-      <Contact fetchedProfile={fetchedProfile[0]}/>
+      <Contact fetchedProfile={fetchedProfile[0]} />
       <ScrollToTop />
     </div>
   );

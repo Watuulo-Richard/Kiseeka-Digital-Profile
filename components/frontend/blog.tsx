@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function Blog() {
   return (
-    <section id="blog" className="py-20">
+    <section id="blog" className="py-0">
       <div className="container px-4 md:px-6 mx-auto">
         <div className="space-y-12">
           <div className="space-y-4 text-center">

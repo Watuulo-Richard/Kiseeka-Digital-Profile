@@ -83,43 +83,41 @@ export function TestimonialCard({
 }
 const testimonials = [
   {
-    name: 'Jordan Hayes',
-    role: 'CTO at Quantum Innovations',
-    img: 'https://randomuser.me/api/portraits/men/22.jpg',
+    name: 'Watuulo Richard',
+    role: 'Full-Stack Developer at Desishub',
+    img: './testimonial-one.jpg',
     description: (
       <p>
-        NexaUI has completely transformed our development workflow.
+        Kiseka Pius is one of the most hardworking individuals I have known since our high school years. His discipline, focus, and commitment to excellence have consistently set him apart.
         <Highlight>
-          The component system saved us weeks of custom coding and design work.
+          Now serving as an Auditor at PKF Uganda, he continues to demonstrate professionalism, integrity, and strong analytical skills.
         </Highlight>{' '}
-        Our team can now focus on business logic instead of UI details.
+        I highly regard his work ethic and dedication.
       </p>
     ),
   },
   {
-    name: 'Maya Rodriguez',
-    role: 'Lead Developer at Skyline Digital',
-    img: 'https://randomuser.me/api/portraits/women/33.jpg',
+    name: 'Nalwoga Hildah Betty',
+    role: 'Auditor at PKF Uganda',
+    img: './testimonial-two.jpeg',
     description: (
       <p>
-        I was skeptical at first, but NexaUI proved me wrong.
+        Kiseka Pius is a highly dedicated and dependable professional at PKF Uganda. He approaches his work with a strong sense of responsibility, attention to detail, and a clear commitment to maintaining high audit standards.
         <Highlight>
-          The accessibility features and responsive design are top-notch.
+          Pius demonstrates strong analytical and problem-solving skills, enabling him to handle complex audit tasks with accuracy and efficiency. He is well-organized, proactive, and able to work effectively under pressure while maintaining professionalism and ethical conduct at all times.
         </Highlight>{' '}
-        It&apos;s rare to find a framework that prioritizes both aesthetics and
-        functionality.
+        Beyond his technical competence, Pius is a supportive and collaborative colleague. He communicates clearly, works well within teams, and contributes positively to a productive work environment.
       </p>
     ),
   },
   {
-    name: 'Ethan Park',
-    role: 'Startup Founder at Elevate Labs',
-    img: 'https://randomuser.me/api/portraits/men/32.jpg',
+    name: 'Umuhoza Gift',
+    role: 'Auditor at PKF Uganda',
+    img: './testimonial-three.jpeg',
     description: (
       <p>
-        As a non-technical founder, NexaUI has been a game-changer for our MVP.
-        <Highlight>We launched three months ahead of schedule.</Highlight> The
-        modular components allowed us to iterate quickly based on user feedback.
+        Kiseka Pius is a highly dependable and hardworking professional at PKF Uganda. He is detail-oriented, disciplined, and consistently demonstrates strong analytical skills in his audit work.
+        <Highlight>Pius approaches his responsibilities with integrity and professionalism, and he is a reliable team player who contributes positively to both team outcomes and client engagements.</Highlight> In addition to his technical competence, Pius is a reliable team player who collaborates well with colleagues.
       </p>
     ),
   },
@@ -233,7 +231,7 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="overflow-x-hidden container relative py-10">
+    <section className="overflow-x-hidden container relative py-5">
       {/* Decorative elements */}
       <div className="absolute -left-20 top-20 z-10 h-64 w-64 rounded-full bg-[#fbebe5] dark:bg-black blur-3xl" />
       <div className="absolute -right-20 bottom-20 z-10 h-64 w-64 rounded-full bg-[#fbebe5] dark:bg-black blur-3xl" />
@@ -252,7 +250,7 @@ export default function Testimonials() {
              clients, partners, and colleagues
           </span>{' '}
           are saying about working with{' '}
-          <span className="font-semibold text-[#F2B5A0]">Kiseeka Pius, Auditor at PKF Uganda.</span>
+          <span className="font-semibold text-[#F2B5A0]">Kiseka Pius, Auditor at PKF Uganda.</span>
         </h3>
       </motion.div>
 

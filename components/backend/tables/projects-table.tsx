@@ -20,14 +20,24 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import clsx from 'clsx';
 import {
   Edit,
+  Eye,
   FileSpreadsheet,
   Loader2,
   Search,
   Trash2,
   X,
+  ExternalLink,
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -46,28 +56,28 @@ export default function ProjectsTable({ title, projects }: {
   const [isExporting, setIsExporting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const itemsPerPage = 10;
-  const router = useRouter()
+  const router = useRouter();
 
-  // Filter Education Background based on search query
-  const filteredEducationBackgrounds = useMemo(() => {
+  // Filter projects based on search query
+  const filteredProjects = useMemo(() => {
     if (!searchQuery.trim()) return projects;
 
     const query = searchQuery.toLowerCase();
     return projects.filter(
       (project) =>
-        project.title.toLowerCase().includes(query)
-        // || project.url.toLowerCase().includes(query)
-        // || educationBackground.description.toLowerCase().includes(query)
+        project.title.toLowerCase().includes(query) ||
+        (project.url && project.url.toLowerCase().includes(query))
     );
   }, [projects, searchQuery]);
 
-  // Handle edit click
-  // async function handleEditClick (meal: MealPropTypes) {
-  //   setIsAddingNew(false);
-  //   router.push(`/dashboard/meals/${meal.slug}`)
-  //   setIsModalOpen(true);
-  // };
+  // Handle view detail click
+  const handleViewDetail = (project: Project) => {
+    setSelectedProject(project);
+    setIsDetailModalOpen(true);
+  };
 
   // Handle add new click
   const handleAddNewClick = () => {
@@ -87,12 +97,12 @@ export default function ProjectsTable({ title, projects }: {
           headers: { 'Content-Type': 'application/json' },
         },
       );
-      console.log(response), 'Jesus';
+      
       if (response.ok) {
         setIsDeleting(null);
         toast.success('Project Deleted Successfully...✅');
         console.log(response);
-        router.push('/dashboard/dashboard/view-projects')
+        router.push('/dashboard/view-projects');
       } else {
         setIsDeleting(null);
         toast.error('Failed To Delete Project...!!!🥺');
@@ -113,7 +123,7 @@ export default function ProjectsTable({ title, projects }: {
   };
 
   // Calculate total pages
-  const totalPages = Math.ceil(filteredEducationBackgrounds.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
 
   // Format date function
   const formatDate = (date: Date | string) => {
@@ -121,33 +131,34 @@ export default function ProjectsTable({ title, projects }: {
     return format(dateObj, 'MMM dd, yyyy');
   };
 
+  const paginatedProjects = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredProjects.slice(startIndex, endIndex);
+  }, [filteredProjects, currentPage, itemsPerPage]);
+
   // Generate page numbers for pagination
   const getPageNumbers = () => {
     const pageNumbers = [];
 
     if (totalPages <= 5) {
-      // Show all pages if 5 or fewer
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
       }
     } else {
-      // Show first page, current page and neighbors, and last page
       if (currentPage <= 3) {
-        // Near the beginning
         for (let i = 1; i <= 4; i++) {
           pageNumbers.push(i);
         }
         pageNumbers.push('ellipsis');
         pageNumbers.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
-        // Near the end
         pageNumbers.push(1);
         pageNumbers.push('ellipsis');
         for (let i = totalPages - 3; i <= totalPages; i++) {
           pageNumbers.push(i);
         }
       } else {
-        // Middle
         pageNumbers.push(1);
         pageNumbers.push('ellipsis');
         pageNumbers.push(currentPage - 1);
@@ -165,18 +176,17 @@ export default function ProjectsTable({ title, projects }: {
     <>
       <Card className={clsx('w-full my-6')}>
         <CardHeader
-          className={clsx('flex flex-row items-center justify-between')}
+          className={clsx('flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4')}
         >
           <div>
-            <CardTitle className={clsx('text-2xl')}>{title}</CardTitle>
-            <p className={clsx('text-muted-foreground mt-1')}>
+            <CardTitle className={clsx('text-xl sm:text-2xl')}>{title}</CardTitle>
+            <p className={clsx('text-muted-foreground mt-1 text-sm')}>
               {projects.length}{' '}
               {projects.length === 1 ? 'Project' : 'Projects'}
             </p>
           </div>
-          <Button className='' onClick={handleAddNewClick}>
-            {/* <Plus className={clsx('mr-2 h-4 w-4')} /> */}
-            <Link href='/dashboard/work-experience'>
+          <Button className="w-full sm:w-auto" onClick={handleAddNewClick}>
+            <Link href='/dashboard/projects-form'>
                 Add Project
             </Link>
           </Button>
@@ -184,8 +194,8 @@ export default function ProjectsTable({ title, projects }: {
 
         <CardContent>
           {/* Search and Export */}
-          <div className={clsx('flex items-center justify-between mb-4')}>
-            <div className={clsx('relative max-w-sm')}>
+          <div className={clsx('flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4')}>
+            <div className={clsx('relative w-full sm:max-w-sm')}>
               <Search
                 className={clsx(
                   'absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground',
@@ -195,7 +205,7 @@ export default function ProjectsTable({ title, projects }: {
                 placeholder="Search projects..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={clsx('pl-8 w-full md:w-80')}
+                className={clsx('pl-8 w-full')}
               />
               {searchQuery && (
                 <Button
@@ -210,8 +220,8 @@ export default function ProjectsTable({ title, projects }: {
             </div>
             <Button
               variant="outline"
-            //   onClick={exportToExcel}
               disabled={isExporting}
+              className="w-full sm:w-auto"
             >
               {isExporting ? (
                 <>
@@ -227,71 +237,170 @@ export default function ProjectsTable({ title, projects }: {
             </Button>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Project Title</TableHead>
-                <TableHead>Project Link</TableHead>
-                <TableHead>Created At</TableHead>
-                <TableHead>Updated At</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {projects.length > 0 ? (
-                projects.map((project) => (
-                  <TableRow key={project.id}>
-                    <TableCell>{project.title}</TableCell>
-                    <TableCell>{project.url}</TableCell>
-                    <TableCell>{formatDate(project.createdAt)}</TableCell>
-                    <TableCell>{formatDate(project.updatedAt)}</TableCell>
-                    <TableCell className={clsx('text-right')}>
-                      <div className={clsx('flex justify-end gap-2')}>
-                        <Link href={`/dashboard/projects-form/${project.id}`}>
-                          <Button 
+          {/* Mobile Card View */}
+          <div className="block lg:hidden space-y-4">
+            {paginatedProjects.length > 0 ? (
+              paginatedProjects.map((project) => (
+                <Card key={project.id} className="overflow-hidden">
+                  <div className="p-4">
+                    <h3 className="font-semibold text-base mb-2">
+                      {project.title}
+                    </h3>
+                    {project.url && (
+                      <a 
+                        href={project.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline flex items-center gap-1 mb-3"
+                      >
+                        <span className="truncate">{project.url}</span>
+                        <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                      </a>
+                    )}
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <div>
+                        <span className="font-medium">Created:</span>{" "}
+                        {formatDate(project.createdAt)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 p-4 pt-0 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleViewDetail(project)}
+                    >
+                      <Eye className="h-4 w-4 mr-1" />
+                      View
+                    </Button>
+                    <Link
+                      href={`/dashboard/projects-form/${project.id}`}
+                      className="flex-1"
+                    >
+                      <Button variant="outline" size="sm" className="w-full">
+                        <Edit className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive"
+                      onClick={() => handleDeleteClick(project.id)}
+                      disabled={isDeleting === project.id}
+                    >
+                      {isDeleting === project.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <Card className="p-6 text-center text-muted-foreground">
+                {searchQuery
+                  ? 'No matching projects found'
+                  : 'No projects found'}
+              </Card>
+            )}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden lg:block overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[200px]">Project Title</TableHead>
+                  <TableHead className="min-w-[250px]">Project Link</TableHead>
+                  <TableHead className="min-w-[120px]">Created At</TableHead>
+                  <TableHead className="min-w-[120px]">Updated At</TableHead>
+                  <TableHead className="text-right min-w-[180px]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedProjects.length > 0 ? (
+                  paginatedProjects.map((project) => (
+                    <TableRow key={project.id}>
+                      <TableCell className="font-medium">
+                        <div className="max-w-[250px] truncate">
+                          {project.title}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {project.url ? (
+                          <a 
+                            href={project.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline flex items-center gap-1 max-w-[300px]"
+                          >
+                            <span className="truncate">{project.url}</span>
+                            <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                          </a>
+                        ) : (
+                          <span className="text-muted-foreground">N/A</span>
+                        )}
+                      </TableCell>
+                      <TableCell>{formatDate(project.createdAt)}</TableCell>
+                      <TableCell>{formatDate(project.updatedAt)}</TableCell>
+                      <TableCell className={clsx('text-right')}>
+                        <div className={clsx('flex justify-end gap-2')}>
+                          <Button
                             variant="outline"
                             size="icon"
-                              // onClick={() => handleEditClick(project.id)}
-                            title="Edit Work Experience"
+                            onClick={() => handleViewDetail(project)}
+                            title="View Details"
                           >
-                            <Edit className={clsx('h-4 w-4')} />
-                            
+                            <Eye className={clsx('h-4 w-4')} />
                           </Button>
-                        </Link>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className={clsx('text-destructive')}
-                          onClick={() => handleDeleteClick(project.id)}
-                          disabled={isDeleting === project.id}
-                          title="Delete Project"
-                        >
-                          {isDeleting === project.id ? (
-                            <Loader2 className={clsx('h-4 w-4 animate-spin')} />
-                          ) : (
-                            <Trash2 className={clsx('h-4 w-4')} />
-                          )}
-                        </Button>
-                      </div>
+                          <Link href={`/dashboard/projects-form/${project.id}`}>
+                            <Button 
+                              variant="outline"
+                              size="icon"
+                              title="Edit Project"
+                            >
+                              <Edit className={clsx('h-4 w-4')} />
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className={clsx('text-destructive')}
+                            onClick={() => handleDeleteClick(project.id)}
+                            disabled={isDeleting === project.id}
+                            title="Delete Project"
+                          >
+                            {isDeleting === project.id ? (
+                              <Loader2 className={clsx('h-4 w-4 animate-spin')} />
+                            ) : (
+                              <Trash2 className={clsx('h-4 w-4')} />
+                            )}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className={clsx('text-center py-6')}>
+                      {searchQuery
+                        ? 'No matching projects found'
+                        : 'No projects found'}
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className={clsx('text-center py-6')}>
-                    {searchQuery
-                      ? 'No matching projects found'
-                      : 'No education project found'}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
 
+          {/* Pagination */}
           {totalPages > 1 && (
             <div className={clsx('mt-4')}>
               <Pagination>
-                <PaginationContent>
+                <PaginationContent className="flex-wrap">
                   <PaginationItem>
                     <PaginationPrevious
                       onClick={() =>
@@ -307,7 +416,7 @@ export default function ProjectsTable({ title, projects }: {
 
                   {getPageNumbers().map((page, index) =>
                     page === 'ellipsis' ? (
-                      <PaginationItem key={`ellipsis-${index}`}>
+                      <PaginationItem key={`ellipsis-${index}`} className="hidden sm:block">
                         <PaginationEllipsis />
                       </PaginationItem>
                     ) : (
@@ -345,98 +454,142 @@ export default function ProjectsTable({ title, projects }: {
         </CardContent>
       </Card>
 
-      {/* Sales Person Modal (for both Edit and Add) */}
-      {/* <Dialog
-        open={isModalOpen}
-        onOpenChange={(open) => {
-          if (!isSaving) {
-            setIsModalOpen(open);
-          }
-        }}
-      >
-        <DialogContent className="sm:max-w-[425px]">
+      {/* Detail Modal */}
+      <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>
-              {isAddingNew ? 'Add New Sales Person' : 'Edit Sales Person'}
-            </DialogTitle>
+            <DialogTitle>Project Details</DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter sales person's name"
-                        {...field}
-                        disabled={isSaving}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+          {selectedProject && (
+            <ScrollArea className="max-h-[calc(90vh-8rem)] pr-4">
+              <div className="space-y-6">
+                {/* Title */}
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    Project Title
+                  </h3>
+                  <p className="text-lg font-semibold">{selectedProject.title}</p>
+                </div>
+
+                {/* URL/Link */}
+                {selectedProject.url && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      Project Link
+                    </h3>
+                    <a 
+                      href={selectedProject.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline flex items-center gap-2 break-all"
+                    >
+                      {selectedProject.url}
+                      <ExternalLink className="h-4 w-4 flex-shrink-0" />
+                    </a>
+                  </div>
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="+25676xxxxxx"
-                        {...field}
-                        disabled={isSaving}
+
+                {/* Image */}
+                {/* {selectedProject.image && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                      Project Image
+                    </h3>
+                    <div className="w-full aspect-video rounded-lg overflow-hidden border">
+                      <img
+                        src={selectedProject.image}
+                        alt={selectedProject.title}
+                        className="w-full h-full object-cover"
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                    </div>
+                  </div>
+                )} */}
+
+                {/* Description */}
+                {selectedProject.description && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      Description
+                    </h3>
+                    <p className="text-sm leading-relaxed">{selectedProject.description}</p>
+                  </div>
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="example@domain.com"
-                        type="email"
-                        {...field}
-                        disabled={isSaving}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="button" variant="outline" disabled={isSaving}>
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button type="submit" disabled={isSaving}>
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {isAddingNew ? 'Adding...' : 'Saving...'}
-                    </>
-                  ) : isAddingNew ? (
-                    'Add Sales Person'
-                  ) : (
-                    'Save Changes'
+
+                {/* Technologies */}
+                {/* {selectedProject.technologies && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      Technologies Used
+                    </h3>
+                    <p className="text-sm">{selectedProject.technologies}</p>
+                  </div>
+                )} */}
+
+                {/* Dates */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      Created At
+                    </h3>
+                    <p className="text-sm">
+                      {formatDate(selectedProject.createdAt)}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                      Last Updated
+                    </h3>
+                    <p className="text-sm">
+                      {formatDate(selectedProject.updatedAt)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* ID */}
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    Project ID
+                  </h3>
+                  <p className="text-xs font-mono bg-muted px-2 py-1 rounded break-all">
+                    {selectedProject.id}
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-4 border-t">
+                  <Link
+                    href={`/dashboard/projects-form/${selectedProject.id}`}
+                    className="flex-1"
+                  >
+                    <Button variant="default" className="w-full">
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit Project
+                    </Button>
+                  </Link>
+                  {selectedProject.url && (
+                    <a
+                      href={selectedProject.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1"
+                    >
+                      <Button variant="outline" className="w-full">
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        Visit Project
+                      </Button>
+                    </a>
                   )}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+                  <DialogClose asChild>
+                    <Button variant="outline" className="flex-1">
+                      Close
+                    </Button>
+                  </DialogClose>
+                </div>
+              </div>
+            </ScrollArea>
+          )}
         </DialogContent>
-      </Dialog> */}
+      </Dialog>
     </>
   );
 }

@@ -84,7 +84,7 @@ export async function getTestimonialsAction() {
     try {
         const response = await fetch(testimonialAPIRoute, { next: { revalidate: REVALIDATE_TIME } })
         const testimonials = await response.json()
-        // console.log(testimonials.data, 'Finally Testimonials Fetched Successfully...👍🏾');
+        console.log(testimonials.data, 'Finally Testimonials Fetched Successfully...👍🏾');
         return testimonials.data as Testimonial[]
     } catch (error) {
         console.log(error);

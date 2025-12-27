@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 import { baseUrl } from '@/types/type';
 import { Portfolio, Testimonial } from '@prisma/client';
 import { Users } from '@/components/frontend/users';
+import { useRouter } from 'next/navigation';
 
 export default function TestimonialForm({
   portfolio,
@@ -44,7 +45,7 @@ export default function TestimonialForm({
       description: testimonial?.description,
     },
   });
-
+const router = useRouter()
   const initialImage = testimonial?.image || '/placeholder.svg';
   const [imageUrl, setImageUrl] = useState(initialImage);
   const [loading, setLoading] = useState(false);
@@ -74,6 +75,7 @@ export default function TestimonialForm({
           setLoading(false);
           console.log(response);
           toast.success('Testimonial Details Have Been Updated Successfully');
+          router.push("/dashboard/view-testimonials");
         } else {
           setLoading(false);
           toast.error('Failed To Update Testimonial Details...🥺');
@@ -98,6 +100,7 @@ export default function TestimonialForm({
           console.log(response);
           toast.success('Testimonial Details Have Been Saved Successfully');
           reset();
+          router.push("/dashboard/view-testimonials");
         } else {
           setLoading(false);
           toast.error('Failed To Save Testimonial Details...🥺');
@@ -117,9 +120,9 @@ export default function TestimonialForm({
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-2">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <div className="p-3 bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
-              <Users className="h-4 w-4 text-white" />
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="bg-gradient-to-r from-rose-300 to-[#F2B5A0] rounded-full">
+              <Users className="h-2 w-2 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-[#F2B5A0] to-gray-900 bg-clip-text text-transparent">
               Submit Your Testimonial
@@ -127,7 +130,7 @@ export default function TestimonialForm({
           </div>
           <p className="text-gray-600 text-sm max-w-2xl mx-auto">
             Kindly fill out the form below to share a professional testimonial
-            for Kiseeka Pius. Your insights and endorsement help strengthen his
+            for Kiseka Pius. Your insights and endorsement help strengthen his
             digital profile and credibility.
           </p>
         </div>
@@ -222,20 +225,18 @@ export default function TestimonialForm({
               <CardHeader className="border-b border-gray-100">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <FileText className="h-5 w-5 text-gray-600" />
-                  Professional Profile
+                  Testimonial Title stays here if you want to change it later
                 </CardTitle>
                 <CardDescription className="text-gray-600">
-                  Summarize your career journey, unique value, and
-                  accomplishments that define who you are.
+                  Provide a professional testimonial describing Kiseka Pius’s character, work ethic, and professional strengths.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
                 <Label className="text-gray-700 font-semibold">
-                  Provide a detailed overview of your expertise, experience, and
-                  what sets you apart.
+                  Share a professional testimonial about Kiseka Pius, highlighting your experience working or studying with him.
                 </Label>
                 <Textarea
-                  placeholder="Share your professional background, key skills, achievements, and what makes you stand out..."
+                  placeholder="Describe how you have found Kiseka Pius professionally—his work ethic, character, skills, and impact in the auditing field..."
                   className="min-h-32 resize-none"
                   {...register('description', { required: true })}
                 />

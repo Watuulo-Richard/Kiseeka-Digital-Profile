@@ -32,7 +32,7 @@ type TypewriterTitleProps = {
 
 const DEFAULT_SEQUENCES: TypewriterSequence[] = [
   { text: "Hi👋🏿 I'm Kiseka Pius.", deleteAfter: true },
-  { text: "Professional Auditor!!", deleteAfter: true },
+  { text: "Professional Auditor!", deleteAfter: true },
   { text: "And ACCA Candidate 🎓", deleteAfter: false },
 ];
 

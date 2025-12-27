@@ -20,6 +20,7 @@ export default function SignIn() {
   } = useForm<UserLoginTypes>({ resolver: zodResolver(loginSchema) });
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  
   async function handleSignInOnSubmit(loginDetails: UserLoginTypes) {
     try {
       setIsLoading(true);
@@ -53,12 +54,14 @@ export default function SignIn() {
     setIsGoogleLoading(true);
     signIn('google', { callbackUrl: '/dashboard' });
   }
+  
   function handleLinkedInSignIn() {
     setIsLinkedInLoading(true);
     signIn('linkedin', { callbackUrl: '/dashboard' });
   }
+
   return (
-    <div className="flex min-h-screen w-full items-center justify-center">
+    <div className="flex min-h-[500px] w-full items-center justify-center px-4 py-6 sm:px-6 sm:py-8">
       <motion.div
         className="w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}
@@ -67,8 +70,8 @@ export default function SignIn() {
       >
         <div className="relative">
           {/* Background decorative elements */}
-          <div className="absolute -left-12 -top-12 h-64 w-64 rounded-full bg-gradient-to-br from-teal-200 to-teal-300 opacity-20 blur-3xl"></div>
-          <div className="absolute -bottom-16 -right-16 h-80 w-80 rounded-full bg-gradient-to-tr from-purple-200 to-purple-300 opacity-20 blur-3xl"></div>
+          <div className="absolute -left-10 -top-10 h-40 w-40 sm:h-48 sm:w-48 rounded-full bg-gradient-to-br from-teal-200 to-teal-300 opacity-20 blur-2xl"></div>
+          <div className="absolute -bottom-12 -right-12 h-48 w-48 sm:h-56 sm:w-56 rounded-full bg-gradient-to-tr from-purple-200 to-purple-300 opacity-20 blur-2xl"></div>
 
           {/* Card */}
           <motion.div
@@ -88,15 +91,16 @@ export default function SignIn() {
             }}
           >
             {/* Card header */}
-            <div className="px-8 pb-3 pt-4">
+            <div className="px-5 pb-2 pt-5 sm:px-6 sm:pt-6">
               <motion.div
-                className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50"
+                className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 sm:h-14 sm:w-14"
                 whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                 transition={{ duration: 0.5 }}
               >
                 <svg
-                  width="32"
-                  height="32"
+                  width="24"
+                  height="24"
+                  className="sm:w-7 sm:h-7"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -118,24 +122,24 @@ export default function SignIn() {
                 </svg>
               </motion.div>
 
-              <h1 className="text-center text-2xl font-bold text-gray-900">
+              <h1 className="text-center text-lg font-semibold text-gray-900 sm:text-xl">
                 Sign in to your account
               </h1>
-              <p className="mt-2 text-center text-gray-500">
-                Welcome back Pius! Please enter your details
+              <p className="mt-1 text-center text-xs text-gray-500 sm:text-sm">
+                Welcome back! Please enter your details
               </p>
             </div>
 
             {/* Card body */}
-            <div className="p-8 pt-0">
+            <div className="p-4 sm:p-5">
               <form
                 onSubmit={handleSubmit(handleSignInOnSubmit)}
-                className="space-y-5"
+                className="space-y-3 sm:space-y-4"
               >
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-1 block text-sm font-medium text-gray-700"
+                    className="mb-1 block text-xs font-medium text-gray-700 sm:text-sm"
                   >
                     Email
                   </label>
@@ -144,14 +148,12 @@ export default function SignIn() {
                       {...register('email', { required: true })}
                       id="email"
                       type="email"
-                      // value={email}
-                      // onChange={(e) => setEmail(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-[#F2B5A0]"
+                      className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-[#F2B5A0] sm:py-2.5"
                       placeholder="Enter your email"
                     />
                     {errors.email && (
-                      <span className="text-sm text-destructive">
-                        Email is required...
+                      <span className="mt-0.5 block text-xs text-destructive sm:text-sm">
+                        Email is required
                       </span>
                     )}
                   </motion.div>
@@ -160,7 +162,7 @@ export default function SignIn() {
                 <div>
                   <label
                     htmlFor="password"
-                    className="mb-1 block text-sm font-medium text-gray-700"
+                    className="mb-1 block text-xs font-medium text-gray-700 sm:text-sm"
                   >
                     Password
                   </label>
@@ -169,132 +171,81 @@ export default function SignIn() {
                       {...register('password', { required: true })}
                       id="password"
                       type={showPassword ? 'text' : 'password'}
-                      // value={password}
-                      // onChange={(e) => setPassword(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-[#F2B5A0] placeholder:text-[#F2B5A0]"
+                      className="w-full rounded-lg border border-gray-200 px-3 py-2 pr-10 text-sm outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-[#F2B5A0] sm:py-2.5"
                       placeholder="••••••••"
                     />
-                    {errors.password && (
-                      <span className="text-sm text-destructive">
-                        Password is required...
-                      </span>
-                    )}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
+                    {errors.password && (
+                      <span className="mt-0.5 block text-xs text-destructive sm:text-sm">
+                        Password is required
+                      </span>
+                    )}
                   </motion.div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  {/* <div className="flex items-center">
-                    <motion.button
-                      type="button"
-                      onClick={() => setRememberMe(!rememberMe)}
-                      className={`flex h-5 w-5 items-center justify-center rounded border ${rememberMe ? "border-teal-500 bg-teal-500" : "border-gray-300"}`}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      {rememberMe && <Check size={14} className="text-white" />}
-                    </motion.button>
-                    <label
-                      htmlFor="remember-me"
-                      className="ml-2 block text-sm text-gray-700"
-                    >
-                      Remember me
-                    </label>
-                  </div> */}
+                <div className="flex items-center justify-end">
                   <Link
                     href="#"
-                    className="text-sm font-medium text-[#F2B5A0] transition-colors hover:text-[#F2B5A0]/40"
+                    className="text-xs font-medium text-[#F2B5A0] transition-colors hover:text-[#F2B5A0]/70 sm:text-sm"
                   >
                     Forgot password?
                   </Link>
                 </div>
 
-                {isLoading ? (
-                  <motion.button
-                    type="submit"
-                    className="flex w-full items-center justify-center rounded-xl bg-[#F2B5A0] py-3 font-medium text-white"
-                    whileHover={{ scale: 1.02, backgroundColor: '#F2B5A0' }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in, Please Wait...
-                  </motion.button>
-                ) : (
-                  <motion.button
-                    type="submit"
-                    className="flex w-full items-center justify-center rounded-xl bg-[#F2B5A0] py-3 font-medium text-white"
-                    whileHover={{ scale: 1.02, backgroundColor: '#F2B5A0' }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    Sign in
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </motion.button>
-                )}
+                <motion.button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex w-full items-center justify-center rounded-lg bg-[#F2B5A0] py-2 text-xs font-medium text-white disabled:cursor-not-allowed disabled:opacity-70 sm:py-2.5 sm:text-sm"
+                  whileHover={{ scale: isLoading ? 1 : 1.02, backgroundColor: isLoading ? '#F2B5A0' : '#E09A85' }}
+                  whileTap={{ scale: isLoading ? 1 : 0.98 }}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin sm:mr-2 sm:h-4 sm:w-4" />
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      Sign in
+                      <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4" />
+                    </>
+                  )}
+                </motion.button>
 
-                <div className="relative my-6">
+                <div className="relative my-3 sm:my-4">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-200"></div>
                   </div>
-                  <div className="relative flex justify-center text-sm">
+                  <div className="relative flex justify-center text-xs sm:text-sm">
                     <span className="bg-white px-2 text-gray-500">
                       Or continue with
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  {isGoogleLoading ? (
-                    <motion.button
-                      onClick={handleGoogleSignIn}
-                      type="button"
-                      className="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5"
-                      disabled={isGoogleLoading}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {/* <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.71 17.57V20.34H19.28C21.36 18.42 22.56 15.6 22.56 12.25Z"
-                          fill="#4285F4"
-                        />
-                        <path
-                          d="M12 23C14.97 23 17.46 22.02 19.28 20.34L15.71 17.57C14.73 18.23 13.48 18.63 12 18.63C9.13 18.63 6.72 16.69 5.82 14.09H2.12V16.95C3.94 20.53 7.69 23 12 23Z"
-                          fill="#34A853"
-                        />
-                        <path
-                          d="M5.82 14.09C5.6 13.43 5.48 12.73 5.48 12C5.48 11.27 5.6 10.57 5.82 9.91V7.05H2.12C1.41 8.57 1 10.24 1 12C1 13.76 1.41 15.43 2.12 16.95L5.82 14.09Z"
-                          fill="#FBBC05"
-                        />
-                        <path
-                          d="M12 5.37C13.62 5.37 15.06 5.94 16.21 7.02L19.36 3.87C17.45 2.09 14.97 1 12 1C7.69 1 3.94 3.47 2.12 7.05L5.82 9.91C6.72 7.31 9.13 5.37 12 5.37Z"
-                          fill="#EA4335"
-                        />
-                      </svg> */}
-                      <Loader2 className="mr-2 h-4 w-4 text-[#F2B5A0] animate-spin" />
-                    </motion.button>
-                  ) : (
-                    <motion.button
-                      onClick={handleGoogleSignIn}
-                      type="button"
-                      className="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5"
-                      disabled={isGoogleLoading}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
+                <div className="grid grid-cols-2 gap-2.5">
+                  <motion.button
+                    onClick={handleGoogleSignIn}
+                    type="button"
+                    disabled={isGoogleLoading}
+                    className="flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
+                    whileHover={{ scale: isGoogleLoading ? 1 : 1.05, y: isGoogleLoading ? 0 : -2 }}
+                    whileTap={{ scale: isGoogleLoading ? 1 : 0.95 }}
+                  >
+                    {isGoogleLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-[#F2B5A0] sm:h-5 sm:w-5" />
+                    ) : (
                       <svg
-                        width="24"
-                        height="24"
+                        width="18"
+                        height="18"
+                        className="sm:h-5 sm:w-5"
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -316,41 +267,24 @@ export default function SignIn() {
                           fill="#EA4335"
                         />
                       </svg>
-                    </motion.button>
-                  )}
+                    )}
+                  </motion.button>
 
-                  {isLinkedInLoading ? (
-                    <motion.button
-                      type="button"
-                      className="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {/* <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M20.447 20.452H16.893V14.883C16.893 13.555 16.866 11.846 15.041 11.846C13.188 11.846 12.905 13.291 12.905 14.785V20.452H9.351V9H12.765V10.561H12.811C13.288 9.661 14.448 8.711 16.181 8.711C19.782 8.711 20.448 11.081 20.448 14.166V20.452H20.447ZM5.337 7.433C4.193 7.433 3.274 6.507 3.274 5.366C3.274 4.225 4.194 3.299 5.337 3.299C6.477 3.299 7.401 4.225 7.401 5.366C7.401 6.507 6.476 7.433 5.337 7.433ZM7.119 20.452H3.555V9H7.119V20.452ZM22.225 0H1.771C0.792 0 0 0.774 0 1.729V22.271C0 23.227 0.792 24 1.771 24H22.222C23.2 24 24 23.227 24 22.271V1.729C24 0.774 23.2 0 22.222 0H22.225Z"
-                          fill="#0077B5"
-                        />
-                      </svg> */}
-                      <Loader2 className="mr-2 h-4 w-4 text-emerald-600 animate-spin" />
-                    </motion.button>
-                  ) : (
-                    <motion.button
+                  <motion.button
                     onClick={handleLinkedInSignIn}
-                      type="button"
-                      className="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
+                    type="button"
+                    disabled={isLinkedInLoading}
+                    className="flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
+                    whileHover={{ scale: isLinkedInLoading ? 1 : 1.05, y: isLinkedInLoading ? 0 : -2 }}
+                    whileTap={{ scale: isLinkedInLoading ? 1 : 0.95 }}
+                  >
+                    {isLinkedInLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-[#0077B5] sm:h-5 sm:w-5" />
+                    ) : (
                       <svg
-                        width="24"
-                        height="24"
+                        width="18"
+                        height="18"
+                        className="sm:h-5 sm:w-5"
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -360,16 +294,16 @@ export default function SignIn() {
                           fill="#0077B5"
                         />
                       </svg>
-                    </motion.button>
-                  )}
+                    )}
+                  </motion.button>
                 </div>
               </form>
 
-              <p className="mt-8 text-center text-sm text-gray-500">
+              <p className="mt-4 text-center text-xs text-gray-500 sm:mt-5 sm:text-sm">
                 Don&apos;t have an account?{' '}
                 <Link
                   href="/sign-up-page"
-                  className="font-medium text-[#F2B5A0] transition-colors hover:text-[#F2B5A0]/40"
+                  className="font-medium text-[#F2B5A0] transition-colors hover:text-[#F2B5A0]/70"
                 >
                   Sign up for free
                 </Link>
