@@ -65,7 +65,7 @@ export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
               {features.map((feature, index) => (
                 <div key={index} className="animate-in">
-                  <Card className="h-full transition-all duration-300 hover:shadow-lg hover:border-primary/50">
+                  <Card className="h-full shadow-none hover:shadow-sm transition-all duration-300 hover:border-primary/40">
                     <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
                       <div className="p-2 rounded-full bg-primary/10">
                         {feature.icon}

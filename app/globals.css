@@ -115,7 +115,7 @@
 }
 
 .skill-card {
-  @apply transition-all duration-300 hover:scale-105 hover:shadow-lg;
+  @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-sm;
 }
 
 .animated-background {

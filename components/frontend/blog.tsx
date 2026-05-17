@@ -19,9 +19,9 @@ export default function Blog() {
           </div>
 
           <div className="flex flex-col items-center">
-            <Card className="w-full max-w-2xl">
+            <Card className="w-full max-w-2xl shadow-none hover:shadow-sm transition-all duration-300 hover:border-primary/50">
               <CardContent className="p-6 text-center">
-                <h3 className="text-xl font-bold mb-4">Visit My Blog</h3>
+                <h3 className="text-xl font-bold mb-4">Visit My Blogs</h3>
                 <p className="text-muted-foreground mb-6">
                   Read My Articles I share insights on internal auditing, risk
                   management, compliance frameworks, and financial analysis on
@@ -31,10 +31,10 @@ export default function Blog() {
                 <Button asChild>
                   <Link
                     href="/blogs-page"
-                    target="_blank"
+                    // target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <ExternalLink className="mr-2 h-4 w-4" /> Visit Blog
+                    <ExternalLink className="mr-2 h-4 w-4" /> Visit Blogs
                   </Link>
                 </Button>
               </CardContent>

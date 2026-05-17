@@ -1,16 +1,3 @@
-// export const dynamic = 'force-dynamic';
-// import React from 'react'
-// import BlogComponent from '@/components/frontend/blog-component';
-// import { getUserBlogPosts, getUserBlogPostsCategories } from '@/actions/blog-posts-action';
-// export default async function page() {
-//   const userBlogPosts = await getUserBlogPosts();
-//   const userBlogPostsCategories = await getUserBlogPostsCategories()
-//   return (
-//     <>
-//       <BlogComponent userBlogPosts={userBlogPosts} userBlogPostsCategories={userBlogPostsCategories} />
-//     </>
-//   )
-// }
 import { Suspense } from "react";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { BlogCard } from "@/components/frontend/blog/blog-card";
@@ -21,24 +8,30 @@ import {
 } from "@/actions/blog-posts-action";
 import { SiteNav } from "@/components/frontend/blog/site-nav";
 
-interface BlogData {
-  title: string;
-  description: string;
-  date: string;
-  tags?: string[];
-  featured?: boolean;
-  readTime?: string;
-  author?: string;
-  authorImage?: string;
-  thumbnail?: string;
-}
-
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+};
+
+const getBlogCategoryTitles = (blog: {
+  category?:
+    | { title?: string | null }
+    | Array<{ title?: string | null }>
+    | null;
+}) => {
+  if (!blog.category) return [];
+
+  if (Array.isArray(blog.category)) {
+    return blog.category
+      .map((category) => category.title?.trim())
+      .filter((title): title is string => Boolean(title));
+  }
+
+  const title = blog.category.title?.trim();
+  return title ? [title] : [];
 };
 
 export default async function page({
@@ -49,13 +42,12 @@ export default async function page({
   const resolvedSearchParams = await searchParams;
   const userBlogPostsCategories = await getUserBlogPostsCategories();
   const userBlogPosts = await getUserBlogPosts();
-  // const allPages = blogSource.getPages() as BlogPage[];
-  const sortedBlogs = userBlogPosts.sort((a, b) => {
+  const sortedBlogs = [...userBlogPosts].sort((a, b) => {
     const dateA = new Date(a.createdAt).getTime();
     const dateB = new Date(b.createdAt).getTime();
     return dateB - dateA;
   });
-  const sortedCategoryBlogs = userBlogPostsCategories.sort((a, b) => {
+  const sortedCategoryBlogs = [...userBlogPostsCategories].sort((a, b) => {
     const dateA = new Date(a.createdAt).getTime();
     const dateB = new Date(b.createdAt).getTime();
     return dateB - dateA;
@@ -71,17 +63,17 @@ export default async function page({
   const selectedCategoryBlog = resolvedSearchParams.tag || "All";
   const filteredBlogs =
     selectedCategoryBlog === "All"
-      ? sortedCategoryBlogs
-      : sortedCategoryBlogs.filter((blogCategory) =>
-          blogCategory.title?.includes(selectedCategoryBlog)
+      ? sortedBlogs
+      : sortedBlogs.filter((blog) =>
+          getBlogCategoryTitles(blog).includes(selectedCategoryBlog)
         );
 
   const categoryBlogCounts = allCategoryBlogs.reduce((acc, blogCategory) => {
     if (blogCategory === "All") {
-      acc[blogCategory] = sortedCategoryBlogs.length;
+      acc[blogCategory] = sortedBlogs.length;
     } else {
-      acc[blogCategory] = sortedCategoryBlogs.filter((blogCategory) =>
-        blogCategory.title?.includes(blogCategory.title)
+      acc[blogCategory] = sortedBlogs.filter((blog) =>
+        getBlogCategoryTitles(blog).includes(blogCategory)
       ).length;
     }
     return acc;
@@ -104,10 +96,10 @@ export default async function page({
         <div className="max-w-7xl mx-auto w-full">
           <div className="flex flex-col gap-2">
             <h1 className="font-medium text-4xl md:text-5xl tracking-tighter">
-              Magic UI Blog
+              My Blogs
             </h1>
             <p className="text-muted-foreground text-sm md:text-base lg:text-lg">
-              Latest news and updates from Magic UI.
+              Latest news and updates from Kiseka Pius.
             </p>
           </div>
         </div>
@@ -129,7 +121,7 @@ export default async function page({
               filteredBlogs.length < 4 ? "border-b" : "border-b-0"
             }`}
           >
-            {sortedBlogs.map((blog) => {
+            {filteredBlogs.map((blog) => {
               const date = new Date(blog.createdAt);
               const formattedDate = formatDate(date);
 
@@ -141,7 +133,7 @@ export default async function page({
                   description={blog.excerpt}
                   date={formattedDate}
                   thumbnail={blog.image}
-                  showRightBorder={sortedBlogs.length < 3}
+                  showRightBorder={filteredBlogs.length < 3}
                 />
               );
             })}

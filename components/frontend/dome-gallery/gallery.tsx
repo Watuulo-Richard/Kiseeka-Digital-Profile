@@ -153,7 +153,7 @@ export default function DomeGallery({
   minRadius = 600,
   maxRadius = Infinity,
   padFactor = 0.25,
-  overlayBlurColor = '#060010',
+  overlayBlurColor = 'hsl(var(--background))',
   maxVerticalRotationDeg = DEFAULTS.maxVerticalRotationDeg,
   dragSensitivity = DEFAULTS.dragSensitivity,
   enlargeTransitionMs = DEFAULTS.enlargeTransitionMs,
@@ -830,7 +830,7 @@ export default function DomeGallery({
                   }
                 >
                   <div
-                    className="item__image absolute block overflow-hidden cursor-pointer bg-gray-200 transition-transform duration-300"
+                    className="item__image absolute block overflow-hidden cursor-pointer transition-transform duration-300"
                     role="button"
                     tabIndex={0}
                     aria-label={it.alt || 'Open image'}
@@ -874,15 +874,15 @@ export default function DomeGallery({
           <div
             className="absolute inset-0 m-auto z-[3] pointer-events-none"
             style={{
-              backgroundImage: `radial-gradient(rgba(235, 235, 235, 0) 65%, var(--overlay-blur-color, ${overlayBlurColor}) 100%)`
+              backgroundImage: `radial-gradient(transparent 65%, var(--overlay-blur-color, ${overlayBlurColor}) 100%)`
             }}
           />
 
           <div
             className="absolute inset-0 m-auto z-[3] pointer-events-none"
             style={{
-              WebkitMaskImage: `radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
-              maskImage: `radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
+              WebkitMaskImage: `radial-gradient(transparent 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
+              maskImage: `radial-gradient(transparent 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
               backdropFilter: 'blur(3px)'
             }}
           />
@@ -909,8 +909,8 @@ export default function DomeGallery({
               ref={scrimRef}
               className="scrim absolute inset-0 z-10 pointer-events-none opacity-0 transition-opacity duration-500"
               style={{
-                background: 'rgba(0, 0, 0, 0.4)',
-                backdropFilter: 'blur(3px)'
+                background: 'hsl(var(--background) / 0.6)',
+                backdropFilter: 'blur(8px)'
               }}
             />
             <div

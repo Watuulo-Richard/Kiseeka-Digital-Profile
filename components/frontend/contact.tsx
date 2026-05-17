@@ -95,7 +95,7 @@ export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio 
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
               <div className="lg:col-span-2">
-                <Card>
+                <Card className="shadow-none hover:shadow-sm transition-all duration-300 hover:border-primary/50">
                   <CardContent className="p-6">
                     <form
                       onSubmit={handleSubmit(handleEmailOnSubmit)}
@@ -210,7 +210,7 @@ export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio 
 
               <div className="space-y-6">
                 {contactInfo.map((info, index) => (
-                  <Card key={index} className="overflow-hidden">
+                  <Card key={index} className="overflow-hidden shadow-none hover:shadow-sm transition-all duration-300 hover:border-primary/50">
                     <CardContent className="p-6 flex items-start gap-4">
                       <div className="bg-primary/10 p-3 rounded-full mt-1">
                         {info.icon}
@@ -240,7 +240,7 @@ export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio 
                   </Card>
                 ))}
 
-                <Card>
+                <Card className="shadow-none hover:shadow-sm transition-all duration-300 hover:border-primary/50">
                   <CardContent className="p-6">
                     <h3 className="font-medium mb-2">Connect with me</h3>
                     <p className="text-sm text-muted-foreground mb-4">
@@ -249,7 +249,7 @@ export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio 
                     <div className="flex gap-4">
                       <Button variant="outline" size="icon" asChild>
                         <a
-                          href="https://github.com/maskeynihal"
+                          href="https://www.instagram.com/iampiusreuz/"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
