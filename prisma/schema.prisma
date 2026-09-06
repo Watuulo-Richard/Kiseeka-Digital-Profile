@@ -78,6 +78,7 @@ model Portfolio {
   blogPostsCategories BlogPostCategory[]
   blogPosts           BlogPost[]
   comments            Comment[]
+  galleryImages       GalleryImage[]
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 }
@@ -207,3 +208,13 @@ model Comment {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
+model GalleryImage {
+  id          String    @id @default(cuid())
+  src         String // URL string (e.g. from Cloudinary/S3/Uploadthing)
+  alt         String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  portfolioId String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+

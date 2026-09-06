@@ -22,20 +22,22 @@ export default function TopNav({session}:{session:Session}) {
   ]
 
   return (
-    <nav className="px-3 sm:px-6 flex items-center justify-between bg-[#fbebe5] dark:bg-[#0F0F12] border-b border-gray-200 dark:border-[#1F1F23] h-full">
+    <nav className="px-3 sm:px-6 flex items-center justify-between bg-[#fbebe5] dark:bg-[#0F0F12] border-b border-primary/30 dark:border-[#1F1F23] h-full">
       <div className="font-medium text-sm hidden sm:flex items-center space-x-1 truncate md:ml-10 lg:ml-72 max-w-[800px]">
         {breadcrumbs.map((item, index) => (
           <div key={item.label} className="flex items-center">
-            {index > 0 && <ChevronRight className="h-4 w-4 text-gray-500 dark:text-gray-400 mx-1" />}
+            {index > 0 && <ChevronRight className="h-4 w-4 text-[#c0543a]/70 dark:text-primary/70 mx-1" />}
             {item.href ? (
               <Link
                 href={item.href}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                className="text-[#c0543a]/80 dark:text-primary/80 hover:text-[#c0543a] dark:hover:text-primary font-medium transition-colors"
               >
                 {item.label}
               </Link>
             ) : (
-              <span className="text-gray-900 dark:text-gray-100">{item.label}</span>
+              <span className="text-[#c0543a] dark:text-primary font-semibold">
+                {item.label}
+              </span>
             )}
           </div>
         ))}
@@ -44,9 +46,9 @@ export default function TopNav({session}:{session:Session}) {
       <div className="flex items-center gap-2 sm:gap-4 ml-auto sm:ml-0">
         <button
           type="button"
-          className="p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-[#1F1F23] rounded-full transition-colors"
+          className="p-1.5 sm:p-2 hover:bg-primary/10 dark:hover:bg-[#1F1F23] rounded-full border border-transparent hover:border-primary/50 dark:hover:border-white/15 transition-colors"
         >
-          <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
+          <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-[#c0543a] dark:text-primary" />
         </button>
 
         <ModeToggle />
@@ -58,13 +60,13 @@ export default function TopNav({session}:{session:Session}) {
               alt="User avatar"
               width={28}
               height={28}
-              className="rounded-full ring-2 ring-gray-200 dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer"
+              className="rounded-full ring-2 ring-primary/60 dark:ring-[#2B2B30] sm:w-8 sm:h-8 cursor-pointer"
             />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
             sideOffset={8}
-            className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg"
+            className="w-[280px] sm:w-80 rounded-2xl shadow-lg"
           >
             <Profile01 session={session} />
           </DropdownMenuContent>

@@ -22,12 +22,14 @@ export default async function BackendLayout({
     <div className="flex h-screen overflow-hidden bg-[#fbebe5]">
       <Sidebar />
       <div className="w-full flex flex-1 flex-col overflow-hidden">
-        <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23]">
+        <header className="z-30 h-16 shrink-0 border-b border-primary/30 dark:border-[#1F1F23]">
           <TopNav session={session} />
         </header>
-        <main className="flex-1 overflow-y-auto overflow-x-hidden px-2 pt-14 py-4 bg-[#fbebe5] dark:bg-[#0F0F12]">
-          {children}
-        </main>
+        <div className="flex min-h-0 flex-1 flex-col px-2 pt-14">
+          <main className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pb-4 bg-[#fbebe5] dark:bg-[#0F0F12]">
+            {children}
+          </main>
+        </div>
       </div>
     </div>
   );

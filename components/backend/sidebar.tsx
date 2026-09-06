@@ -21,12 +21,22 @@ import {
 import { FileChartColumn } from "./file-icon"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
+import { usePathname } from "next/navigation"
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   function handleNavigation() {
     setIsMobileMenuOpen(false)
+  }
+
+  function isActive(href: string) {
+    if (href === "#") return false
+    return (
+      pathname === href ||
+      (href !== "/dashboard" && pathname.startsWith(href))
+    )
   }
 
   function NavItem({
@@ -38,13 +48,19 @@ export default function Sidebar() {
     icon: any
     children: React.ReactNode
   }) {
+    const active = isActive(href)
     return (
       <Link
         href={href}
         onClick={handleNavigation}
-        className="flex items-center px-3 py-2 text-sm rounded-md transition-colors text-gray-600 dark:text-gray-300 hover:text-white dark:hover:text-white hover:bg-rose-300/95 dark:hover:bg-[#1F1F23]"
+        className={cn(
+          "group flex items-center px-3 py-2 text-sm rounded-md transition-colors",
+          active
+            ? "bg-primary/20 border border-primary/50 text-[#c0543a] shadow-sm dark:bg-white/[0.06] dark:border-white/15 dark:text-white"
+            : "text-gray-600 dark:text-gray-300 hover:text-white dark:hover:text-white hover:bg-rose-300/95 dark:hover:bg-[#1F1F23]"
+        )}
       >
-        <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
+        <Icon className="h-4 w-4 mr-3 flex-shrink-0 text-[#c0543a] dark:text-primary/90 group-hover:text-white dark:group-hover:text-white" />
         <span className="truncate">{children}</span>
       </Link>
     )
@@ -59,20 +75,20 @@ export default function Sidebar() {
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         aria-label="Toggle menu"
       >
-        <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+        <Menu className="h-5 w-5 text-[#c0543a] dark:text-primary" />
       </button>
 
       {/* Sidebar */}
       <nav
         className={cn(
           "fixed inset-y-0 left-0 z-[70] w-72 sm:w-80 lg:w-64 xl:w-72 bg-[#fbebe5] dark:bg-[#0F0F12] transform transition-transform duration-300 ease-in-out",
-          "lg:translate-x-0 lg:static border-r border-gray-200 dark:border-[#1F1F23]",
+          "lg:translate-x-0 lg:static border-r border-primary/30 dark:border-[#1F1F23]",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="h-16 sm:h-20 lg:h-16 px-4 sm:px-6 flex items-center justify-between border-b border-gray-200 dark:border-[#1F1F23] flex-shrink-0">
+          <div className="h-16 sm:h-20 lg:h-16 px-4 sm:px-6 flex items-center justify-between border-b border-primary/30 dark:border-[#1F1F23] flex-shrink-0">
             <Link
               href="/dashboard"
               rel="noopener noreferrer"
@@ -99,7 +115,7 @@ export default function Sidebar() {
               onClick={() => setIsMobileMenuOpen(false)}
               aria-label="Close menu"
             >
-              <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+              <X className="h-5 w-5 text-[#c0543a] dark:text-primary" />
             </button>
           </div>
 
@@ -182,6 +198,9 @@ export default function Sidebar() {
                     <NavItem href="/dashboard/view-blog-posts" icon={TableProperties}>
                       Blog Posts
                     </NavItem>
+                    <NavItem href="/dashboard/view-gallery" icon={TableProperties}>
+                      Gallery Images
+                    </NavItem>
                   </div>
                 </div>
               </div>
@@ -189,7 +208,7 @@ export default function Sidebar() {
           </ScrollArea>
 
           {/* Footer */}
-          <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-gray-200 dark:border-[#1F1F23] flex-shrink-0">
+          <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-primary/30 dark:border-[#1F1F23] flex-shrink-0">
             <div className="space-y-1">
               <NavItem href="#" icon={Settings}>
                 Settings

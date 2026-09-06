@@ -2,7 +2,16 @@
 import { useEffect, useState } from "react";
 import DomeGallery from "./gallery";
 
-export default function GalleryComp() {
+type GalleryImageInput = {
+  src: string;
+  alt?: string;
+};
+
+export default function GalleryComp({
+  images,
+}: {
+  images?: GalleryImageInput[];
+}) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -42,6 +51,7 @@ export default function GalleryComp() {
 
       <div className="relative w-full" style={{ height: "100vh" }}>
         <DomeGallery
+          images={images}
           overlayBlurColor={bgColor}
           grayscale={false}
           imageBorderRadius="16px"

@@ -16,6 +16,7 @@ import {
   getWorkExperiences,
 } from "@/actions/actions";
 import GalleryComp from "@/components/frontend/dome-gallery/gallery-comp";
+import { getGalleryImagesAction } from "@/actions/gallery";
 
 // export const metadata: Metadata = {
 //   title: 'Kiseka Pius | Senior Auditor',
@@ -28,6 +29,10 @@ export default async function Home() {
   const fetchedWorkExperiences = await getWorkExperiences();
   const skills = await getSkillsAction();
   const educationBackgrounds = await getEducationBackgroundAction();
+  const galleryImagesResponse = await getGalleryImagesAction();
+  const galleryImages = galleryImagesResponse.success
+    ? galleryImagesResponse.data.map((image) => ({ src: image.src, alt: image.alt }))
+    : [];
 
   if (!fetchedProfile) {
     return null;
@@ -44,7 +49,7 @@ export default async function Home() {
       {/* <Projects /> */}
       <EducationBackground educationBackgrounds={educationBackgrounds} />
       <Testimonials />
-      <GalleryComp />
+      <GalleryComp images={galleryImages} />
       <Blog />
       <Contact fetchedProfile={fetchedProfile[0]} />
       <ScrollToTop />

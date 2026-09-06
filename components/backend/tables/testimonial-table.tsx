@@ -179,9 +179,15 @@ export default function TestimonialsTable({
 
   return (
     <>
-      <Card className={clsx('w-full my-6')}>
+      <Card
+        className={clsx(
+          'w-full my-6 overflow-hidden rounded-2xl border border-[#F2B5A0]/30 bg-[#fff8f4] shadow-sm dark:border-gray-800 dark:bg-white/[0.03]'
+        )}
+      >
         <CardHeader
-          className={clsx('flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4')}
+          className={clsx(
+            'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#F2B5A0]/20 pb-5'
+          )}
         >
           <div>
             <CardTitle className={clsx('text-xl sm:text-2xl')}>{title}</CardTitle>
@@ -201,7 +207,7 @@ export default function TestimonialsTable({
             <div className={clsx('relative w-full sm:max-w-sm')}>
               <Search
                 className={clsx(
-                  'absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground'
+                  'absolute left-2.5 top-2.5 h-4 w-4 text-[#c0543a] dark:text-primary'
                 )}
               />
               <Input
@@ -217,7 +223,7 @@ export default function TestimonialsTable({
                   className={clsx('absolute right-1 top-1.5 h-6 w-6')}
                   onClick={() => setSearchQuery('')}
                 >
-                  <X className={clsx('h-4 w-4')} />
+                  <X className={clsx('h-4 w-4 text-[#c0543a] dark:text-primary')} />
                 </Button>
               )}
             </div>
@@ -228,12 +234,12 @@ export default function TestimonialsTable({
             >
               {isExporting ? (
                 <>
-                  <Loader2 className={clsx('mr-2 h-4 w-4 animate-spin')} />
+                  <Loader2 className={clsx('mr-2 h-4 w-4 animate-spin text-[#c0543a] dark:text-primary')} />
                   Exporting...
                 </>
               ) : (
                 <>
-                  <FileSpreadsheet className={clsx('mr-2 h-4 w-4')} />
+                  <FileSpreadsheet className={clsx('mr-2 h-4 w-4 text-[#c0543a] dark:text-primary')} />
                   Export to Excel
                 </>
               )}
@@ -283,7 +289,7 @@ export default function TestimonialsTable({
                             onClick={() => handleViewDetail(testimonial)}
                             title="View Details"
                           >
-                            <Eye className={clsx('h-4 w-4')} />
+                            <Eye className={clsx('h-4 w-4 text-[#c0543a] dark:text-primary')} />
                           </Button>
                           <Link
                             href={`/dashboard/testimonial-form/${testimonial.id}`}
@@ -293,7 +299,7 @@ export default function TestimonialsTable({
                               size="icon"
                               title="Edit Testimonial"
                             >
-                              <Edit className={clsx('h-4 w-4')} />
+                              <Edit className={clsx('h-4 w-4 text-[#c0543a] dark:text-primary')} />
                             </Button>
                           </Link>
                           <Button
@@ -365,7 +371,7 @@ export default function TestimonialsTable({
                       className="flex-1"
                       onClick={() => handleViewDetail(testimonial)}
                     >
-                      <Eye className="h-4 w-4 mr-1" />
+                      <Eye className="h-4 w-4 mr-1 text-[#c0543a] dark:text-primary" />
                       View
                     </Button>
                     <Link
@@ -373,7 +379,7 @@ export default function TestimonialsTable({
                       className="flex-1"
                     >
                       <Button variant="outline" size="sm" className="w-full">
-                        <Edit className="h-4 w-4 mr-1" />
+                        <Edit className="h-4 w-4 mr-1 text-[#c0543a] dark:text-primary" />
                         Edit
                       </Button>
                     </Link>
@@ -539,7 +545,7 @@ export default function TestimonialsTable({
                   className="flex-1"
                 >
                   <Button variant="default" className="w-full">
-                    <Edit className="h-4 w-4 mr-2" />
+                    <Edit className="h-4 w-4 mr-2 text-[#c0543a] dark:text-primary" />
                     Edit Testimonial
                   </Button>
                 </Link>
