@@ -1,0 +1,820 @@
+---
+
+title: Setting Up React Query and Axios the Way I Use Them, Line by Line
+
+description: A simple, scenario-based walkthrough of config/axios.ts, app/providers/ReactQueryProvider.tsx, and hooks/useStudents.ts — what each line does, why it exists, and the exact data-fetching problems it solves in a Next.js 15+ App Router project.
+
+author: Watuulo Richard
+
+date: 2026-09-06
+
+image: ./assets/react-query-axios-nextjs/cover.png
+
+imageDark: ./assets/react-query-axios-nextjs/cover-dark.png
+
+tags: [react-query, axios, nextjs, server-actions, data-fetching, typescript]
+
+---
+
+> Reference: [TanStack Query (React Query) docs](https://tanstack.com/query/latest/docs/framework/react/overview) · [Axios docs](https://axios-http.com/) · [Integrating React Query with Server Actions in Next.js 15 — CodeMint](https://codemint-gamma.vercel.app/blog/react-query)
+
+>
+
+> This guide walks through the exact files I use to fetch and mutate data in my Next.js apps: the Axios instance (`config/axios.ts`), the React Query provider (`app/providers/ReactQueryProvider.tsx`), and the query hooks (`hooks/useStudents.ts`). Every line gets its own plain-language explanation and a simple, everyday scenario.
+
+## Backstory
+
+Data fetching bugs are sneaky. The code looks simple — call an API, show the data, submit a form — but almost every line exists because of a specific, real problem someone ran into first.
+
+Instead of just showing what the code does, this guide explains **why each line exists**, using a scenario simple enough that the reasoning sticks. Once you understand the "why," the code stops looking like magic.
+
+The mental model for the whole stack together:
+
+```bash
+
+config/axios.ts                    -> the delivery person (one shared HTTP client)
+
+app/providers/ReactQueryProvider.tsx -> the warehouse assistant (caches + syncs data)
+
+app/api/v1/.../route.ts            -> the store itself (the real data, behind the counter)
+
+actions/*.ts                       -> trusted errands that fetch on your behalf
+
+services/*.ts                      -> neat, pre-wrapped receipts
+
+hooks/use*.ts                      -> how your screen asks for things
+
+```
+
+---
+
+## What We Are Explaining
+
+By the end of this post, you'll understand exactly what happens in these files:
+
+```bash
+
+config/
+
+  axios.ts                         # one shared Axios instance used everywhere
+
+app/
+
+  providers/
+
+    ReactQueryProvider.tsx         # the QueryClient, its settings, and the provider
+
+  layout.tsx                       # where the provider is mounted for the whole app
+
+app/api/v1/students/route.ts       # a real API endpoint (the "store")
+
+actions/
+
+  students.ts                      # server actions that call the API for you
+
+services/
+
+  students.ts                      # typed helpers that wrap those actions
+
+hooks/
+
+  useStudents.ts                   # the React Query hooks your UI actually uses
+
+```
+
+And why each individual line is there — not just "what it does," but "what breaks if you remove it."
+
+---
+
+## The Big Picture Scenario
+
+Imagine your app needs information that lives far away — say, a **school that keeps all the student records in a big office building downtown** (that's your database/API). Your users keep walking up to you and asking, *"what's the list of students?"*
+
+If you ran to the downtown office every single time someone asked, you'd be exhausted, and so would the office. That's the problem React Query solves.
+
+Now picture two helpers next to you:
+
+- **Axios** is your **delivery person**. You hand Axios a note ("go get the students"), and it knows exactly how to navigate the city, which entrance to use, and how to carry the reply back. Without it, you'd have to write the travel instructions from scratch every single time.
+
+- **React Query** is your **personal assistant with a notepad**. The first time someone asks for the students, you send Axios downtown, get the answer, and write it on the notepad. The second time someone asks, the assistant just reads the notepad — instant. If the assistant thinks the notepad might be out of date, it quietly sends Axios to re-check in the background while still showing the old answer, so the user never stares at a blank screen.
+
+- The **server action** is the **trusted errand boy** — someone the downtown office actually trusts to knock on its door. Your browser-facing code never talks to the office directly; it sends the errand boy, who brings back a neatly signed receipt.
+
+The rest of this guide explains each of those helpers — one file at a time — so you can reproduce this setup in your own app.
+
+---
+
+## Part 1: `config/axios.ts` — The Delivery Person
+
+### The import
+
+```ts
+
+import axios from "axios";
+
+```
+
+**Scenario:** Your app speaks JavaScript, but the outside world speaks raw HTTP. `axios` is the toolkit that knows how to open an HTTP request, carry headers, and translate the response back into a plain JavaScript object. Everything else on this page builds on top of this one import.
+
+---
+
+### The server base URL
+
+```ts
+
+const serverBaseUrl =
+
+  process.env.NEXT_PUBLIC_APP_URL ||
+
+  process.env.BETTER_AUTH_URL ||
+
+  "http://localhost:3000";
+
+```
+
+**Scenario:** When you're running the app, you have a front door address (`http://localhost:3000` in development, or your deployed URL in production). This line picks that address, with a couple of fallbacks: `NEXT_PUBLIC_APP_URL` if it exists, otherwise the auth URL, otherwise a local default. It's a safety net so the server side of your app always knows where *it* lives when it needs to call its own API.
+
+---
+
+### The shared instance
+
+```ts
+
+const baseAPI = axios.create({
+
+  baseURL:
+
+    typeof window === "undefined" ? `${serverBaseUrl}/api/v1` : "/api/v1",
+
+  headers: {
+
+    "Content-Type": "application/json",
+
+    "Cache-Control": "no-store, no-cache, must-revalidate",
+
+    "Pragma": "no-cache",
+
+  },
+
+});
+
+```
+
+**Scenario:** Instead of telling Axios "go get `/api/v1/students`" with instructions every time, you create one **delivery person** (`baseAPI`) that already knows the neighborhood. `axios.create(...)` returns a copy of axios with all these defaults baked in, so every later call is short and consistent.
+
+**`baseURL: typeof window === "undefined" ? `${serverBaseUrl}/api/v1` : "/api/v1"`**
+
+**Scenario:** This is the delivery person remembering the address of the office building. It changes depending on *who's sending the request*:
+
+- `typeof window === "undefined"` is true on the **server** (Node.js has no `window`). There, the app must dial out to a full address — `http://localhost:3000/api/v1` or the deployed `https://yoursite.com/api/v1` — because the server isn't a browser that already knows its own domain.
+- In the **browser** (`window` exists), it can use the short relative path `/api/v1`, and the browser fills in the domain automatically.
+
+**`"Content-Type": "application/json"`**
+
+**Scenario:** This tells the office: "everything I'm sending you is written in JSON." If you send JSON without declaring it, the office may refuse to read it.
+
+**`"Cache-Control": "no-store, no-cache, must-revalidate"`**
+
+**Scenario:** This is two safety warnings in one. It tells the browser and any caching middlemen: *"never make a copy of this reply and reuse it"* (`no-store`), and even if a copy exists somewhere, *"always go back to the office to double-check before using it"* (`no-cache, must-revalidate`). You're sending live data requests; an old cached copy could show students that were deleted long ago.
+
+**`"Pragma": "no-cache"`**
+
+**Scenario:** An older, legacy version of the same warning — some very old proxies only understand `Pragma`. It's harmless to include and catches those edge cases.
+
+### The export
+
+```ts
+
+export { baseAPI };
+
+```
+
+**Scenario:** One delivery person, shared by the whole app. Every file that needs to talk to the API imports this same instance, so the settings are defined once and never duplicated.
+
+---
+
+## Part 2: `app/providers/ReactQueryProvider.tsx` — The Assistant's Cage
+
+### Why "use client"?
+
+```ts
+
+"use client";
+
+```
+
+**Scenario:** React Query keeps its entire cache *inside the browser* (client-side), so this file must be a Client Component. The `"use client"` directive tells Next.js not to try rendering this component on the server.
+
+---
+
+### The lazy QueryClient
+
+```ts
+
+const [queryClient] = useState(
+
+  () =>
+
+    new QueryClient({
+
+      defaultOptions: {
+
+        queries: {
+
+          staleTime: 15 * 60 * 1000, // 15 minutes
+
+          gcTime: 30 * 60 * 1000, // 30 minutes
+
+          refetchOnWindowFocus: false,
+
+          retry: 1,
+
+        },
+
+      },
+
+    })
+
+);
+
+```
+
+**Scenario:** The `QueryClient` is the assistant's **cage** — a single place that holds the notepad (the cache) and the settings that govern it. Everything about this line is deliberate.
+
+**`useState(() => new QueryClient({ ... }))`**
+
+**Scenario:** Notice the arrow function wrapped in `useState(...)`. This is the "lazy initializer." If you wrote `useState(new QueryClient())` (calling it eagerly), React would create a *brand new* cage on every single re-render — flushing the notepad constantly and wasting memory. By passing a function, the `QueryClient` is created exactly **once**, on the first render, and then reused. This is one of the most common React Query mistakes, and the fix is this one tiny syntax detail.
+
+**`staleTime: 15 * 60 * 1000`**
+
+**Scenario:** The assistant's rule for "how old is *too old* before I bother re-asking?". For 15 minutes, data on the notepad is considered **fresh** — React Query won't refetch it, no matter how many components ask. `15 * 60 * 1000` is simply 15 minutes in milliseconds (seconds × 1000).
+
+**`gcTime: 30 * 60 * 1000`**
+
+**Scenario:** "gc" stands for **garbage collection**. This is how long an *unused* entry stays on the notepad before being thrown away entirely. Notice it's **longer** than `staleTime`: `staleTime` decides "is this answer still trustworthy?", while `gcTime` decides "is this answer still worth keeping at all?". The rule of thumb is `gcTime` must be longer than `staleTime`, or you'll throw away entries before you even consider them outdated — pointless.
+
+**`refetchOnWindowFocus: false`**
+
+**Scenario:** By default, React Query re-fetches everything the moment you click back into the browser tab. In an admin dashboard where data rarely changes second-to-second, that's dozens of wasted requests. `false` says: "don't re-run errands just because the user switched tabs."
+
+**`retry: 1`**
+
+**Scenario:** If an errand fails (the office was temporarily closed), the assistant tries **once more** before giving up and showing the error. This gives transient failures a second chance without hammering a genuinely broken API with ten attempts.
+
+---
+
+### The provider + devtools
+
+```ts
+
+return (
+
+  <QueryClientProvider client={queryClient}>
+
+    {children}
+
+    <ReactQueryDevtools initialIsOpen={false} />
+
+  </QueryClientProvider>
+
+);
+
+```
+
+**Scenario:** `<QueryClientProvider client={queryClient}>` marks the territory where the assistant operates. Any component under it can call `useQuery`, `useMutation`, or `useQueryClient` and reach this one shared cage. If a component uses these hooks *outside* the provider, React Query throws a confusing "no QueryClient set" error.
+
+**`<ReactQueryDevtools initialIsOpen={false} />`**
+
+**Scenario:** This is the window into the cage — a floating inspector panel (open it in dev with the icon that appears in your corner) showing every query, its key, its state, and a "refetch" button. Invaluable for debugging. `initialIsOpen={false}` just means it starts closed. (It only renders in development.)
+
+---
+
+## Part 3: `app/layout.tsx` — Mounting the Assistant
+
+```tsx
+
+<ReactQueryProvider>
+
+  <ThemeProvider>
+
+    <SidebarProvider>{children}</SidebarProvider>
+
+    <SessionTimeoutWarning />
+
+    <Toaster richColors />
+
+  </ThemeProvider>
+
+</ReactQueryProvider>
+
+```
+
+**Scenario:** The provider has to wrap the *whole app* — every page and every component — so it goes in the root layout, as close to the top as possible. Note the order: `ReactQueryProvider` is the outermost or one of the outermost wrappers. If any component that calls `useQuery` sits above it, that component crashes.
+
+---
+
+## Part 4: `app/api/v1/students/route.ts` — The Store Itself
+
+```ts
+
+export async function GET(request: NextRequest) {
+
+  const session = await auth.api.getSession({ headers: request.headers });
+
+  if (!session?.user) {
+
+    return NextResponse.json({ success: false, message: "Unauthorized", ... }, { status: 401 });
+
+  }
+
+  const cacheKey = studentCacheKeys.bySchool(schoolId ?? "all");
+
+  const cached = await getCached<StudentBaseType[]>(cacheKey);
+
+  if (cached) {
+
+    return NextResponse.json({ success: true, data: cached, message: "... (cached)", ... });
+
+  }
+
+  const students = await db.student.findMany({ ... });
+
+  await setCached(cacheKey, students);
+
+  return NextResponse.json({ success: true, data: students, ... });
+
+}
+
+```
+
+**Scenario:** This is the office building itself. It checks who's knocking (auth), looks at the notepad first (Redis cache — covered in my cache guide), and only if nothing is cached does it go to the actual filing cabinet (the database). The important detail for this doc is its **response contract**: every route answers with the same JSON shape:
+
+```ts
+
+{ success: boolean, data: unknown, message: string, error: string | null, status: number }
+
+```
+
+Both sides of the app (the action caller and your UI) can therefore rely on this shape, which is what makes the next two blank layers so clean.
+
+---
+
+## Part 5: `actions/students.ts` — The Trusted Errand Boy
+
+### The directive and helpers
+
+```ts
+
+"use server";
+
+import axios from "axios";
+
+import { baseAPI } from "@/config/axios";
+
+import { headers } from "next/headers";
+
+async function authHeaders() {
+
+  const incomingHeaders = await headers();
+
+  return { cookie: incomingHeaders.get("cookie") ?? "" };
+
+}
+
+```
+
+**Scenario:** `"use server"` marks every exported function as a **Server Action** — code that always runs on the server, never shipped to the browser. This is the big deal of this pattern: your browser never talks to the API directly; it asks this trusted errand boy to do it.
+
+**`import { headers } from "next/headers";`**
+
+**Scenario:** When the browser started a request, it sent a `cookie` header that proves "this user is logged in." But the errand boy runs in a `Server Action` — a *new* context — and **axios won't forward those cookies automatically** (the comment in the real file says exactly this). So `headers()` re-reads the incoming request's headers, and the helper returns a fresh `cookie` header to attach to the outgoing API call. Remove this and every authenticated request comes back 401.
+
+---
+
+### One action, end to end
+
+```ts
+
+export async function listStudentsAction() {
+
+  try {
+
+    const response = await baseAPI.get("/student", {
+
+      headers: await authHeaders(),
+
+    });
+
+    return {
+
+      success: response.data.success,
+
+      data:    response.data.data,
+
+      message: response.data.message,
+
+      error:   response.data.error,
+
+      status:  response.data.status,
+
+    };
+
+  } catch (error) {
+
+    console.error(error);
+
+    return {
+
+      success: false,
+
+      data:    [],
+
+      message: "Failed to fetch students",
+
+      error:   "Something went wrong. Please try again.",
+
+      status:  500,
+
+    };
+
+  }
+
+}
+
+```
+
+**Scenario:** This single action shows the whole errand in action.
+
+**`await baseAPI.get("/student", { headers: await authHeaders() })`**
+
+**Scenario:** The actual trip. `baseAPI` (the delivery person) is told the route (`/student`), with the authenticated cookie attached so the office knows who's asking.
+
+**The returned object**
+
+**Scenario:** The action **normalizes** the reply. Whatever the API returns, the action hands your app back a clean, typed shape: `success`, `data`, `message`, `error`, `status`. Your UI never has to dig through axios response structures.
+
+**`try { ... } catch (error) { ... }`**
+
+**Scenario:** If the office is unreachable (server down, timeout), the request throws. Without a `try/catch`, a thrown error would crash the whole Server Action. Instead, it's caught, logged, and converted into the same response shape with `success: false` — your UI handles "we tried and it failed" just as elegantly as "it worked."
+
+**`axios.isAxiosError(error)`**
+
+**Scenario:** (In the real app this appears as a refinement.) Axios errors are not plain `Error`s — they carry `error.response?.status` and `error.response?.data`. `axios.isAxiosError(error)` is a type guard that lets you read those extras safely. A neat trick in the real code: a *business* 4xx (like "no school linked") is treated as a normal answer — the API's own message is surfaced to the user — while a network failure gets the generic fallback.
+
+---
+
+## Part 6: `services/students.ts` — The Neat Receipts
+
+```ts
+
+export const handleStudent = {
+
+  async handleListStudentsService() {
+
+    try {
+
+      const students = await listStudentsAction();
+
+      return { success: students.success, data: students.data, message: students.message };
+
+    } catch (error) {
+
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+
+      return { success: false, data: [], message: `Failed: ${errorMessage}` };
+
+    }
+
+  },
+
+  // ...create / update / delete in the same shape
+
+};
+
+```
+
+**Scenario:** The service layer is a **menu of receipts**. It wraps each Server Action in one more `try/catch` so the calling hook never has to deal with an actual thrown error — every service method *always* returns the same typed object. It also logs the real error (`console.error(...)`) while returning a safe, user-friendly message. This is what lets your hooks stay tiny and declarative.
+
+---
+
+## Part 7: `hooks/useStudents.ts` — How Your Screen Asks for Things
+
+### The query
+
+```ts
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+export function useStudents() {
+
+  const queryClient = useQueryClient();
+
+  const studentsQuery = useQuery({
+
+    queryKey: ["students", "all"],
+
+    queryFn: handleStudent.handleListStudentsService,
+
+    staleTime: 30000,
+
+    gcTime: 3 * 60 * 1000,
+
+  });
+
+  return {
+
+    students: studentsQuery.data?.data ?? [],
+
+    isLoading: studentsQuery.isLoading,
+
+    error: studentsQuery.error?.message ??
+
+      (!studentsQuery.data?.success ? studentsQuery.data?.message : null),
+
+    refetch: studentsQuery.refetch,
+
+  };
+
+}
+
+```
+
+**Scenario:** This is the actual "ask for the students" — the line your component calls. Everything React Query does (loading state, caching, retrying, syncing) is handled for you; you never write `useState` + `useEffect` to fetch data again.
+
+**`useQueryClient()`**
+
+**Scenario:** A handle to the shared cage (the one `QueryClient` from the provider). You need it later to invalidate queries after mutations.
+
+**`queryKey: ["students", "all"]`**
+
+**Scenario:** The label written on the notepad, made of an array. React Query identifies every cached entry by its key — ["students", "all"] for the list, ["students", "one", id] for a single row. **The exact same key must be used for the query AND for invalidating it**, or the assistant can't find what to cross out. Use stable strings; never build keys from random values or objects that change identity on every render.
+
+**`queryFn: handleStudent.handleListStudentsService`**
+
+**Scenario:** The function the assistant runs when it actually needs to go get data. Here it's the service from Part 6 — a promise that resolves to the normalized response object.
+
+**`staleTime: 30000` / `gcTime: 3 * 60 * 1000`**
+
+**Scenario:** These override the provider defaults *for this query only*. The list is allowed to be re-considered fresh after just 30 seconds (data changes more often here), but the assistant keeps it around for 3 minutes.
+
+**`students: studentsQuery.data?.data ?? []`**
+
+**Scenario:** While the query hasn't finished, `data` is `undefined`. `?.` and `?? []` convert that to a safe empty array, so the component can render `.map(...)` immediately without a crash.
+
+**`isLoading: studentsQuery.isLoading`**
+
+**Scenario:** The assistant's "hold on, I'm still reading/going" flag. The component can show a spinner on `true`. No manual state to manage.
+
+**`error: studentsQuery.error?.message ?? ...`**
+
+**Scenario:** Slightly clever: errors can come from two places — a thrown network error (`query.error`) or a *business* error the API returned inside the response object (`data.success === false` with a `message`). This line prioritizes the thrown one, then falls back to the API's message. Either way, the component gets a plain string.
+
+**`refetch: studentsQuery.refetch`**
+
+**Scenario:** A manual "go check again right now" button the component can trigger (e.g. after a search or a pull-to-refresh).
+
+---
+
+### The mutations
+
+```ts
+
+const createStudentMutation = useMutation({
+
+  mutationFn: handleStudent.handleCreateStudentService,
+
+  onSuccess: () => {
+
+    queryClient.invalidateQueries({ queryKey: ["students"] });
+
+  },
+
+  onError: (error) => {
+
+    console.log(error.message);
+
+  },
+
+});
+
+```
+
+**Scenario:** *Reading* data is a query; *changing* data is a **mutation** — create, update, delete. They're separate tools on purpose.
+
+**`mutationFn`**
+
+**Scenario:** The errand that performs the change — again, a service method that resolves to an answer.
+
+**`onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["students"] }) }`**
+
+**Scenario:** THE most important line in the whole stack. After you create a student, the notepad still holds the *old* list (without the new student). `invalidateQueries` crosses that entry out and tells the assistant to refetch it. Notice the key here is `["students"]` — a *partial* match — which invalidates **both** `["students", "all"]` and `["students", "one", ...]` in one call. Forget this line, and your UI keeps showing stale data even though the database just changed.
+
+**`onError`**
+
+**Scenario:** What to do when the mutation fails (log it, show a toast, etc.).
+
+**Returned mutation helpers**
+
+```ts
+
+return {
+
+  createStudent: createStudentMutation.mutate,
+
+  isCreating: createStudentMutation.isPending,
+
+  // ...
+
+};
+
+```
+
+**Scenario:** The hook doesn't run mutations automatically — it hands your component a `mutate` function to call (e.g. from a form's submit handler) and an `isPending` flag for disabling the button. This keeps your components looking like forms, not networking code.
+
+---
+
+### The dependent query
+
+```ts
+
+export function useStudent(id: string) {
+
+  const studentQuery = useQuery({
+
+    queryKey: ["students", "one", id],
+
+    queryFn: () => handleStudent.handleGetStudentService(id),
+
+    enabled: !!id,   // don't run until we actually have an id
+
+  });
+
+  return {
+
+    student: studentQuery.data?.data ?? null,
+
+    isLoading: studentQuery.isLoading,
+
+  };
+
+}
+
+```
+
+**Scenario:** On a detail page you often don't have the `id` until the parent loads. `enabled: !!id` means *"if there's no id yet, don't even start the errand"* — otherwise React Query would fire a request using `undefined` and cache a bogus entry. Once `id` arrives, the query automatically runs.
+
+---
+
+## Putting Everything Together
+
+Here's the full flow, in order, the next time your user lands on the students page:
+
+1. **`<StudentsPage />`** calls `useStudents()`.
+
+2. Inside the hook, `useQuery({ queryKey: ["students", "all"], ... })` asks React Query: *"is this on your notepad and still fresh?"*
+
+3. **React Query says "yes, fresh"** → return the cached array instantly. No network call, no loading spinner, no trip to the office.
+
+4. **React Query says "no / stale"** → it runs `queryFn`, which calls `handleStudent.handleListStudentsService()`, which calls `listStudentsAction()`.
+
+5. The **server action** (`actions/students.ts`) attaches the user's cookie and sends `baseAPI.get("/student", ...)`.
+
+6. The **Axios instance** (`config/axios.ts`) carries the request to `/api/v1/students` (full URL on the server, relative in the browser).
+
+7. The **API route** checks auth, checks Redis cache, hits the database if needed, and answers with the standard `{ success, data, message, error, status }` envelope.
+
+8. The response walks back up through the action → service → hook, where React Query **writes it to the notepad**, marks it fresh for `staleTime`, and hands your component `isLoading: false` + `data`.
+
+9. Later, someone **creates a student** via `createStudentMutation.mutate(...)`. On success, `invalidateQueries({ queryKey: ["students"] })` crosses out the old list, and the next read refetches — so your screen never shows a form that saved but a list that forgot.
+
+That's it. Every layer has one job, and the data travels on a single, predictable pipeline.
+
+---
+
+## Why Is React Query So Important in an App?
+
+If you only take one thing from this guide, take this. Without React Query, every screen that shows server data has to hand-roll the same four things:
+
+- **Loading state** — `const [loading, setLoading] = useState(true)` before every fetch.
+- **Error handling** — `try/catch` everywhere, with no standard shape.
+- **Caching + deduplication** — two components asking for the same "students" fire *two* requests.
+- **Syncing** — after a mutation you manually call `setState` or `window.location.reload()` to "refetch."
+
+React Query takes all four and makes them **automatic and consistent**:
+
+1. **It cache-reads first, network second.** The notepad model — fetch once, serve many — is why your app feels instant and stops hammering your API with identical requests.
+
+2. **It gives you loading/error/"data is here" as plain flags.** `isLoading`, `isError`, `isPending`, `data`, `error` — no `useEffect` juggling, no duplicated spinner logic across pages.
+
+3. **It keeps the UI truthful with background refetches.** `staleTime` + `refetchOnMount`/`refetchOnWindowFocus` mean data refreshes quietly in the background; users see the latest information without a full-screen spinner.
+
+4. **It makes "change data, then refresh the screen" a one-liner.** `invalidateQueries` and `setQueryData` turn messy post-mutation refresh logic into declarative intent — the single most common source of "my list is stale" bugs, solved.
+
+5. **It deduplicates and retries for you.** Two components on the same page asking for the same key share one request, and transient failures retry instead of showing a scary error.
+
+The takeaway: React Query isn't a "fetching library" — it's a **server-state manager**. Local state (theme, modals) stays in React; server state (students, posts, scores) lives in the cage, and your components just *ask*.
+
+---
+
+## Common Errors and Fixes
+
+### `No QueryClient set, use QueryClientProvider to set one`
+
+Your component calls `useQuery` but isn't inside `<QueryClientProvider>`. Mount `ReactQueryProvider` high — in the root layout — and above **every** component that uses these hooks.
+
+### The list never updates after creating/editing/deleting
+
+The mutation forgot `queryClient.invalidateQueries({ queryKey: ["students"] })` in `onSuccess`. The database changed, but the cache didn't. Always pair a write with an invalidation using a key that overlaps the query (remember: partial keys catch the whole family).
+
+### The QueryClient re-creates and my cache flushes constantly
+
+You wrote `useState(new QueryClient())` instead of `useState(() => new QueryClient())`. Use the lazy-initializer form so the client is created exactly once.
+
+### Authenticated server action suddenly returns 401/403
+
+Axios doesn't forward the caller's cookies in a Server Action. Attach them explicitly: `{ headers: await authHeaders() }` (using `headers()` from `next/headers`).
+
+### Errors print as a generic `Error` with no status code
+
+Use `axios.isAxiosError(error)` to narrow the type, then read `error.response?.status` and `error.response?.data` for the real status and server message.
+
+### The detail page fires a pointless request before the id arrives
+
+The query isn't guarded: add `enabled: !!id` so React Query waits for a real id.
+
+### Data looks old forever / never refetches
+
+Check `staleTime` and `refetchOnWindowFocus`. If you set a long `staleTime`, that's a choice — refetch via `refetch()` or mutate, and if you kept `refetchOnWindowFocus: false`, background refresh won't happen when the user returns to the tab.
+
+### Two tabs or screens show inconsistent data
+
+They're probably using *different* query keys for the same data, so the assistant treats them as different notepad entries. Standardize keys (e.g. a small keys object per resource).
+
+---
+
+## Final Checklist
+
+Use this checklist to make sure your React Query + Axios wiring is correct:
+
+- [ ] One Axios instance in `config/axios.ts` with baseURL switching for server vs client and cache-busting headers
+
+- [ ] `QueryClient` created lazily with `useState(() => new QueryClient({ ... }))`
+
+- [ ] `gcTime` is longer than `staleTime`
+
+- [ ] `ReactQueryProvider` mounted in the root layout, above all components that use the hooks
+
+- [ ] Every server action exports the same response shape `{ success, data, message, error, status }`
+
+- [ ] Server actions forward the caller's cookie with `authHeaders()`
+
+- [ ] Every resource has a stable `queryKey` (list, detail, etc.) reused consistently
+
+- [ ] Every mutation's `onSuccess` calls `invalidateQueries` with an overlapping key
+
+- [ ] Dependent queries use `enabled: !!id` so they don't fire before their input exists
+
+- [ ] `isAxiosError` is used before reading `error.response` details
+
+---
+
+## Conclusion
+
+The clean mental model is:
+
+```bash
+
+config/axios.ts            -> ONE delivery person, pre-configured routes
+
+ReactQueryProvider.tsx     -> ONE assistant's cage, with sane defaults
+
+API route                  -> the real store, behind auth + cache
+
+actions/*                 -> trusted errands that speak for the browser
+
+services/*                -> neat typed receipts, never throw
+
+hooks/use*                -> screens just ask; the assistant handles the errands
+
+queryKey                  -> the notepad label (used for both read and invalidate)
+
+onSuccess + invalidate    -> the exact moment stale data gets corrected
+```
+
+Once you see it as "an assistant with a notepad, a delivery person who knows the route, and a trusted errand boy," none of this code is mysterious anymore — every line is handling one very specific, very human problem: *make the first request real, make every repeated request fast, and make sure the cache is never lying.*
+
+## Resources
+
+- [TanStack Query — Overview](https://tanstack.com/query/latest/docs/framework/react/overview)
+
+- [TanStack Query — useQuery reference](https://tanstack.com/query/latest/docs/framework/react/reference/useQuery)
+
+- [TanStack Query — useMutation reference](https://tanstack.com/query/latest/docs/framework/react/reference/useMutation)
+
+- [Axios — Getting started](https://axios-http.com/docs/intro)
+
+- [Integrating React Query with Server Actions in Next.js 15 — CodeMint](https://codemint-gamma.vercel.app/blog/react-query)
+
+- [Next.js — Server Actions and Mutations](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
+
+- [Next.js — headers() API reference](https://nextjs.org/docs/app/api-reference/functions/headers)
