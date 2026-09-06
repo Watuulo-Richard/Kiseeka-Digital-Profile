@@ -3,8 +3,7 @@
 
 import Script from 'next/script';
 
-const CHATBOT_ID =
-  process.env.NEXT_PUBLIC_CHATBASE_ID?.trim() || 'cUcblAGsw0-1Ac1k78c_0';
+const CHATBOT_ID = 'cUcblAGsw0-1Ac1k78c_0';
 
 export function ChatbaseWidget() {
   return (
