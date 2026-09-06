@@ -1,31 +1,18 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Download, Github, Linkedin, Mail } from 'lucide-react';
-import Link from 'next/link';
-import CardFlip from './card-flip';
-import { RiTwitterXLine } from 'react-icons/ri';
-import { Portfolio } from '@prisma/client';
-import { TypewriterEffect } from '../ui/typewriter-effect';
-import TypewriterTitle from '../kokonutui/type-writer';
+import { RiTwitterXLine } from "react-icons/ri";
+import { Download, Github, Linkedin, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Portfolio } from "@prisma/client";
+import CardFlip from "./card-flip";
+import Link from "next/link";
+import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 
 export default function Hero({
   fetchedProfile,
 }: {
   fetchedProfile: Portfolio;
 }) {
-  const words = [
-  {
-    text: "I'm ",
-  },
-  {
-    text: `${fetchedProfile.title.split(' ').join('-')}`,
-    className: "bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent",
-  },
-  {
-    text: 'Professional-Auditor.',
-  },
-];
   return (
     // <section id="home" className="py-20 md:py-32 flex flex-col items-center justify-center min-h-[90vh]">
     //   <div className="container px-4 md:px-6 mx-auto">
@@ -108,7 +95,14 @@ export default function Hero({
           <div className="w-full lg:w-[60%]">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                <TypewriterTitle />
+                <LayoutTextFlip
+                  text="I'm "
+                  words={[
+                    fetchedProfile.title.split(" ").join("-"),
+                    "Professional-Auditor.",
+                  ]}
+                  wordClassName="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+                />
               </h1>
               <p className="mx-auto max-w-[700px] text-xl text-muted-foreground md:text-2xl md:text-start md:mx-0">
                 <span className="js-only">
@@ -217,7 +211,7 @@ export default function Hero({
 
           {/* Right Content */}
           <div className="w-full flex justify-center lg:w-[40%]">
-            <CardFlip />
+            <CardFlip image="/PIUS-PROFILE.jpg" />
           </div>
         </div>
       </div>

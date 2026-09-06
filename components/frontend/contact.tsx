@@ -11,6 +11,11 @@ import { useState } from 'react';
 import { Portfolio } from '@prisma/client';
 import { baseUrl } from '@/types/type';
 import { toast } from 'sonner';
+import { PlaceholdersAndVanishInput } from '@/components/ui/placeholders-and-vanish-input';
+
+const NAME_PLACEHOLDERS = ['Your full name', "Who's reaching out?", 'e.g. Kiseka Pius'];
+
+const EMAIL_PLACEHOLDERS = ['you@example.com', 'Where can I reply to?', 'Your email address'];
 
 export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio }) {
   const contactInfo = [
@@ -39,6 +44,7 @@ export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio 
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
   } = useForm<EmailFormTypes>({
@@ -103,15 +109,21 @@ export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio 
                     >
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <label htmlFor="name" className="text-sm font-medium">
+                          <label className="text-sm font-medium">
                             Name
                           </label>
-                          <Input
+                          <input
+                            type="hidden"
                             {...register('name', { required: true })}
-                            id="name"
-                            name="name"
-                            placeholder="Your name"
-                            required
+                          />
+                          <PlaceholdersAndVanishInput
+                            placeholders={NAME_PLACEHOLDERS}
+                            onChange={(value) =>
+                              setValue('name', value, { shouldValidate: true })
+                            }
+                            onSubmit={(value) =>
+                              setValue('name', value, { shouldValidate: true })
+                            }
                           />
                           {errors.name && (
                             <span className="text-sm text-destructive">
@@ -120,19 +132,21 @@ export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio 
                           )}
                         </div>
                         <div className="space-y-2">
-                          <label
-                            htmlFor="email"
-                            className="text-sm font-medium"
-                          >
+                          <label className="text-sm font-medium">
                             Email
                           </label>
-                          <Input
+                          <input
+                            type="hidden"
                             {...register('email', { required: true })}
-                            id="email"
-                            name="email"
-                            type="email"
-                            placeholder="Your email"
-                            required
+                          />
+                          <PlaceholdersAndVanishInput
+                            placeholders={EMAIL_PLACEHOLDERS}
+                            onChange={(value) =>
+                              setValue('email', value, { shouldValidate: true })
+                            }
+                            onSubmit={(value) =>
+                              setValue('email', value, { shouldValidate: true })
+                            }
                           />
                           {errors.email && (
                             <span className="text-sm text-destructive">

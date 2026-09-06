@@ -80,7 +80,7 @@ export default async function page({
   }, {} as Record<string, number>);
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
       <SiteNav />
       <div className="absolute top-0 left-0 z-0 w-full h-[200px] [mask-image:linear-gradient(to_top,transparent_0%,black_100%)]">
         <FlickeringGrid

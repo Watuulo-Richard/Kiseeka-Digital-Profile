@@ -229,6 +229,14 @@ const testimonials = [
   },
 ];
 
+const COLUMNS = 4;
+
+function chunkIntoColumns<T>(items: T[], columns: number): T[][] {
+  return Array.from({ length: columns }, (_, columnIndex) =>
+    items.filter((_, index) => index % columns === columnIndex)
+  );
+}
+
 export default function Testimonials() {
   return (
     <section className="overflow-x-hidden container relative py-5">
@@ -255,10 +263,8 @@ export default function Testimonials() {
       </motion.div>
 
       <div className="relative mt-6 max-h-screen overflow-hidden">
-        <div className="gap-4 md:columns-2 xl:columns-3 2xl:columns-4">
-          {Array(Math.ceil(testimonials.length / 3))
-            .fill(0)
-            .map((_, i) => (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {chunkIntoColumns(testimonials, COLUMNS).map((column, i) => (
               <Marquee
                 vertical
                 key={i}
@@ -268,7 +274,7 @@ export default function Testimonials() {
                   '[--duration:70s]': i === 3,
                 })}
               >
-                {testimonials.slice(i * 3, (i + 1) * 3).map((card, idx) => (
+                {column.map((card, idx) => (
                   <motion.div
                     key={idx}
                     initial={{ opacity: 0 }}

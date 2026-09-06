@@ -38,16 +38,16 @@ export function ReadMoreSection({
             return (
               <Link
                 key={post.id}
-                href="{post.url}"
+                href={`/blogs-page/${post.slug}/`}
                 className="group grid grid-cols-1 lg:grid-cols-12 items-center gap-4 cursor-pointer"
               >
                 {post.image && (
                   <div className="flex-shrink-0 col-span-1 lg:col-span-4">
-                    <div className="relative w-full h-full">
+                    <div className="relative w-full aspect-[16/10] overflow-hidden rounded-lg">
                       <img
                         src={post.image}
                         alt={post.title}
-                        className="w-full h-full object-cover rounded-lg group-hover:opacity-80 transition-opacity"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
                   </div>

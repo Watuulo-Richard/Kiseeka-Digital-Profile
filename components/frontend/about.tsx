@@ -1,11 +1,11 @@
+import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { Card, CardContent } from '@/components/ui/card';
-import { Landmark  } from 'lucide-react';
-import Globe1 from './globe-component';
+import { BadgeDollarSign } from './finance';
 import { Portfolio } from '@prisma/client';
 import { ChartPie } from './chart-pie';
+import Globe1 from './globe-component';
 import { Users } from './users';
 import { Globe } from './globe';
-import { BadgeDollarSign } from './finance';
 
 export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
   const features = [
@@ -49,9 +49,12 @@ export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
                 </div>
 
                 <div className="mx-auto max-w-3xl text-center md:mx-0 md:text-start mt-6">
-                  <p className="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
-                    {fetchedProfile.bio}
-                  </p>
+                  <TextGenerateEffect
+                    words={fetchedProfile.bio}
+                    className="font-normal"
+                    textClassName="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed"
+                    staggerDelay={0.04}
+                  />
                 </div>
               </div>
 

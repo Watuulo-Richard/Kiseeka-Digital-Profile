@@ -14,6 +14,14 @@ interface TableOfContentsProps {
   containerSelector?: string;
 }
 
+const SCROLL_OFFSET = 84;
+
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9\u00C0-\u00FF]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
 export function TableOfContents({
   className,
   containerSelector = ".prose",
@@ -21,147 +29,116 @@ export function TableOfContents({
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
+  /* Scan headings inside the prose container and give every one a stable id */
   useEffect(() => {
-    /* Here Are Only searching within the specified container that we gave our class which is prose*/
-    /* Here You Can Add A Number of Headings You Feel You Want Depending on how many you have in the database*/
-    const headingElements = document.querySelectorAll("h1, h2, h3");
-    const headingsArray: Heading[] = [];
+    let cancelled = false;
 
-    headingElements.forEach((element, index) => {
-      /* Auto-generate IDs if they don't exist */
-      if (element.id) {
-        const id =
-          element.textContent
-            ?.toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/(^-|-$)/g, "") || `heading-${index}`;
+    const scan = () => {
+      const root = containerSelector
+        ? document.querySelector(containerSelector)
+        : document;
+
+      if (!root) return;
+
+      const headingsArray: Heading[] = [];
+      const usedIds = new Set<string>();
+
+      root.querySelectorAll("h1, h2, h3").forEach((element, index) => {
+        /* The article title itself shouldn't appear in the TOC */
+        if (element.tagName === "H1") return;
+
+        const rawText = element.textContent?.trim() || "";
+        if (!rawText) return;
+
+        const baseId =
+          element.id || slugify(rawText) || `heading-${index + 1}`;
+        let id = baseId;
+        let counter = 2;
+        while (usedIds.has(id)) {
+          id = `${baseId}-${counter++}`;
+        }
+        usedIds.add(id);
+
         element.id = id;
-      }
 
-      headingsArray.push({
-        id: element.id,
-        text: element.textContent || "",
-        level: parseInt(element.tagName.charAt(1)),
-      });
-    });
-
-    setHeadings(headingsArray);
-  }, [containerSelector]); /* Re-run if container changes */
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      () => {
-        const headingPositions = headings.map((heading) => {
-          const element = document.getElementById(heading.id);
-          return {
-            id: heading.id,
-            top: element ? element.getBoundingClientRect().top : Infinity,
-          };
+        headingsArray.push({
+          id,
+          text: rawText,
+          level: parseInt(element.tagName.charAt(1)),
         });
-
-        let activeHeading = headingPositions.find(
-          (heading) => heading.top >= 0 && heading.top <= 100
-        );
-
-        if (!activeHeading) {
-          const headingsAbove = headingPositions
-            .filter((heading) => heading.top < 0)
-            .sort((a, b) => b.top - a.top);
-
-          activeHeading = headingsAbove[0];
-        }
-
-        if (!activeHeading) {
-          const headingsBelow = headingPositions
-            .filter((heading) => heading.top > 100)
-            .sort((a, b) => a.top - b.top);
-
-          activeHeading = headingsBelow[0];
-        }
-
-        if (activeHeading && activeHeading.id !== activeId) {
-          setActiveId(activeHeading.id);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-100px",
-        threshold: 0,
-      }
-    );
-
-    headings.forEach(({ id }) => {
-      const element = document.getElementById(id);
-      if (element) {
-        observer.observe(element);
-      }
-    });
-
-    const handleScroll = () => {
-      const headingPositions = headings.map((heading) => {
-        const element = document.getElementById(heading.id);
-        return {
-          id: heading.id,
-          top: element ? element.getBoundingClientRect().top : Infinity,
-        };
       });
 
-      let activeHeading = headingPositions.find(
-        (heading) => heading.top >= -50 && heading.top <= 100
-      );
-
-      if (!activeHeading) {
-        const headingsAbove = headingPositions
-          .filter((heading) => heading.top < -50)
-          .sort((a, b) => b.top - a.top);
-
-        activeHeading = headingsAbove[0];
-      }
-
-      if (activeHeading && activeHeading.id !== activeId) {
-        setActiveId(activeHeading.id);
+      if (!cancelled) {
+        setHeadings((prev) =>
+          prev.length === headingsArray.length &&
+          prev.every((heading, i) => heading.id === headingsArray[i].id)
+            ? prev
+            : headingsArray
+        );
       }
     };
 
-    let scrollTimeout: NodeJS.Timeout;
+    scan();
+    /* Second pass in case content mounts slightly late */
+    const timer = window.setTimeout(scan, 100);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [containerSelector]);
+
+  /* Track which heading is currently in view while scrolling */
+  useEffect(() => {
+    if (headings.length === 0) return;
+
+    const getActiveHeading = () => {
+      let current: Heading | null = null;
+
+      for (const heading of headings) {
+        const element = document.getElementById(heading.id);
+        if (!element) continue;
+
+        /* Headings are in document order, so keep the last one above the line */
+        if (element.getBoundingClientRect().top <= SCROLL_OFFSET) {
+          current = heading;
+        } else {
+          break;
+        }
+      }
+
+      return current;
+    };
+
+    const handleScroll = () => {
+      const current = getActiveHeading();
+      setActiveId((prev) => (current && current.id !== prev ? current.id : prev));
+    };
+
+    let scrollTimeout: number;
     const throttledScroll = () => {
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(handleScroll, 10);
+      window.clearTimeout(scrollTimeout);
+      scrollTimeout = window.setTimeout(handleScroll, 50);
     };
 
     window.addEventListener("scroll", throttledScroll, { passive: true });
-
     handleScroll();
 
     return () => {
-      observer.disconnect();
       window.removeEventListener("scroll", throttledScroll);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
+      window.clearTimeout(scrollTimeout);
     };
-  }, [headings, activeId]);
+  }, [headings]);
 
-  const handleClick = async (id: string) => {
-    const url = `${window.location.origin}${window.location.pathname}#${id}`;
-
+  const handleClick = (id: string) => {
     window.history.pushState({}, "", `#${id}`);
-
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch (err) {
-      console.error(err);
-      const textArea = document.createElement("textarea");
-      textArea.value = url;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
-    }
+    setActiveId(id);
 
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - SCROLL_OFFSET;
 
       window.scrollTo({
         top: offsetPosition,
@@ -178,19 +155,18 @@ export function TableOfContents({
         On this page
       </h4>
       <nav>
-        <ul className="space-y-2">
-          {headings.map((heading, index) => (
-            <li key={heading.id || `heading-${index}`}>
+        <ul className="space-y-2 border-l border-border">
+          {headings.map((heading) => (
+            <li key={heading.id}>
               <button
                 onClick={() => handleClick(heading.id)}
                 className={cn(
-                  "text-left w-full text-sm transition-colors hover:text-foreground",
+                  "text-left w-full text-sm transition-colors hover:text-foreground -ml-px border-l-2 pl-3",
                   activeId === heading.id
-                    ? "text-foreground font-medium"
-                    : "text-muted-foreground",
-                  heading.level === 2 && "pl-0",
-                  heading.level === 3 && "pl-4",
-                  heading.level === 4 && "pl-8"
+                    ? "border-primary text-primary font-medium"
+                    : "border-transparent text-muted-foreground",
+                  heading.level === 3 && "pl-7",
+                  heading.level === 4 && "pl-11"
                 )}
               >
                 {heading.text}

@@ -11,23 +11,19 @@
  */
 
 import { cn } from "@/lib/utils";
-import { ArrowRight, Repeat2 } from "lucide-react";
+import { Repeat2 } from "lucide-react";
 import { useState } from "react";
 
 export interface CardFlipProps {
     title?: string;
     subtitle?: string;
-    description?: string;
-    features?: string[];
-    image?: '/pius.png';
+    image?: string;
 }
 
 export default function CardFlip({
     title = "Tap to reveal",
     subtitle = "Audit • Analyze • Achieve",
-    description = "Dive deep into the world of modern UI/UX design.",
-    features = ["UI/UX", "Modern Design", "Tailwind CSS", "Kokonut UI"],
-    image = '/pius.png',
+    image,
 }: CardFlipProps) {
     const [isFlipped, setIsFlipped] = useState(false);
 
@@ -47,6 +43,7 @@ export default function CardFlip({
                         : "[transform:rotateY(0deg)]"
                 )}
             >
+                {/* Front of card */}
                 <div
                     className={cn(
                         "absolute inset-0 w-full h-full",
@@ -112,79 +109,21 @@ export default function CardFlip({
                         "absolute inset-0 w-full h-full",
                         "[backface-visibility:hidden] [transform:rotateY(180deg)]",
                         "overflow-hidden rounded-2xl",
-                        "bg-gradient-to-b from-zinc-100 to-white dark:from-zinc-900 dark:to-black",
+                        "bg-zinc-100 dark:bg-zinc-900",
                         "border border-zinc-200 dark:border-zinc-800",
                         "shadow-xs dark:shadow-lg",
-                        "flex flex-col",
                         "transition-all duration-700",
                         "group-hover:shadow-lg dark:group-hover:shadow-xl",
                         !isFlipped ? "opacity-0" : "opacity-100"
                     )}
                 >
-                    {/* <div className="flex-1 space-y-6">
-                        <div className="space-y-2">
-                            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white leading-snug tracking-tight transition-all duration-500 ease-out-expo group-hover:translate-y-[-2px]">
-                                {title}
-                            </h3>
-                            <p className="text-sm text-zinc-600 dark:text-zinc-400 tracking-tight transition-all duration-500 ease-out-expo group-hover:translate-y-[-2px] line-clamp-2">
-                                {description}
-                            </p>
-                        </div>
-
-                        <div className="space-y-2">
-                            {features.map((feature, index) => (
-                                <div
-                                    key={feature}
-                                    className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300 transition-all duration-500"
-                                    style={{
-                                        transform: isFlipped
-                                            ? "translateX(0)"
-                                            : "translateX(-10px)",
-                                        opacity: isFlipped ? 1 : 0,
-                                        transitionDelay: `${
-                                            index * 100 + 200
-                                        }ms`,
-                                    }}
-                                >
-                                    <ArrowRight className="w-3 h-3 text-orange-500" />
-                                    <span>{feature}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div> */}
-                    <div className="">
-                        <img src={image} className="w-full h-full object-cover object-center" alt="" />
-                    </div>
-
-                    <div className="pt-6 mt-6 border-t border-zinc-200 dark:border-zinc-800">
-                        <div
-                            className={cn(
-                                "group/start relative",
-                                "flex items-center justify-between",
-                                "p-3 -m-3 rounded-xl",
-                                "transition-all duration-300",
-                                "bg-gradient-to-r from-zinc-100 via-zinc-100 to-zinc-100",
-                                "dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-800",
-                                "hover:from-orange-500/10 hover:from-0% hover:via-orange-500/5 hover:via-100% hover:to-transparent hover:to-100%",
-                                "dark:hover:from-orange-500/20 dark:hover:from-0% dark:hover:via-orange-500/10 dark:hover:via-100% dark:hover:to-transparent dark:hover:to-100%",
-                                "hover:scale-[1.02] hover:cursor-pointer"
-                            )}
-                        >
-                            <span className="text-sm font-medium text-zinc-900 dark:text-white transition-colors duration-300 group-hover/start:text-orange-600 dark:group-hover/start:text-orange-400">
-                                Start today
-                            </span>
-                            <div className="relative group/icon">
-                                <div
-                                    className={cn(
-                                        "absolute inset-[-6px] rounded-lg transition-all duration-300",
-                                        "bg-gradient-to-br from-orange-500/20 via-orange-500/10 to-transparent",
-                                        "opacity-0 group-hover/start:opacity-100 scale-90 group-hover/start:scale-100"
-                                    )}
-                                />
-                                <ArrowRight className="relative z-10 w-4 h-4 text-orange-500 transition-all duration-300 group-hover/start:translate-x-0.5 group-hover/start:scale-110" />
-                            </div>
-                        </div>
-                    </div>
+                    {image ? (
+                        <img
+                            src={image}
+                            className="w-full h-full object-cover object-center"
+                            alt=""
+                        />
+                    ) : null}
                 </div>
             </div>
 
