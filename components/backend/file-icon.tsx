@@ -34,7 +34,7 @@ const FileChartColumn = ({
   width = 28,
   height = 28,
   strokeWidth = 2,
-  stroke = "#716F81",
+  stroke = "currentColor",
   ...props
 }: FileChartColumnProps) => {
   const controls = useAnimation();
