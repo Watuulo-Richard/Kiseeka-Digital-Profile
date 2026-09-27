@@ -1,12 +1,12 @@
-import { compare } from 'bcrypt-ts';
-import { NextAuthOptions } from 'next-auth';
-import type { Adapter } from 'next-auth/adapters';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import GoogleProvider from 'next-auth/providers/google';
-import LinkedInProvider from 'next-auth/providers/linkedin';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { JWT } from 'next-auth/jwt';
+import LinkedInProvider from 'next-auth/providers/linkedin';
+import GoogleProvider from 'next-auth/providers/google';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { compare } from 'bcrypt-ts';
+import type { Adapter } from 'next-auth/adapters';
+import { NextAuthOptions } from 'next-auth';
 import { prismaClient } from '@/lib/db';
+import { JWT } from 'next-auth/jwt';
 
 export const authOptions: NextAuthOptions = {
   // Fix: Pass prismaClient instead of Prisma
