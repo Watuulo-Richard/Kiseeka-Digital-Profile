@@ -14,22 +14,25 @@ import {
 interface DateProps {
     endDate:Date | undefined;
     setEndDate: (endDate: Date) => void;
+    label?: React.ReactNode;
+    id?: string;
+    triggerClassName?: string;
 }
-export function EndDate({endDate, setEndDate}:DateProps) {
+export function EndDate({endDate, setEndDate, label = "Enter the date you completed your studies (leave blank if still studying)", id = "date", triggerClassName}:DateProps) {
   const [open, setOpen] = React.useState(false)
 //   const [date, setDate] = React.useState<Date | undefined>(undefined)
 
   return (
     <div className="flex flex-col gap-3">
-      <Label htmlFor="date" className="px-1">
-        Enter the date you completed your studies (leave blank if still studying)
+      <Label htmlFor={id} className="px-1">
+        {label}
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            id="date"
-            className="w-48 justify-between font-normal"
+            id={id}
+            className={`w-48 justify-between font-normal ${triggerClassName ?? ""}`}
           >
             {endDate ? endDate.toLocaleDateString() : "Select date"}
             <ChevronDownIcon />

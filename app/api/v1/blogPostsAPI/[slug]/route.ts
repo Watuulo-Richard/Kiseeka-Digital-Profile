@@ -1,49 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prismaClient } from '@/lib/db';
+import {
+  UpdateBlogPostResponse,
+  DeleteBlogPostResponse,
+} from '@/types/blog-post';
 
-// export async function GET(
-//   request: NextRequest,
-//   { params }: { params: Promise<{ slug: string }> },
-// ) {
-//   try {
-//     const { slug } = await params;
-//     const getUserBlogPost = await prismaClient.blogPost.findUnique({
-//       where: {
-//         slug: slug,
-//       },
-//       include: {
-//         category: true,
-//         comments: true,
-//         portfolio: true,
-//       },
-//     });
-//     return NextResponse.json(
-//       {
-//         data: getUserBlogPost,
-//         error: null,
-//         message: 'User Blog-Post Fetched Successfully...!!!✅',
-//         status: 200,
-//       },
-//       {
-//         status: 200,
-//       },
-//     );
-//   } catch (error) {
-//     console.log(error);
-//     return NextResponse.json(
-//       {
-//         data: null,
-//         error:
-//           '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-//         message: 'Failed To Fetch User Blog-Post...!!!🥺',
-//         status: 500,
-//       },
-//       {
-//         status: 500,
-//       },
-//     );
-//   }
-// }
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
@@ -58,7 +19,7 @@ export async function GET(
       include: {
         category: true,
         comments: true,
-        portfolio: true,
+        user: true,
       },
     });
 
@@ -100,7 +61,10 @@ export async function GET(
     return NextResponse.json(
       {
         data: {
-          blogPost: getUserBlogPost,
+          blogPost: {
+            ...getUserBlogPost,
+            category: getUserBlogPost.category ? [getUserBlogPost.category] : [],
+          },
           relatedBlogs: relatedBlogs,
         },
         error: null,
@@ -123,81 +87,135 @@ export async function GET(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> },
-) {
-  try {
-    const { slug } = await params;
-    const deleteUserBlogPost = await prismaClient.blogPost.delete({
-      where: {
-        slug: slug,
-      },
-    });
-    return NextResponse.json(
-      {
-        data: deleteUserBlogPost,
-        error: null,
-        message: 'User Blog-Post Deleted Successfully...!!!✅',
-        status: 200,
-      },
-      {
-        status: 200,
-      },
-    );
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        data: null,
-        error:
-          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-        message: 'Failed To Delete User Blog-Post...!!!🥺',
-        status: 500,
-      },
-      {
-        status: 500,
-      },
-    );
-  }
-}
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
-) {
+): Promise<NextResponse<UpdateBlogPostResponse>> {
   try {
     const { slug } = await params;
+
+    if (!slug) {
+      return NextResponse.json(
+        {
+          success: false,
+          id:      "",
+          message: "User Blog-Post Slug Is Required...!!!🥺😔",
+          error:   "Missing user blog-post slug",
+          status:  400,
+        },
+        { status: 400 },
+      );
+    }
+
     const BlogPostsFormData = await request.json();
-    const updateUserBlogPosts = await prismaClient.blogPost.update({
-      where: {
-        slug: slug,
-      },
-      data: BlogPostsFormData,
+
+    const existingBlogPost = await prismaClient.blogPost.findUnique({
+      where: { slug },
     });
+
+    if (!existingBlogPost) {
+      return NextResponse.json(
+        {
+          success: false,
+          id:      "",
+          message: "User Blog-Post Not Found...!!!🥺😔",
+          error:   "User blog-post not found",
+          status:  404,
+        },
+        { status: 404 },
+      );
+    }
+
+    const updateUserBlogPosts = await prismaClient.blogPost.update({
+      where: { slug },
+      data:  BlogPostsFormData,
+    });
+
     return NextResponse.json(
       {
-        data: updateUserBlogPosts,
-        error: null,
-        message: 'User Blog-Posts Updated Successfully...!!!✅',
-        status: 200,
+        success: true,
+        id:      updateUserBlogPosts.id,
+        message: "User Blog-Post Updated Successfully...✅",
+        error:   null,
+        status:  200,
       },
-      {
-        status: 200,
-      },
+      { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error("Database error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       {
-        data: null,
-        error:
-          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-        message: 'Failed To Update User Blog-Posts...!!!🥺',
-        status: 500,
+        success: false,
+        id:      "",
+        message: `Failed To Update User Blog-Post: ${errorMessage}`,
+        error:   errorMessage,
+        status:  500,
       },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> },
+): Promise<NextResponse<DeleteBlogPostResponse>> {
+  try {
+    const { slug } = await params;
+
+    if (!slug) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User Blog-Post Slug Is Required...!!!🥺😔",
+          error:   "Missing user blog-post slug",
+          status:  400,
+        },
+        { status: 400 },
+      );
+    }
+
+    const existingBlogPost = await prismaClient.blogPost.findUnique({
+      where: { slug },
+    });
+
+    if (!existingBlogPost) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User Blog-Post Not Found...!!!🥺😔",
+          error:   "User blog-post not found",
+          status:  404,
+        },
+        { status: 404 },
+      );
+    }
+
+    await prismaClient.blogPost.delete({ where: { slug } });
+
+    return NextResponse.json(
       {
-        status: 500,
+        success: true,
+        message: "User Blog-Post Deleted Successfully...✅",
+        error:   null,
+        status:  200,
       },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("Database error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json(
+      {
+        success: false,
+        message: `Failed To Delete User Blog-Post: ${errorMessage}`,
+        error:   errorMessage,
+        status:  500,
+      },
+      { status: 500 },
     );
   }
 }

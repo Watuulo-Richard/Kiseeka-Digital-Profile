@@ -7,9 +7,17 @@ import {
   ChevronRightIcon,
 } from "lucide-react"
 import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
+import type { DropdownProps } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 function Calendar({
   className,
@@ -162,6 +170,7 @@ function Calendar({
             </td>
           )
         },
+        Dropdown: CalendarDropdown,
         ...components,
       }}
       {...props}
@@ -204,6 +213,45 @@ function CalendarDayButton({
       )}
       {...props}
     />
+  )
+}
+
+function CalendarDropdown({
+  options = [],
+  value,
+  onChange,
+  disabled,
+}: DropdownProps) {
+  const selectedOption = options.find(
+    (option) => String(option.value) === String(value)
+  )
+
+  return (
+    <Select
+      value={value === undefined ? undefined : String(value)}
+      onValueChange={(nextValue) => {
+        const event = {
+          target: { value: nextValue },
+        } as unknown as React.ChangeEvent<HTMLSelectElement>
+        onChange?.(event)
+      }}
+      disabled={disabled}
+    >
+      <SelectTrigger className="h-7 w-auto gap-1 rounded-md border-input bg-transparent px-2 text-sm font-medium shadow-none">
+        <SelectValue>{selectedOption?.label}</SelectValue>
+      </SelectTrigger>
+      <SelectContent className="max-h-64">
+        {options.map((option) => (
+          <SelectItem
+            key={option.value}
+            value={String(option.value)}
+            disabled={option.disabled}
+          >
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
 }
 

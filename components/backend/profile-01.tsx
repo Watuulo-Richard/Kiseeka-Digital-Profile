@@ -23,12 +23,11 @@ interface Profile01Props {
 }
 
 export default function Profile01({ session }: Partial<Profile01Props>) {
-  console.log(session?.user.id);
   const menuItems: MenuItem[] = [
     {
       label: 'Edit Your Profile',
       // value: subscription,
-      href: `/dashboard/profile-form/${session?.user.id}`,
+      href: `/dashboard/user-profile`,
       icon: <CreditCard className="w-4 h-4 text-[#c0543a] dark:text-primary" />,
       external: false,
     },

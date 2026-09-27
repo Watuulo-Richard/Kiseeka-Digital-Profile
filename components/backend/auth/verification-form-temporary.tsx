@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 import { UserVerificationTypes, verifyUserSchema } from '@/schema/schema';
-import { Label } from '@/components/ui/label';
 import {
   InputOTP,
   InputOTPGroup,
@@ -48,14 +47,9 @@ export default function OTPVerificationForm({
   const router = useRouter();
 
   async function handleVerifyOnSubmit(verificationCode: UserVerificationTypes) {
-    // console.log('Form submitted with verificationCode from Email:', verificationCode);
-    // console.log('User token From the DB:', userToken);
-    // console.log('User ID From the DB:', id);
     setIsVerifying(true);
     const userInputToken = parseInt(verificationCode.token);
     if (userInputToken === userToken) {
-      //   console.log('Parsed token:', userInputToken);
-      // Update User But We Only Updated The Token
       try {
         const response = await fetch(`${baseUrl}/api/v1/signupAPI/${id}`, {
           method: 'PATCH',
@@ -68,7 +62,7 @@ export default function OTPVerificationForm({
           console.log(response);
           reset();
           toast.success(
-            '✅ Success! User verified successfully. Everything looks great!',
+            'Success! User verified successfully. Everything looks great!',
           );
           router.push('/sign-in-page');
         } else {
@@ -88,41 +82,19 @@ export default function OTPVerificationForm({
     } else {
       setShowNotification(true);
       setIsVerifying(false);
-      //   console.log('Token mismatch!');
     }
   }
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 p-4">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gNDAgMCBMIDAgMCAwIDQwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-10"></div>
-        <div className=""></div>
-        <motion.div
-          className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-blue-500 opacity-20 blur-3xl filter"
-          animate={{
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{
-            repeat: Number.POSITIVE_INFINITY,
-            duration: 15,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-cyan-500 opacity-20 blur-3xl filter"
-          animate={{
-            x: [0, -30, 0],
-            y: [0, 20, 0],
-          }}
-          transition={{
-            repeat: Number.POSITIVE_INFINITY,
-            duration: 18,
-            ease: 'easeInOut',
-          }}
-        />
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background px-4 py-6 sm:px-6 sm:py-8">
+      {/* Blurred brand background */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-16 -top-16 h-64 w-64 rounded-full bg-[#F2B5A0]/40 blur-3xl sm:h-80 sm:w-80" />
+        <div className="absolute -right-24 top-1/4 h-72 w-72 rounded-full bg-rose-400/30 blur-3xl sm:h-96 sm:w-96" />
+        <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-orange-300/30 blur-3xl sm:h-80 sm:w-80" />
+        <div className="absolute -bottom-16 right-1/4 h-64 w-64 rounded-full bg-primary/30 blur-3xl sm:h-80 sm:w-80" />
       </div>
+
       <div className="relative z-10 w-full max-w-md">
         <motion.div
           key="verification"
@@ -130,17 +102,17 @@ export default function OTPVerificationForm({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
-          className="overflow-hidden rounded-3xl border border-blue-500/20 bg-gray-900/80 shadow-lg shadow-blue-500/10 backdrop-blur-xl"
+          className="overflow-hidden rounded-3xl border border-border bg-card/80 shadow-xl backdrop-blur-xl"
         >
-          <div className="p-8">
+          <div className="p-6 sm:p-8">
             <div className="mb-8 flex flex-col items-center">
               <motion.div
-                className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-500/10"
+                className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10"
                 animate={{
                   boxShadow: [
-                    '0 0 0 0 rgba(59, 130, 246, 0.2)',
-                    '0 0 0 10px rgba(59, 130, 246, 0)',
-                    '0 0 0 0 rgba(59, 130, 246, 0)',
+                    '0 0 0 0 rgba(242, 181, 160, 0.3)',
+                    '0 0 0 10px rgba(242, 181, 160, 0)',
+                    '0 0 0 0 rgba(242, 181, 160, 0)',
                   ],
                 }}
                 transition={{
@@ -148,17 +120,17 @@ export default function OTPVerificationForm({
                   duration: 2,
                 }}
               >
-                <Fingerprint className="h-10 w-10 text-blue-400" />
+                <Fingerprint className="h-10 w-10 text-primary" />
               </motion.div>
-              <h2 className="mb-2 text-2xl font-bold text-white">
+              <h2 className="mb-2 text-center text-2xl font-bold text-foreground">
                 Identity Verification
               </h2>
-              <p className="text-center text-blue-200">
+              <p className="text-center text-sm text-muted-foreground">
                 Enter the 6-digit security code sent to your device
               </p>
               <form
                 onSubmit={handleSubmit(handleVerifyOnSubmit)}
-                className=" space-y-6"
+                className="w-full space-y-6"
               >
                 {showNotification && (
                   <Alert variant="destructive">
@@ -183,15 +155,15 @@ export default function OTPVerificationForm({
                       onChange={(value) => field.onChange(value)}
                     >
                       <InputOTPGroup>
-                        <InputOTPSlot index={0} className=' border border-blue-500/30 bg-gray-800 text-center text-xl font-bold text-blue-400 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-gray-800/80 focus:ring-2 focus:ring-blue-500/50'/>
-                        <InputOTPSlot index={1} className=' border border-blue-500/30 bg-gray-800 text-center text-xl font-bold text-blue-400 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-gray-800/80 focus:ring-2 focus:ring-blue-500/50'/>
-                        <InputOTPSlot index={2} className=' border border-blue-500/30 bg-gray-800 text-center text-xl font-bold text-blue-400 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-gray-800/80 focus:ring-2 focus:ring-blue-500/50'/>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
                       </InputOTPGroup>
-                      <InputOTPSeparator className='text-blue-400'/>
+                      <InputOTPSeparator className="text-muted-foreground" />
                       <InputOTPGroup>
-                        <InputOTPSlot index={3} className=' border border-blue-500/30 bg-gray-800 text-center text-xl font-bold text-blue-400 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-gray-800/80 focus:ring-2 focus:ring-blue-500/50'/>
-                        <InputOTPSlot index={4} className=' border border-blue-500/30 bg-gray-800 text-center text-xl font-bold text-blue-400 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-gray-800/80 focus:ring-2 focus:ring-blue-500/50'/>
-                        <InputOTPSlot index={5} className=' border border-blue-500/30 bg-gray-800 text-center text-xl font-bold text-blue-400 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-gray-800/80 focus:ring-2 focus:ring-blue-500/50'/>
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
                       </InputOTPGroup>
                     </InputOTP>
                   )}
@@ -203,30 +175,33 @@ export default function OTPVerificationForm({
                   </span>
                 )}
 
-                <motion.button
-                  type="submit"
-                  disabled={Verifying}
-                  className="mb-4 flex w-full items-center justify-center rounded-xl bg-blue-600 py-4 font-medium text-white"
-                  whileHover={{ scale: 1.02, backgroundColor: '#2563eb' }}
-                  whileTap={{ scale: 0.98 }}
+                <motion.div
+                  whileHover={{ scale: Verifying ? 1 : 1.02 }}
+                  whileTap={{ scale: Verifying ? 1 : 0.98 }}
                 >
-                  {Verifying ? (
-                    <>
-                      <Loader className="mr-2 h-4 w-4 animate-spin" />
-                      Verifying...
-                    </>
-                  ) : (
-                    'Verify'
-                  )}
-                </motion.button>
+                  <Button
+                    type="submit"
+                    disabled={Verifying}
+                    className="w-full rounded-lg"
+                  >
+                    {Verifying ? (
+                      <>
+                        <Loader className="mr-2 h-4 w-4 animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      'Verify'
+                    )}
+                  </Button>
+                </motion.div>
               </form>
             </div>
           </div>
 
-          <div className="border-t border-blue-500/20 bg-blue-900/20 p-4">
+          <div className="border-t border-border bg-muted/40 p-4">
             <div className="flex items-center justify-center">
-              <ShieldCheck className="mr-2 h-4 w-4 text-blue-400" />
-              <p className="text-xs text-blue-200">
+              <ShieldCheck className="mr-2 h-4 w-4 text-primary" />
+              <p className="text-xs text-muted-foreground">
                 Secured with end-to-end encryption
               </p>
             </div>

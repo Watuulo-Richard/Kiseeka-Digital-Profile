@@ -26,22 +26,37 @@ export const workExperienceSchema = z.object({
   startDate: z.string().min(1, "Start date is required"),
   endDate: z.string().min(1, "End date is required"),
   description: z.string().min(1, "Description must be at least 1 character"),
-  portfolioId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type WorkExperienceFormTypes = z.infer<typeof workExperienceSchema>;
 
 // Zod schema for education validation
-export const EducationSchema = z.object({
-  institution: z.string().min(1, "Education is required"),
-  // .max(100, 'Education must be less than 100 characters'),
-  educationLevel: z.string().min(1, "Education level is required"),
-  // .max(100, 'Education level must be less than 100 characters'),
-  startDate: z.string().date(),
-  endDate: z.string().date(),
-  description: z.string().min(1, "Description must be at least one character"),
-  portfolioId: z.string().optional(),
-});
+export const EducationSchema = z
+  .object({
+    institution: z.string().min(1, "Institution is required"),
+    educationLevel: z.string().min(1, "Education level is required"),
+    startDate: z.string().date("Start date must be a valid date"),
+    endDate: z
+      .string()
+      .date("End date must be a valid date")
+      .or(z.literal(""))
+      .optional(),
+    currentlyStudying: z.boolean().optional(),
+    description: z
+      .string()
+      .min(1, "Description must be at least one character"),
+    userId: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.currentlyStudying && !data.endDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endDate"],
+        message: "End date is required unless you are currently studying here.",
+      });
+    }
+  });
 
 export type EducationFormTypes = z.infer<typeof EducationSchema>;
 
@@ -57,7 +72,7 @@ export const ProjectsSchema = z.object({
     .max(500, "Description must be less than 500 characters")
     .optional(),
   url: z.string().optional(),
-  portfolioId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type ProjectsFormTypes = z.infer<typeof ProjectsSchema>;
@@ -70,7 +85,7 @@ export const SkillSchema = z.object({
     .max(100, "Project title must be less than 100 characters"),
   level: z.coerce.number(),
   description: z.string(),
-  portfolioId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type SkillFormTypes = z.infer<typeof SkillSchema>;
@@ -95,7 +110,7 @@ export const TestimonialSchema = z.object({
     .string()
     .min(10, "Description must be at least 10 characters")
     .max(500, "Description must be less than 500 characters"),
-  portfolioId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type TestimonialFormTypes = z.infer<typeof TestimonialSchema>;
@@ -109,7 +124,7 @@ export const BlogPostsCategorySchema = z.object({
   slug: z.string().optional(),
   description: z.string().min(10, "Description must be at least 10 characters"),
   // .max(500, "Description must be less than 500 characters"),
-  portfolioId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type BlogPostsCategoryFormTypes = z.infer<
@@ -135,7 +150,7 @@ export const BlogPostsSchema = z.object({
   image: z.string().optional(),
   featured: z.boolean().optional(),
   blogPostsCategoryId: z.string().optional(),
-  portfolioId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type BlogPostsFormTypes = z.infer<typeof BlogPostsSchema>;
@@ -156,7 +171,7 @@ export const CommentSchema = z.object({
     .min(10, "Viewer Comment must be at least 10 characters")
     .max(500, "Viewer Comment must be less than 500 characters"),
   blogPostId: z.string().optional(),
-  portfolioId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type CommentFormTypes = z.infer<typeof CommentSchema>;
@@ -180,7 +195,7 @@ export const EmailSchema = z.object({
     .string()
     .min(1, "Message must be at least 10 characters")
     .max(500, "Message must be less than 500 characters"),
-  portfolioId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export type EmailFormTypes = z.infer<typeof EmailSchema>;

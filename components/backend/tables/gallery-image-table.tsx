@@ -111,10 +111,10 @@ function SortableHead({
 
 export default function GalleryImagesTable({
   title,
-  portfolioId,
+  userId,
 }: {
   title: string;
-  portfolioId: string;
+  userId: string;
 }) {
   const {
     listGalleryImages,
@@ -669,7 +669,7 @@ export default function GalleryImagesTable({
 
       {/* Add / Edit dialog */}
       <GalleryForm
-        portfolioId={portfolioId}
+        userId={userId}
         galleryImageId={editingImageId ?? undefined}
         open={formOpen}
         onOpenChange={(open) => {

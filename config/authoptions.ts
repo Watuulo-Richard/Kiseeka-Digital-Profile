@@ -7,8 +7,6 @@ import LinkedInProvider from 'next-auth/providers/linkedin';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { JWT } from 'next-auth/jwt';
 import { prismaClient } from '@/lib/db';
-// Remove this line - you don't need the Prisma type here
-// import { Prisma } from '@/lib/generated/prisma';
 
 export const authOptions: NextAuthOptions = {
   // Fix: Pass prismaClient instead of Prisma

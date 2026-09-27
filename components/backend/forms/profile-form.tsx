@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Portfolio } from '@prisma/client';
+import { User as PrismaUser } from '@prisma/client';
 import ImageInput from '../image-upload';
 import { baseUrl } from '@/types/type';
 import {
@@ -27,7 +27,7 @@ export default function ProfileForm({
   userPortfolio,
 }: {
   userId: string;
-  userPortfolio: Portfolio | null;
+  userPortfolio: PrismaUser | null;
 }) {
   const {
     register,
@@ -37,8 +37,8 @@ export default function ProfileForm({
   } = useForm<ProfileFormTypes>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      title: userPortfolio?.title,
-      bio: userPortfolio?.bio,
+      title: userPortfolio?.title ?? '',
+      bio: userPortfolio?.bio ?? '',
       profileImage: userPortfolio?.profileImage || '/placeholder.svg',
     },
   });

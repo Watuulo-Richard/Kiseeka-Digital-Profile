@@ -4,7 +4,7 @@ import { EducationFormTypes, EducationSchema } from '@/schema/schema';
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
 import { format } from 'date-fns';
-import { Education, Portfolio } from '@prisma/client';
+import { Education, User } from '@prisma/client';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -32,7 +32,7 @@ export default function EducationForm({
   portfolio,
   educationBackground,
 }: {
-  portfolio: Portfolio;
+  portfolio: User;
   educationBackground: Education | null;
 }) {
   const formatDate = (date: Date | string) => {
@@ -76,7 +76,7 @@ export default function EducationForm({
   async function handleEducationOnSubmit(
     EducationFormData: EducationFormTypes,
   ) {
-    EducationFormData.portfolioId = portfolio.id;
+    EducationFormData.userId = portfolio.id;
     setLoading(true);
     try {
       const response = await fetch(`${baseUrl}/api/v1/educationAPI`, {

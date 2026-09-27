@@ -1,13 +1,15 @@
+"use client";
+
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { Card, CardContent } from '@/components/ui/card';
 import { BadgeDollarSign } from './finance';
-import { Portfolio } from '@prisma/client';
+import { User } from '@prisma/client';
 import { ChartPie } from './chart-pie';
 import Globe1 from './globe-component';
 import { Users } from './users';
 import { Globe } from './globe';
 
-export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
+export default function About({fetchedProfile}:{fetchedProfile: User}) {
   const features = [
     {
       icon: <BadgeDollarSign className="h-10 w-10 text-primary" />,
@@ -41,16 +43,16 @@ export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
         <div className="container px-4 md:px-6 mx-auto">
           <div className="space-y-12">
             <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-8 lg:gap-12">
-              <div className="flex-1 lg:w-[60%]">
+              <div className="flex-1 lg:w-[70%]">
                 <div className="space-y-4 text-center md:text-start">
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                     About Me
                   </h2>
                 </div>
 
-                <div className="mx-auto max-w-3xl text-center md:mx-0 md:text-start mt-6">
+                <div className="mx-auto max-w-4xl text-center md:mx-0 md:text-start mt-6">
                   <TextGenerateEffect
-                    words={fetchedProfile.bio}
+                    words={fetchedProfile.bio ?? ''}
                     className="font-normal"
                     textClassName="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed"
                     staggerDelay={0.04}
@@ -58,7 +60,7 @@ export default function About({fetchedProfile}:{fetchedProfile: Portfolio}) {
                 </div>
               </div>
 
-              <div className="flex-shrink-0 lg:w-[40%] flex justify-center lg:justify-end">
+              <div className="flex-shrink-0 lg:w-[30%] flex justify-center lg:justify-end">
                 <div className="w-full max-w-md lg:max-w-none">
                   <Globe1 />
                 </div>

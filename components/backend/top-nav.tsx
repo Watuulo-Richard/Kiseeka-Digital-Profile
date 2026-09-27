@@ -17,7 +17,7 @@ export default function TopNav({session}:{session:Session}) {
   const breadcrumbs: BreadcrumbItem[] = [
     { label: "dashboard", href: "/dashboard" },
     { label: "analytics", href: "#" },
-    { label: "profile", href: "/dashboard/profile-form" },
+    { label: "profile", href: "/dashboard/user-profile" },
     { label: "work experience", href: "/dashboard/work-experience" },
   ]
 
@@ -56,7 +56,7 @@ export default function TopNav({session}:{session:Session}) {
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none">
             <Image
-              src={ session.user.image || "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png"}
+              src={ session.user.image || "/PIUS-PROFILE.jpg"}
               alt="User avatar"
               width={28}
               height={28}

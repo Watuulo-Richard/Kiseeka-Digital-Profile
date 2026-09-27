@@ -1,15 +1,21 @@
 export const dynamic = 'force-dynamic'
 import GalleryImagesTable from '@/components/backend/tables/gallery-image-table';
-import { getPortfolio } from '@/actions/actions';
+import { authOptions } from '@/config/authoptions';
+import { getServerSession } from 'next-auth';
 
 export default async function GalleryPage() {
-  const portfolio = await getPortfolio();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user.id;
+
+  if (!userId) {
+    return null;
+  }
 
   return (
     <div className="pt-6">
       <GalleryImagesTable
         title="Gallery Images"
-        portfolioId={portfolio[0]?.id ?? ''}
+        userId={userId}
       />
     </div>
   );

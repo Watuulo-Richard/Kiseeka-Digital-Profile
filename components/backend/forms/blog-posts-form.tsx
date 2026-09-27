@@ -27,7 +27,7 @@ import { BlogPostsFormTypes, BlogPostsSchema } from "@/schema/schema";
 import ImageInput from "../image-upload";
 import { toast } from "sonner";
 import { baseUrl, BlogPostAndRelatedBlogPostType, BlogPostCommentTypes } from "@/types/type";
-import { BlogPostCategory, Portfolio } from "@prisma/client";
+import { BlogPostCategory, User } from "@prisma/client";
 import { Users } from "@/components/frontend/users";
 import { DateAndTime } from "../date-and-time";
 import {
@@ -49,7 +49,7 @@ export default function BlogPostsForm({
   userBlogPostsCategories,
   userBlogPost,
 }: {
-  portfolio: Portfolio;
+  portfolio: User;
   userBlogPostsCategories: BlogPostCategory[];
   userBlogPost: BlogPostAndRelatedBlogPostType | null;
 }) {
@@ -109,7 +109,7 @@ const router = useRouter()
 
     BlogPostsFormData.image = imageUrl;
     BlogPostsFormData.slug = generateSlug(BlogPostsFormData.title);
-    BlogPostsFormData.portfolioId = portfolio.id;
+    BlogPostsFormData.userId = portfolio.id;
     BlogPostsFormData.blogPostsCategoryId = blogCategory;
     BlogPostsFormData.content = blogContent;
     BlogPostsFormData.featured = isFeatured;

@@ -18,10 +18,10 @@ import {
   TableProperties,
   X,
 } from "lucide-react"
-import { FileChartColumn } from "./file-icon"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
+import { FileChartColumn } from "./file-icon"
+import { cn } from "@/lib/utils"
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -96,8 +96,8 @@ export default function Sidebar() {
             >
               <div className="rounded-full overflow-hidden ring-2 ring-gradient-text dark:ring-[#2B2B30] w-8 h-8 sm:w-10 sm:h-10 lg:w-8 lg:h-8 flex-shrink-0">
                 <Image
-                  src="https://j9v2s0d9fs.ufs.sh/f/lPsbSsZAX9SYdNnmqvWekY0wghnZXPrJQ7R45bjNmFBu8SCx"
-                  alt="Kiseeka Pius"
+                  src="/PIUS-PROFILE.jpg"
+                  alt="Kiseka Pius"
                   width={40}
                   height={40}
                   className="w-full h-full object-cover"
@@ -144,28 +144,28 @@ export default function Sidebar() {
                     Form Suite
                   </div>
                   <div className="space-y-1">
-                    <NavItem href="/dashboard/profile-form" icon={CircleUser}>
+                    <NavItem href="/dashboard/user-profile" icon={CircleUser}>
                       Profile
                     </NavItem>
                     <NavItem href="/dashboard/work-experience" icon={BriefcaseBusiness}>
                       Work Experience
                     </NavItem>
-                    <NavItem href="/dashboard/education-form" icon={GraduationCap}>
+                    <NavItem href="/dashboard/education" icon={GraduationCap}>
                       Education
                     </NavItem>
-                    <NavItem href="/dashboard/projects-form" icon={GlobeLock}>
+                    <NavItem href="/dashboard/projects" icon={GlobeLock}>
                       Projects
                     </NavItem>
-                    <NavItem href="/dashboard/skills-form" icon={Hammer}>
+                    <NavItem href="/dashboard/skills" icon={Hammer}>
                       Skill
                     </NavItem>
-                    <NavItem href="/dashboard/testimonial-form" icon={Users}>
+                    <NavItem href="/dashboard/testimonial" icon={Users}>
                       Testimonial
                     </NavItem>
-                    <NavItem href="/dashboard/blog-posts-category" icon={BookOpen}>
+                    <NavItem href="/dashboard/blog-categories" icon={BookOpen}>
                       Blog Category
                     </NavItem>
-                    <NavItem href="/dashboard/blog-posts-form" icon={FileChartColumn}>
+                    <NavItem href="/dashboard/blog-posts" icon={FileChartColumn}>
                       Blog Posts
                     </NavItem>
                   </div>
@@ -177,25 +177,25 @@ export default function Sidebar() {
                     Table Overview
                   </div>
                   <div className="space-y-1">
-                    <NavItem href="/dashboard/view-work-experiences" icon={TableProperties}>
+                    <NavItem href="/dashboard/work-experience" icon={TableProperties}>
                       Work Experiences
                     </NavItem>
-                    <NavItem href="/dashboard/view-education-backgrounds" icon={TableProperties}>
+                    <NavItem href="/dashboard/education" icon={TableProperties}>
                       Education
                     </NavItem>
-                    <NavItem href="/dashboard/view-projects" icon={TableProperties}>
+                    <NavItem href="/dashboard/projects" icon={TableProperties}>
                       Projects
                     </NavItem>
-                    <NavItem href="/dashboard/view-skills" icon={TableProperties}>
+                    <NavItem href="/dashboard/skills" icon={TableProperties}>
                       Skills
                     </NavItem>
-                    <NavItem href="/dashboard/view-testimonials" icon={TableProperties}>
+                    <NavItem href="/dashboard/testimonial" icon={TableProperties}>
                       Testimonials
                     </NavItem>
-                    <NavItem href="/dashboard/view-blog-posts-categories" icon={TableProperties}>
+                    <NavItem href="/dashboard/blog-categories" icon={TableProperties}>
                       Blog Categories
                     </NavItem>
-                    <NavItem href="/dashboard/view-blog-posts" icon={TableProperties}>
+                    <NavItem href="/dashboard/blog-posts" icon={TableProperties}>
                       Blog Posts
                     </NavItem>
                     <NavItem href="/dashboard/view-gallery" icon={TableProperties}>

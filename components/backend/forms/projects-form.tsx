@@ -5,7 +5,7 @@ import { ProjectsFormTypes, ProjectsSchema } from '@/schema/schema';
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Portfolio, Project } from '@prisma/client';
+import { User, Project } from '@prisma/client';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,7 +23,7 @@ export default function ProjectsForm({
   portfolio,
   project,
 }: {
-  portfolio: Portfolio;
+  portfolio: User;
   project: Project | null;
 }) {
   const {
@@ -43,7 +43,7 @@ export default function ProjectsForm({
   const [loading, setLoading] = useState(false);
 
   async function handleEducationOnSubmit(ProjectFormData: ProjectsFormTypes) {
-    ProjectFormData.portfolioId = portfolio.id;
+    ProjectFormData.userId = portfolio.id;
     setLoading(true);
     if (project) {
       try {

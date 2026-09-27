@@ -1,18 +1,22 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowRight, Loader2, Linkedin, Twitter } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { userDetailsSchema, UserDetailTypes } from '@/schema/schema';
-import { toast } from 'sonner';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { baseUrl } from '@/types/type';
-import { useRouter } from 'next/navigation';
-import { UserRole } from '@prisma/client';
+import { ArrowRight, Loader2, Linkedin, Twitter } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userDetailsSchema, UserDetailTypes } from "@/schema/schema";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { UserRole } from "@prisma/client";
+import { signIn } from "next-auth/react";
+import { motion } from "framer-motion";
+import { baseUrl } from "@/types/type";
+import Link from "next/link";
 
-export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
+export default function SignUp({ role = "USER" }: { role?: UserRole }) {
   const [loading, setLoading] = useState(false);
 
   const {
@@ -23,10 +27,10 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
   } = useForm<UserDetailTypes>({
     resolver: zodResolver(userDetailsSchema),
     defaultValues: {
-      role: 'USER',
-      fullName: '',
-      email: '',
-      password: '',
+      role: "USER",
+      fullName: "",
+      email: "",
+      password: "",
     },
   });
 
@@ -36,17 +40,17 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
     try {
       setLoading(true);
       const response = await fetch(`${baseUrl}/api/v1/signupAPI`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userDetails),
       });
       console.log(response);
       if (response.ok) {
         setLoading(false);
         console.log(response);
-        toast.success('Account Created successfully', {
+        toast.success("Account Created successfully", {
           description:
-            'Your has been created, a code has been sent to your email please Verify',
+            "Your has been created, a code has been sent to your email please Verify",
         });
         const createdUserDetails = await response.json();
         router.push(`/verification-page/${createdUserDetails.data.id}`);
@@ -54,23 +58,36 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
       } else {
         setLoading(false);
         toast.error(
-          '❌ Error! Something went wrong while creating the User. Please try again or contact support. ⚠️',
+          "❌ Error! Something went wrong while creating the User. Please try again or contact support. ⚠️",
         );
         console.log(response);
       }
     } catch (error) {
       setLoading(false);
       toast.error(
-        '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
+        "❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️",
       );
       console.log(error);
     }
   }
 
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+    const [isLinkedInLoading, setIsLinkedInLoading] = useState(false);
+  
+    function handleGoogleSignIn() {
+      setIsGoogleLoading(true);
+      signIn('google', { callbackUrl: '/dashboard' });
+    }
+    
+    function handleLinkedInSignIn() {
+      setIsLinkedInLoading(true);
+      signIn('linkedin', { callbackUrl: '/dashboard' });
+    }
+
   return (
-    <div className="flex min-h-[500px] w-full">
+    <div className="flex min-h-screen w-full">
       {/* Left side - Form */}
-      <div className="flex w-full flex-col items-center justify-center p-4 lg:w-1/2">
+      <div className="flex w-full flex-col items-center justify-center bg-background p-4 lg:w-1/2">
         <motion.div
           className="w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
@@ -79,9 +96,9 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
         >
           <div className="mb-3">
             <motion.div
-              className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-600"
+              className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground"
               whileHover={{ scale: 1.05, rotate: 5 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <svg
                 width="18"
@@ -92,18 +109,19 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
               >
                 <path
                   d="M12 2L20 7V17L12 22L4 17V7L12 2Z"
-                  stroke="white"
+                  stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
             </motion.div>
-            <h1 className="text-lg font-bold text-gray-900 sm:text-xl">
+            <h1 className="text-lg font-bold text-foreground sm:text-xl">
               Create your account
             </h1>
-            <p className="mt-1 text-xs text-gray-600">
-              After signing up, verify your email with the link sent to your inbox.
+            <p className="mt-1 text-xs text-muted-foreground">
+              After signing up, verify your email with the link sent to your
+              inbox.
             </p>
           </div>
 
@@ -111,19 +129,14 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             onSubmit={handleSubmit(handleSignUpOnSubmit)}
             className="space-y-4"
           >
-            <div>
-              <label
-                htmlFor="fullName"
-                className="mb-1 block text-xs font-medium text-gray-700 sm:text-sm"
-              >
-                Full Name
-              </label>
-              <input
-                {...register('fullName', { required: true })}
+            <div className="grid gap-2">
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input
+                {...register("fullName", { required: true })}
                 id="fullName"
                 type="text"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500 sm:py-2.5"
                 placeholder="Watuulo Richard"
+                autoComplete="name"
               />
               {errors.fullName && (
                 <span className="text-xs text-destructive sm:text-sm">
@@ -132,19 +145,14 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
               )}
             </div>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-1 block text-xs font-medium text-gray-700 sm:text-sm"
-              >
-                Email Address
-              </label>
-              <input
-                {...register('email', { required: true })}
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                {...register("email", { required: true })}
                 id="email"
                 type="email"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500 sm:py-2.5"
                 placeholder="name@example.com"
+                autoComplete="email"
               />
               {errors.email && (
                 <span className="text-xs text-destructive sm:text-sm">
@@ -153,19 +161,14 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
               )}
             </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-1 block text-xs font-medium text-gray-700 sm:text-sm"
-              >
-                Password
-              </label>
-              <input
-                {...register('password', { required: true })}
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                {...register("password", { required: true })}
                 id="password"
                 type="password"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-indigo-500 sm:py-2.5"
                 placeholder="••••••••"
+                autoComplete="new-password"
               />
               {errors.password && (
                 <span className="text-xs text-destructive sm:text-sm">
@@ -175,65 +178,142 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             </div>
 
             {loading ? (
-              <motion.button
-                type="submit"
-                className="flex w-full items-center justify-center rounded-lg bg-indigo-600 py-2 text-xs font-medium text-white disabled:cursor-not-allowed sm:py-2.5 sm:text-sm"
+              <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Creating Account...
-                <Loader2 className="ml-1.5 h-3.5 w-3.5 animate-spin sm:ml-2 sm:h-4 sm:w-4" />
-              </motion.button>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-lg"
+                >
+                  Creating Account...
+                  <Loader2 className="ml-1.5 h-4 w-4 animate-spin" />
+                </Button>
+              </motion.div>
             ) : (
-              <motion.button
-                type="submit"
-                className="flex w-full items-center justify-center rounded-lg bg-indigo-600 py-2 text-xs font-medium text-white sm:py-2.5 sm:text-sm"
+              <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Create Account
-                <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4" />
-              </motion.button>
+                <Button type="submit" className="w-full rounded-lg">
+                  Create Account
+                  <ArrowRight className="ml-1.5 h-4 w-4" />
+                </Button>
+              </motion.div>
             )}
           </form>
 
           <div className="mt-3">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+                <div className="w-full border-t border-border"></div>
               </div>
               <div className="relative flex justify-center text-xs sm:text-sm">
-                <span className="bg-white px-2 text-gray-500">
+                <span className="bg-background px-2 text-muted-foreground">
                   Or continue with
                 </span>
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-2.5">
+            {/* <div className="mt-4 grid grid-cols-2 gap-2.5">
               <motion.button
                 type="button"
-                className="inline-flex w-full justify-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-card-foreground shadow-sm hover:bg-muted"
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <Linkedin className="h-4 w-4 text-gray-700 sm:h-5 sm:w-5" />
+                <Linkedin className="h-4 w-4 text-[#0A66C2] sm:h-5 sm:w-5" />
               </motion.button>
               <motion.button
                 type="button"
-                className="inline-flex w-full justify-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-card-foreground shadow-sm hover:bg-muted"
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <Twitter className="h-4 w-4 text-blue-400 sm:h-5 sm:w-5" />
+                <Twitter className="h-4 w-4 text-[#1DA1F2] sm:h-5 sm:w-5" />
+              </motion.button>
+            </div> */}
+            <div className="grid grid-cols-2 gap-2.5">
+              <motion.button
+                onClick={handleGoogleSignIn}
+                type="button"
+                disabled={isGoogleLoading}
+                className="flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-70"
+                whileHover={{
+                  scale: isGoogleLoading ? 1 : 1.05,
+                  y: isGoogleLoading ? 0 : -2,
+                }}
+                whileTap={{ scale: isGoogleLoading ? 1 : 0.95 }}
+              >
+                {isGoogleLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-[#F2B5A0] sm:h-5 sm:w-5" />
+                ) : (
+                  <svg
+                    width="18"
+                    height="18"
+                    className="sm:h-5 sm:w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.71 17.57V20.34H19.28C21.36 18.42 22.56 15.6 22.56 12.25Z"
+                      fill="#4285F4"
+                    />
+                    <path
+                      d="M12 23C14.97 23 17.46 22.02 19.28 20.34L15.71 17.57C14.73 18.23 13.48 18.63 12 18.63C9.13 18.63 6.72 16.69 5.82 14.09H2.12V16.95C3.94 20.53 7.69 23 12 23Z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M5.82 14.09C5.6 13.43 5.48 12.73 5.48 12C5.48 11.27 5.6 10.57 5.82 9.91V7.05H2.12C1.41 8.57 1 10.24 1 12C1 13.76 1.41 15.43 2.12 16.95L5.82 14.09Z"
+                      fill="#FBBC05"
+                    />
+                    <path
+                      d="M12 5.37C13.62 5.37 15.06 5.94 16.21 7.02L19.36 3.87C17.45 2.09 14.97 1 12 1C7.69 1 3.94 3.47 2.12 7.05L5.82 9.91C6.72 7.31 9.13 5.37 12 5.37Z"
+                      fill="#EA4335"
+                    />
+                  </svg>
+                )}
+              </motion.button>
+
+              <motion.button
+                onClick={handleLinkedInSignIn}
+                type="button"
+                disabled={isLinkedInLoading}
+                className="flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-70"
+                whileHover={{
+                  scale: isLinkedInLoading ? 1 : 1.05,
+                  y: isLinkedInLoading ? 0 : -2,
+                }}
+                whileTap={{ scale: isLinkedInLoading ? 1 : 0.95 }}
+              >
+                {isLinkedInLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-[#0077B5] sm:h-5 sm:w-5" />
+                ) : (
+                  <svg
+                    width="18"
+                    height="18"
+                    className="sm:h-5 sm:w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M20.447 20.452H16.893V14.883C16.893 13.555 16.866 11.846 15.041 11.846C13.188 11.846 12.905 13.291 12.905 14.785V20.452H9.351V9H12.765V10.561H12.811C13.288 9.661 14.448 8.711 16.181 8.711C19.782 8.711 20.448 11.081 20.448 14.166V20.452H20.447ZM5.337 7.433C4.193 7.433 3.274 6.507 3.274 5.366C3.274 4.225 4.194 3.299 5.337 3.299C6.477 3.299 7.401 4.225 7.401 5.366C7.401 6.507 6.476 7.433 5.337 7.433ZM7.119 20.452H3.555V9H7.119V20.452ZM22.225 0H1.771C0.792 0 0 0.774 0 1.729V22.271C0 23.227 0.792 24 1.771 24H22.222C23.2 24 24 23.227 24 22.271V1.729C24 0.774 23.2 0 22.222 0H22.225Z"
+                      fill="#0077B5"
+                    />
+                  </svg>
+                )}
               </motion.button>
             </div>
           </div>
 
-          <p className="mt-5 text-center text-xs text-gray-600 sm:text-sm">
-            Already have an account?{' '}
+          <p className="mt-5 text-center text-xs text-muted-foreground sm:text-sm">
+            Already have an account?{" "}
             <Link
               href="/sign-in-page"
-              className="font-medium text-indigo-600 transition-colors hover:text-indigo-500"
+              className="font-medium text-primary transition-colors hover:text-primary/80"
             >
               Sign in
             </Link>
@@ -242,7 +322,7 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
       </div>
 
       {/* Right side - Illustration */}
-      <div className="hidden w-1/2 items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-700 p-6 lg:flex">
+      <div className="hidden w-1/2 items-center justify-center bg-gradient-to-br from-[#2A1215] via-[#4E2222] to-[#94523F] p-6 lg:flex">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -250,7 +330,7 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
           className="relative w-full max-w-md"
         >
           <motion.div
-            className="absolute -left-3 top-0 h-48 w-48 rounded-full bg-purple-300 opacity-70 mix-blend-multiply blur-xl filter"
+            className="absolute -left-3 top-0 h-48 w-48 rounded-full bg-rose-300/40 mix-blend-multiply blur-xl filter"
             animate={{
               x: [0, 30, 0],
               y: [0, 40, 0],
@@ -258,11 +338,11 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             transition={{
               repeat: Number.POSITIVE_INFINITY,
               duration: 8,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
           <motion.div
-            className="absolute -right-3 top-0 h-48 w-48 rounded-full bg-indigo-300 opacity-70 mix-blend-multiply blur-xl filter"
+            className="absolute -right-3 top-0 h-48 w-48 rounded-full bg-[#F2B5A0]/40 mix-blend-multiply blur-xl filter"
             animate={{
               x: [0, -20, 0],
               y: [0, 30, 0],
@@ -270,11 +350,11 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             transition={{
               repeat: Number.POSITIVE_INFINITY,
               duration: 10,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
           <motion.div
-            className="absolute -bottom-6 left-16 h-48 w-48 rounded-full bg-pink-300 opacity-70 mix-blend-multiply blur-xl filter"
+            className="absolute -bottom-6 left-16 h-48 w-48 rounded-full bg-rose-400/40 mix-blend-multiply blur-xl filter"
             animate={{
               x: [0, 15, 0],
               y: [0, -20, 0],
@@ -282,7 +362,7 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             transition={{
               repeat: Number.POSITIVE_INFINITY,
               duration: 9,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
 
@@ -366,7 +446,7 @@ export default function SignUp({ role = 'USER' }: { role?: UserRole }) {
             <h2 className="mb-2 text-lg font-bold sm:text-xl">
               Welcome to Kiseka Pius' Digital Space
             </h2>
-            <p className="text-sm text-white opacity-80">
+            <p className="text-sm text-white/80">
               Explore a portfolio crafted with passion, precision, and purpose.
             </p>
           </motion.div>

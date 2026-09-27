@@ -6,7 +6,7 @@ export type BlogPostTypes = {
   createdAt: Date;
   updatedAt: Date;
   image: string;
-  portfolioId: string;
+  userId: string;
   slug: string;
   publishDate: Date;
   excerpt: string;
@@ -18,10 +18,10 @@ export type BlogPostTypes = {
     createdAt: Date;
     updatedAt: Date;
     description: string;
-    portfolioId: string;
+    userId: string;
     slug: string;
   };
-  portfolio: {
+  user: {
     id: string;
     title: string;
     bio: string;
@@ -33,7 +33,7 @@ export type BlogPostTypes = {
       email: string;
       viewerComment: string;
       blogPostId: string;
-      portfolioId: string;
+      userId: string;
       createdAt: Date;
       updatedAt: Date;
     }[];
@@ -48,8 +48,8 @@ export type BlogPostCommentTypes = {
   createdAt: Date;
   updatedAt: Date;
   image: string;
-  portfolioId: string;
-  portfolio: {
+  userId: string;
+  user: {
     id: string;
     title: string;
     bio: string;
@@ -61,7 +61,7 @@ export type BlogPostCommentTypes = {
       email: string;
       viewerComment: string;
       blogPostId: string;
-      portfolioId: string;
+      userId: string;
       createdAt: Date;
       updatedAt: Date;
     }[];
@@ -79,13 +79,13 @@ export type BlogPostCommentTypes = {
     createdAt: Date;
     updatedAt: Date;
     description: string;
-    portfolioId: string;
+    userId: string;
     slug: string;
   }[];
   comments: {
     name: string;
     id: string;
-    portfolioId: string;
+    userId: string;
     createdAt: Date;
     updatedAt: Date;
     email: string;
@@ -101,7 +101,7 @@ export type BlogPostAndRelatedBlogPostType = {
     createdAt: Date;
     updatedAt: Date;
     image: string;
-    portfolioId: string;
+    userId: string;
     slug: string;
     publishDate: Date;
     excerpt: string;
@@ -114,10 +114,10 @@ export type BlogPostAndRelatedBlogPostType = {
       createdAt: Date;
       updatedAt: Date;
       description: string;
-      portfolioId: string;
+      userId: string;
       slug: string;
     }[];
-    portfolio: {
+    user: {
       id: string;
       title: string;
       bio: string;
@@ -129,7 +129,7 @@ export type BlogPostAndRelatedBlogPostType = {
         email: string;
         viewerComment: string;
         blogPostId: string;
-        portfolioId: string;
+        userId: string;
         createdAt: Date;
         updatedAt: Date;
       }[];

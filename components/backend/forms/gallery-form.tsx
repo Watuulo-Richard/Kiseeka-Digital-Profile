@@ -25,7 +25,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGalleryImages, useSingleGalleryImageQuery } from "@/hooks/use-gallery";
 
 type GalleryFormProps = {
-  portfolioId: string;
+  userId: string;
   galleryImageId?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -34,11 +34,11 @@ type GalleryFormProps = {
 const EMPTY_DEFAULTS: GalleryImageSchemaType = {
   src: "",
   alt: "",
-  portfolioId: "",
+  userId: "",
 };
 
 export default function GalleryForm({
-  portfolioId,
+  userId,
   galleryImageId,
   open,
   onOpenChange,
@@ -69,7 +69,7 @@ export default function GalleryForm({
         reset({
           src: galleryImage.src,
           alt: galleryImage.alt,
-          portfolioId: galleryImage.portfolioId,
+          userId: galleryImage.userId,
         });
         setImageUrl(galleryImage.src);
       }
@@ -97,7 +97,7 @@ export default function GalleryForm({
     const payload: GalleryImageSchemaType = {
       src: imageUrl,
       alt: data.alt,
-      portfolioId,
+      userId,
     };
 
     if (galleryImageId) {

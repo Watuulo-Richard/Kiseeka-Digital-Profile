@@ -3,7 +3,7 @@
 import { RiTwitterXLine } from "react-icons/ri";
 import { Download, Github, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Portfolio } from "@prisma/client";
+import { User } from "@prisma/client";
 import CardFlip from "./card-flip";
 import Link from "next/link";
 import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
@@ -11,7 +11,7 @@ import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 export default function Hero({
   fetchedProfile,
 }: {
-  fetchedProfile: Portfolio;
+  fetchedProfile: User;
 }) {
   return (
     // <section id="home" className="py-20 md:py-32 flex flex-col items-center justify-center min-h-[90vh]">
@@ -98,7 +98,7 @@ export default function Hero({
                 <LayoutTextFlip
                   text="I'm "
                   words={[
-                    fetchedProfile.title.split(" ").join("-"),
+                    (fetchedProfile.title ?? "").split(" ").join("-"),
                     "Professional-Auditor.",
                   ]}
                   wordClassName="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
@@ -137,7 +137,8 @@ export default function Hero({
                 className="rounded-full bg-transparent"
               >
                 <a
-                  href="https://www.papermark.com/view/cmcxe0mdn0001ie049oxs9mig"
+                  // href="https://www.papermark.com/view/cmcxe0mdn0001ie049oxs9mig"
+                  href="https://www.papermark.com/view/cmujss6560003l6041cv7cs7a"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

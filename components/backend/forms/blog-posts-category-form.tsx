@@ -8,7 +8,7 @@ import { FileText, Info, SaveAll, Loader } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import React, { useState } from "react";
-import { BlogPostCategory, Portfolio } from "@prisma/client";
+import { BlogPostCategory, User } from "@prisma/client";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Users } from "@/components/frontend/users";
@@ -29,7 +29,7 @@ export default function BlogPostsCategoryForm({
   portfolio,
   userBlogPostsCategory,
 }: {
-  portfolio: Portfolio;
+  portfolio: User;
   userBlogPostsCategory: BlogPostCategory | null;
 }) {
   const {
@@ -55,7 +55,7 @@ export default function BlogPostsCategoryForm({
       .split(" ")
       .join("-")
       .toLocaleLowerCase();
-    BlogPostsCategoryFormData.portfolioId = portfolio.id;
+    BlogPostsCategoryFormData.userId = portfolio.id;
 
     if (userBlogPostsCategory) {
       try {

@@ -3,7 +3,7 @@ export type GalleryImageBaseType = {
   id:          string;
   src:         string;
   alt:         string;
-  portfolioId: string;
+  userId: string;
   createdAt:   Date;
   updatedAt:   Date;
 };
@@ -14,7 +14,7 @@ export type CreateGalleryImageType = Omit<
 >;
 
 export type UpdateGalleryImageType = Partial<
-  Omit<GalleryImageBaseType, "id" | "portfolioId" | "createdAt" | "updatedAt">
+  Omit<GalleryImageBaseType, "id" | "userId" | "createdAt" | "updatedAt">
 >;
 
 /* Query Response: Get All Gallery Images */

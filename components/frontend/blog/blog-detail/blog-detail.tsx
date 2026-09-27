@@ -173,7 +173,7 @@ export default function BlogPostDetail({
 
         <aside className="hidden lg:block w-[350px] flex-shrink-0 p-6 lg:p-10 bg-muted/60 dark:bg-muted/20">
           <div className="sticky top-20 space-y-8">
-            {blog.blogPost?.portfolio.title && <AuthorCard blog={blog} />}
+            {blog.blogPost?.user.title && <AuthorCard blog={blog} />}
             <div className="border border-border rounded-lg p-6 bg-card">
               <TableOfContents containerSelector=".prose" />
             </div>

@@ -101,7 +101,7 @@ export default function GalleryImageDetailDialog({
             <div>
               <DetailRow label="Alt Text" value={galleryImage.alt} />
               <DetailRow label="Image ID" value={galleryImage.id} />
-              <DetailRow label="Portfolio ID" value={galleryImage.portfolioId} />
+              <DetailRow label="User ID" value={galleryImage.userId} />
               <DetailRow
                 label="Created On"
                 value={format(new Date(galleryImage.createdAt), "MMM dd, yyyy")}

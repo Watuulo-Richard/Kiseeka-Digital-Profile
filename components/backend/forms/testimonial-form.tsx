@@ -19,7 +19,7 @@ import { TestimonialFormTypes, TestimonialSchema } from '@/schema/schema';
 import ImageInput from '../image-upload';
 import { toast } from 'sonner';
 import { baseUrl } from '@/types/type';
-import { Portfolio, Testimonial } from '@prisma/client';
+import { User, Testimonial } from '@prisma/client';
 import { Users } from '@/components/frontend/users';
 import { useRouter } from 'next/navigation';
 
@@ -27,7 +27,7 @@ export default function TestimonialForm({
   portfolio,
   testimonial,
 }: {
-  portfolio: Portfolio;
+  portfolio: User;
   testimonial: Testimonial | null;
 }) {
   const {
@@ -58,7 +58,7 @@ const router = useRouter()
     }
     setLoading(true);
     (TestimonialData.image = imageUrl),
-      (TestimonialData.portfolioId = portfolio.id);
+      (TestimonialData.userId = portfolio.id);
     // console.log(TestimonialData);
     if (testimonial) {
       try {

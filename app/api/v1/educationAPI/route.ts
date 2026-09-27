@@ -1,80 +1,113 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prismaClient } from '@/lib/db';
+import { prismaClient } from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
+import {
+  GetAllEducationResponse,
+  CreateEducationResponse,
+} from "@/types/education";
 
-export async function POST(request: NextRequest) {
-  // const EducationFormData = await request.json()
-  // console.log(EducationFormData, 'Data Has Reached The API');
+export async function GET(): Promise<NextResponse<GetAllEducationResponse>> {
   try {
-    const EducationFormData = await request.json();
-    const createUserEducationBackground = await prismaClient.education.create({
-      data: {
-        institution: EducationFormData.institution,
-        educationLevel: EducationFormData.educationLevel,
-        startDate: EducationFormData.startDate,
-        endDate: EducationFormData.endDate,
-        description: EducationFormData.description,
-        portfolioId: EducationFormData.portfolioId,
-      },
+    const findUserEducationBackground = await prismaClient.education.findMany({
+      orderBy: { createdAt: "desc" },
     });
+
     return NextResponse.json(
       {
-        data: createUserEducationBackground,
-        error: null,
-        message: 'User Education Background Saved Successfully...!!!✅',
-        status: 201,
+        success: true,
+        data:    findUserEducationBackground,
+        message: "User Education Background Fetched Successfully...✅",
+        error:   null,
+        status:  200,
       },
-      {
-        status: 201,
-      },
+      { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error("Database error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       {
-        data: null,
-        error:
-          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-        message: 'Failed To Save User Work Experience...!!!🥺',
-        status: 500,
+        success: false,
+        data:    [],
+        message: `Failed To Fetch User Education Background: ${errorMessage}`,
+        error:   errorMessage,
+        status:  500,
       },
-      {
-        status: 500,
-      },
+      { status: 500 },
     );
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+): Promise<NextResponse<CreateEducationResponse>> {
   try {
-    const findUserEducationBackground = await prismaClient.education.findMany({
-      orderBy: {
-        createdAt: 'desc',
+    const EducationFormData = await request.json();
+
+    if (!EducationFormData.userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          id:      "",
+          message: "User ID Is Required...!!!🥺😔",
+          error:   "Missing user ID",
+          status:  400,
+        },
+        { status: 400 },
+      );
+    }
+
+    const existingUser = await prismaClient.user.findUnique({
+      where: { id: EducationFormData.userId },
+    });
+
+    if (!existingUser) {
+      return NextResponse.json(
+        {
+          success: false,
+          id:      "",
+          message: "User Not Found...!!!🥺😔",
+          error:   "User not found",
+          status:  404,
+        },
+        { status: 404 },
+      );
+    }
+
+    const createUserEducationBackground = await prismaClient.education.create({
+      data: {
+        institution:    EducationFormData.institution,
+        educationLevel: EducationFormData.educationLevel,
+        startDate:      EducationFormData.startDate,
+        endDate:        EducationFormData.endDate,
+        description:    EducationFormData.description,
+        userId:         EducationFormData.userId,
       },
     });
+
     return NextResponse.json(
       {
-        data: findUserEducationBackground,
-        error: null,
-        message: 'User Education Background Fetched Successfully...!!!✅',
-        status: 200,
+        success: true,
+        id:      createUserEducationBackground.id,
+        message: "User Education Background Saved Successfully...✅",
+        error:   null,
+        status:  201,
       },
-      {
-        status: 200,
-      },
+      { status: 201 },
     );
   } catch (error) {
-    console.log(error);
+    console.error("Database error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
       {
-        data: null,
-        error:
-          '❌ Error! Something went wrong while processing your request. Please try again or contact support. ⚠️',
-        message: 'Failed To Fetch User Education Background...!!!🥺',
-        status: 500,
+        success: false,
+        id:      "",
+        message: `Failed To Save User Education Background: ${errorMessage}`,
+        error:   errorMessage,
+        status:  500,
       },
-      {
-        status: 500,
-      },
+      { status: 500 },
     );
   }
 }

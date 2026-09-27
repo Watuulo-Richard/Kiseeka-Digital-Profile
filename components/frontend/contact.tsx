@@ -8,7 +8,7 @@ import { Instagram, Loader2, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { EmailFormTypes } from '@/schema/schema';
 import { useState } from 'react';
-import { Portfolio } from '@prisma/client';
+import { User } from '@prisma/client';
 import { baseUrl } from '@/types/type';
 import { toast } from 'sonner';
 import { PlaceholdersAndVanishInput } from '@/components/ui/placeholders-and-vanish-input';
@@ -17,7 +17,7 @@ const NAME_PLACEHOLDERS = ['Your full name', "Who's reaching out?", 'e.g. Kiseka
 
 const EMAIL_PLACEHOLDERS = ['you@example.com', 'Where can I reply to?', 'Your email address'];
 
-export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio }) {
+export default function Contact({ fetchedProfile }: { fetchedProfile: User }) {
   const contactInfo = [
     {
       icon: <Mail className="h-6 w-6 text-primary" />,
@@ -57,7 +57,7 @@ export default function Contact({ fetchedProfile }: { fetchedProfile: Portfolio 
   });
 
   async function handleEmailOnSubmit(EmailFormData: EmailFormTypes) {
-    EmailFormData.portfolioId = fetchedProfile.id;
+    EmailFormData.userId = fetchedProfile.id;
     setIsSubmitting(true);
     try {
       const response = await fetch(`${baseUrl}/api/send`, {

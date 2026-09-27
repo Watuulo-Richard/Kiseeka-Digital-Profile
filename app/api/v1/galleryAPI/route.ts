@@ -44,30 +44,30 @@ export async function POST(
   try {
     const galleryImageDetails = await request.json();
 
-    if (!galleryImageDetails.portfolioId) {
+    if (!galleryImageDetails.userId) {
       return NextResponse.json(
         {
           success: false,
           id:      "",
-          message: "Portfolio ID Is Required...!!!🥺😔",
-          error:   "Missing portfolio ID",
+          message: "User ID Is Required...!!!🥺😔",
+          error:   "Missing user ID",
           status:  400,
         },
         { status: 400 },
       );
     }
 
-    const existingPortfolio = await prismaClient.portfolio.findUnique({
-      where: { id: galleryImageDetails.portfolioId },
+    const existingUser = await prismaClient.user.findUnique({
+      where: { id: galleryImageDetails.userId },
     });
 
-    if (!existingPortfolio) {
+    if (!existingUser) {
       return NextResponse.json(
         {
           success: false,
           id:      "",
-          message: "Portfolio Not Found...!!!🥺😔",
-          error:   "Portfolio not found",
+          message: "User Not Found...!!!🥺😔",
+          error:   "User not found",
           status:  404,
         },
         { status: 404 },
@@ -78,7 +78,7 @@ export async function POST(
       data: {
         src:         galleryImageDetails.src,
         alt:         galleryImageDetails.alt,
-        portfolioId: galleryImageDetails.portfolioId,
+        userId: galleryImageDetails.userId,
       },
     });
 

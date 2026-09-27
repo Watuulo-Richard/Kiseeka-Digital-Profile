@@ -45,7 +45,7 @@ function EducationCard({ educationBackground }: { educationBackground: Education
                 <Badge variant="outline">
                   {educationBackground.endDate
                     ? formatDate(educationBackground.endDate)
-                    : ""}
+                    : "Present"}
                 </Badge>
               </div>
             </div>

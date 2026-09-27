@@ -5,7 +5,7 @@ import { UserDetailTypes } from '@/schema/schema';
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { hashSync } from 'bcrypt-ts';
-import EmailTemplate from '@/components/backend/email/email-template';
+import EmailTemplate from '@/components/backend/email/verification-email-template';
 export async function POST(request: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const userDetails: UserDetailTypes = await request.json();
