@@ -24,13 +24,34 @@
     --input: 240 5.9% 90%;
     --ring: 11 76% 80%;
     --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-1: hsl(11 76% 80%);
+    --chart-2: hsl(15 79% 66%);
+    --chart-3: hsl(5 65% 52%);
+    --chart-4: hsl(330 60% 70%);
+    --chart-5: hsl(27 87% 67%);
     --font-mono:
       font-family: "Space Grotesk", sans-serif;
+    --chart-background: transparent;
+    --chart-foreground: hsl(var(--foreground));
+    --chart-foreground-muted: hsl(var(--muted-foreground));
+    --chart-line-primary: hsl(var(--primary));
+    --chart-line-secondary: hsl(15 79% 66%);
+    --chart-crosshair: hsl(var(--muted-foreground));
+    --chart-grid: hsl(var(--border));
+    --chart-brush-border: var(--chart-grid);
+    --chart-tooltip-background: hsl(var(--popover) / 0.92);
+    --chart-tooltip-foreground: hsl(var(--popover-foreground));
+    --chart-tooltip-muted: hsl(var(--muted-foreground));
+    --chart-marker-background: hsl(var(--card));
+    --chart-marker-border: hsl(var(--border));
+    --chart-marker-foreground: hsl(var(--foreground));
+    --chart-label: hsl(var(--muted-foreground));
+    --chart-scale-01: oklch(0.98 0.003 106);
+    --chart-scale-02: oklch(0.92 0.008 106);
+    --chart-scale-03: oklch(0.82 0.015 106);
+    --chart-scale-04: oklch(0.68 0.02 106);
+    --chart-scale-05: oklch(0.55 0.025 106);
+    --chart-scale-pattern-color: oklch(0.96 0.005 106);
   }
 
   .dark {
@@ -53,11 +74,27 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 11 76% 80%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --chart-1: hsl(11 76% 80%);
+    --chart-2: hsl(15 79% 72%);
+    --chart-3: hsl(5 70% 60%);
+    --chart-4: hsl(330 70% 78%);
+    --chart-5: hsl(27 85% 72%);
+    --chart-background: transparent;
+    --chart-foreground: hsl(var(--foreground));
+    --chart-foreground-muted: hsl(var(--muted-foreground));
+    --chart-crosshair: hsl(var(--muted-foreground));
+    --chart-grid: hsl(var(--border));
+    --chart-brush-border: var(--chart-grid);
+    --chart-marker-background: hsl(var(--card));
+    --chart-marker-border: hsl(var(--border));
+    --chart-marker-foreground: hsl(var(--foreground));
+    --chart-label: hsl(var(--muted-foreground));
+    --chart-scale-01: oklch(0.28 0.03 270);
+    --chart-scale-02: oklch(0.38 0.04 270);
+    --chart-scale-03: oklch(0.48 0.05 270);
+    --chart-scale-04: oklch(0.58 0.06 270);
+    --chart-scale-05: oklch(0.68 0.07 270);
+    --chart-scale-pattern-color: oklch(0.145 0 0);
   }
 }
 
