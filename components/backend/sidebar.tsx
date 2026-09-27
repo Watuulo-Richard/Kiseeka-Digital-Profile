@@ -138,10 +138,9 @@ export default function Sidebar() {
                   </div>
                 </div>
 
-                {/* Form Suite Section */}
                 <div>
                   <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
-                    Form Suite
+                    Table Overview
                   </div>
                   <div className="space-y-1">
                     <NavItem href="/dashboard/user-profile" icon={CircleUser}>
@@ -163,10 +162,13 @@ export default function Sidebar() {
                       Testimonial
                     </NavItem>
                     <NavItem href="/dashboard/blog-categories" icon={BookOpen}>
-                      Blog Category
+                      Blog Categories
                     </NavItem>
                     <NavItem href="/dashboard/blog-posts" icon={FileChartColumn}>
                       Blog Posts
+                    </NavItem>
+                    <NavItem href="/dashboard/view-gallery" icon={TableProperties}>
+                      Gallery Images
                     </NavItem>
                   </div>
                 </div>

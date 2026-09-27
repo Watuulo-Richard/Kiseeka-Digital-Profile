@@ -69,7 +69,7 @@ export default function KisekaEmailTemplate({
         `}</style>
       </Head>
       <Preview>
-        Consultation Request Confirmed — {name} · {subject}
+        Consultation Request Confirmed - {name} · {subject}
       </Preview>
 
       <Body style={main}>
@@ -208,7 +208,7 @@ export default function KisekaEmailTemplate({
               </Text>
               <Text style={pillarCopy}>
                 Granular identification of inherent versus residual operational,
-                financial, and governance risks—calibrating preventative and
+                financial, and governance risks-calibrating preventative and
                 detective internal controls to eliminate control leakage.
               </Text>
             </div>
@@ -220,7 +220,7 @@ export default function KisekaEmailTemplate({
               <Text style={pillarCopy}>
                 Rigorous compliance health checks against statutory mandates,
                 industry licensing covenants, AML/KYC directives, and financial
-                reporting standards—preventing regulatory penalties before
+                reporting standards-preventing regulatory penalties before
                 examination cycles.
               </Text>
             </div>
