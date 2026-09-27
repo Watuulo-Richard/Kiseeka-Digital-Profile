@@ -289,9 +289,15 @@ header.scrolled {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Custom scrollbar with gradient colors */
+/* Custom scrollbar with gradient colors — app-wide, follows the frontend theme */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary)) hsl(var(--background));
+}
+
 ::-webkit-scrollbar {
   width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -307,10 +313,17 @@ header.scrolled {
   background: hsl(var(--primary) / 70%);
 }
 
-/* Firefox scrollbar */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--primary)) hsl(var(--background));
+::-webkit-scrollbar-corner {
+  background: hsl(var(--background));
+}
+
+/* Radix ScrollArea: hide the native bar so only the themed custom one shows */
+[data-radix-scroll-area-viewport] {
+  scrollbar-width: none;
+}
+
+[data-radix-scroll-area-viewport]::-webkit-scrollbar {
+  display: none;
 }
 
 /* Prevent nested scrolling */
