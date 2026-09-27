@@ -90,7 +90,7 @@ export default function Sidebar() {
           {/* Header */}
           <div className="h-16 sm:h-20 lg:h-16 px-4 sm:px-6 flex items-center justify-between border-b border-primary/30 dark:border-[#1F1F23] flex-shrink-0">
             <Link
-              href="/dashboard"
+              href="/"
               rel="noopener noreferrer"
               className="flex items-center gap-3 min-w-0"
             >
@@ -172,7 +172,7 @@ export default function Sidebar() {
                 </div>
 
                 {/* Table Overview Section */}
-                <div>
+                {/* <div>
                   <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider gradient-text dark:text-gray-400">
                     Table Overview
                   </div>
@@ -202,7 +202,7 @@ export default function Sidebar() {
                       Gallery Images
                     </NavItem>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </ScrollArea>
