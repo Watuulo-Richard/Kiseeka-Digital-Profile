@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useEffect, useCallback } from "react"
 // import { ModeToggle } from "./mode-toggle"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { LayoutDashboard, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
@@ -22,7 +22,7 @@ const navItems = [
   { name: "Contact Me", href: "#contact" },
 ]
 
-export default function Header() {
+export default function Header({ isAdmin }: { isAdmin?: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
@@ -145,6 +145,14 @@ export default function Header() {
               )
             })}
           </div>
+          {isAdmin && (
+            <Button asChild size="sm" className="rounded-full font-semibold">
+              <Link href="/dashboard">
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </Link>
+            </Button>
+          )}
           <ModeToggle />
         </nav>
 
@@ -182,6 +190,14 @@ export default function Header() {
       >
         <div className="container py-4 bg-background/95 backdrop-blur-sm">
           <nav className="flex flex-col space-y-4">
+            {isAdmin && (
+              <Button asChild className="w-full rounded-full font-semibold">
+                <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                  <LayoutDashboard className="h-4 w-4" />
+                  Dashboard
+                </Link>
+              </Button>
+            )}
             {navItems.map((item) => {
               const isActive = activeSection === item.href.substring(1)
 

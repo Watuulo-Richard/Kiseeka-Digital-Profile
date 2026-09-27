@@ -16,7 +16,11 @@ import { useSkills } from "@/hooks/use-skills";
 import Hero from "@/components/frontend/hero";
 import Blog from "@/components/frontend/blog";
 
-export default function HomeContent() {
+export default function HomeContent({
+  isAdmin,
+}: {
+  isAdmin?: boolean;
+}) {
   const { profile, isLoading } = useProfile();
   const { listWorkExperiences } = useWorkExperiences();
   const { listSkills } = useSkills();
@@ -39,7 +43,7 @@ export default function HomeContent() {
 
   return (
     <div className="w-full">
-      <Header />
+      <Header isAdmin={isAdmin} />
       {profile && <Hero fetchedProfile={profile} />}
       {profile && <About fetchedProfile={profile} />}
       <Experience
